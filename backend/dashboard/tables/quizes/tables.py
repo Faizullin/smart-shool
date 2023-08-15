@@ -9,7 +9,7 @@ class QuizTable(tables.Table):
                 'data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
                 'Actions</button>'
                 '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
-                    '<a class="dropdown-item edit-button" data-url="{% url \'dashboard:quiz_edit\' pk=record.pk %}">Edit</a>'
+                    '<a class="dropdown-item" href="{% url \'dashboard:quiz_edit\' pk=record.pk %}">Edit</a>'
                     '<form method="post" action="{% url \'dashboard:quiz_delete\' pk=record.pk %}">'
                         '{% csrf_token %}'
                         '<button class=" delete-button dropdown-item" type="submit">Delete</button>'

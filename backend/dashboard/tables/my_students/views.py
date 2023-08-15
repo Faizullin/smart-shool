@@ -8,8 +8,6 @@ from django_filters.views import FilterView
 
 from dashboard.get_context_processors import get_context
 from students.models import Student
-from accounts.models import User
-from academics.models import SubjectGroup, Subject
 from accounts.permissions import isUserTeacher
 
 from .forms import StudentForm

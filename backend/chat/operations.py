@@ -138,23 +138,26 @@ def process_query(query, input_value: ChatMessage, user_id=None):
                 msg='',
                 owner=input_value.owner,
             )
-            new_chat_room = ChatRoom.objects.create(
-                bot_chat_id = input_value.chat_room.bot_chat_id,
-                title = 'Ticket to ' + input_value.chat_room.title,
-                owner = get_bot(),
+            new_chat_room, created = ChatRoom.objects.get_or_create(
+                bot_chat_id=input_value.chat_room.bot_chat_id + '-t',
+                owner=get_bot(),
             )
+            new_chat_room.title = 'Ticket to ' + input_value.chat_room.title
+            new_chat_room.save()
             return f'/redirect to {new_chat_room.pk}'
     elif query_action == 'input.support-student-creds':
         output_raw_txt = str(query.query_result.fulfillment_text)
-        output_raw_txt = output_raw_txt.replace('{','{{')
-        output_raw_txt = output_raw_txt.replace('}','}}')
+        output_raw_txt = output_raw_txt.replace('{', '{{')
+        output_raw_txt = output_raw_txt.replace('}', '}}')
         user = User.objects.get(id=user_id)
         student = Student.objects.get(user=user)
         context = {
             'student': student,
         }
-        student_results = Result.objects.filter(student = student, semester = AcademicSession.objects.last())
-        current_total_score = sum([result.total_marks for result in student_results])
+        student_results = Result.objects.filter(
+            student=student, semester=AcademicSession.objects.last())
+        current_total_score = sum(
+            [result.total_marks for result in student_results])
         context['student'].current_total_score = current_total_score
         return Template(output_raw_txt).render(Context(context))
     raise Exception("Not found command: " + query_action)
@@ -170,6 +173,3 @@ def send_ws_message(message: dict, chat_room: ChatRoom):
                 'message': message,
             }
         )
-
-
-

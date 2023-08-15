@@ -41,8 +41,7 @@
                                                 <span class="d-block m-t-5"></span><button class="btn btn-primary create-button" data-toggle="modal" data-target="#dashboard-form-modal" data-url="{% url 'dashboard:subjectgroup_create' %}">Create</button>
                                                 {% if filterset %}
                                                     <form action="" method="get" class="form form-inline">
-                                                        {% load crispy_forms_tags %}
-                                                        {{ filterset.form|crispy }}
+                                                        {{ filterset.form.as_p }}
                                                         <input type="submit" />
                                                     </form>
                                                 {% endif %}

@@ -21,6 +21,7 @@ class SubjectGroupListView(LoginRequiredMixin, tables.SingleTableMixin, FilterVi
     paginator_class = tables.LazyPaginator
     filterset_class = SubjectGroupFilter
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context = get_context(context=context, segment='dashboard:subjectgroup_list')
@@ -32,7 +33,7 @@ class SubjectGroupListView(LoginRequiredMixin, tables.SingleTableMixin, FilterVi
     def get_queryset(self, *args, **kwargs):
         if isUserTeacher(self.request.user):
             return get_teacher_subject_groups_queryset(self.request.user)
-        return SubjectGroup.objects.all()
+        return SubjectGroup.objects.order_by('-id') 
     
 @login_required()
 def subjectgroup_create(request):

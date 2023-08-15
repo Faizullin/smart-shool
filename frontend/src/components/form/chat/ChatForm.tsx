@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
-import { addMessagesData, fetchChatMessages, fetchChatUsers, fetchSendMessage } from '../../../redux/store/reducers/chatSlice';
+import { addMessagesData, fetchChatMessages, fetchChatRoomsMy, fetchChatUsers, fetchSendMessage } from '../../../redux/store/reducers/chatSlice';
 import { IChatMessage, IChatRoom } from '../../../models/IChat';
 import { FormattedMessage } from 'react-intl';
 
@@ -117,9 +117,9 @@ export default function ChatForm({ chat_room }: IChatFormProps) {
     }
     const fetchChatMessagesFromApi = (chat_room: IChatRoom) => {
         const data_params: { chat_room_id: string, params?: any } = { chat_room_id: chat_room.id }
-        if ( lastMessageId.current) {
+        if (lastMessageId.current) {
             data_params.params = {
-                last_message_id:  lastMessageId.current
+                last_message_id: lastMessageId.current
             }
         }
         return dispatch(fetchChatMessages(data_params))
@@ -132,7 +132,16 @@ export default function ChatForm({ chat_room }: IChatFormProps) {
                         dispatch(fetchChatMessages({ chat_room_id: chat_room.id })).then(_ => {
                             setIsConnectionOpen(true)
                             const newIntervalId = setInterval(() => {
-                                fetchChatMessagesFromApi(chat_room)
+                                fetchChatMessagesFromApi(chat_room).then(response => {
+                                    if (response.payload && response.payload instanceof Array && response.payload.length > 0) {
+                                        const cs = response.payload.map(el => el.msg)
+                                        cs.forEach((el: string) => {
+                                            if (el.startsWith('/redirect')) {
+                                                dispatch(fetchChatRoomsMy())
+                                            }
+                                        })
+                                    }
+                                })
                             }, UPDATE_INTERVAL)
                             setIntervalId(newIntervalId)
                         })

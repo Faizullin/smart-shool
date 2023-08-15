@@ -13,6 +13,7 @@ from django.contrib.auth.models import Group
 from .forms import StudentForm
 from .tables import StudentTable, StudentFilter
 
+
 class StudentListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Student
     table_class = StudentTable
@@ -22,14 +23,17 @@ class StudentListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context = get_context(context=context, segment='dashboard:student_list')
+        context = get_context(
+            context=context, segment='dashboard:student_list')
         context.update({
-            'filterset': StudentFilter(self.request.GET, queryset=Student.objects.all())
+            'filterset': StudentFilter(self.request.GET, queryset=Student.objects.all()),
+            'autocomplete_url': reverse('dashboard:user_autocomplete'),
         })
         return context
-    
+
     def get_queryset(self, *args, **kwargs):
         return Student.objects.all()
+
 
 @login_required()
 def student_create(request):
@@ -37,13 +41,16 @@ def student_create(request):
         form = StudentForm(request.POST)
         if form.is_valid():
             form.save()
-            form.instance.user.groups.add(Group.objects.get(name='student'))
-            form.save()
             return JsonResponse({'success': True})
         return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:student_create')}))
     else:
         form = StudentForm()
-    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:student_create')})
+    return render(request, 'dashboard/tables/form_base.html', {
+        'form': form,
+        'edit_url': reverse('dashboard:student_create'),
+        'autocomplete_url': reverse('dashboard:user_autocomplete'),
+    })
+
 
 @login_required()
 def student_edit(request, pk):
@@ -56,12 +63,12 @@ def student_edit(request, pk):
         return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:student_edit', kwargs={'pk': student.pk})}))
     else:
         form = StudentForm(instance=student)
-    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:student_edit', kwargs={'pk': student.pk}) })
+    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:student_edit', kwargs={'pk': student.pk})})
+
 
 @login_required
 def student_delete(request, pk):
     student = get_object_or_404(Student, pk=pk)
-    student.user.groups.remove(Group.objects.get(name='student'))
     if request.method == 'POST':
         student.delete()
         return redirect('dashboard:student_list')

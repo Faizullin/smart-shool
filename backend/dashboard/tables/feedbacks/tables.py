@@ -1,14 +1,13 @@
 import django_tables2 as tables
 import django_filters
-# Replace Feedback with your specific model name
 from results.models import Feedback
 
 
 class FeedbackTable(tables.Table):
     results = tables.TemplateColumn(
         '<div class="dropdown">'
-            '<a class="btn btn-secondary" href="{% url \'dashboard:result_list\' %}?exam={{ record.exam.pk }}&student={{ record.student.pk }}">'
-                'Results</a>'
+        '<a class="btn btn-secondary" href="{% url \'dashboard:result_list\' %}?exam={{ record.result.exam.pk }}&student={{ record.result.student.pk }}">'
+        'Results</a>'
         '</div>',
         verbose_name='Results'
     )
@@ -31,7 +30,8 @@ class FeedbackTable(tables.Table):
 
     class Meta:
         model = Feedback
-        fields = ['id', 'student', 'exam',  'created_at', 'updated_at']
+        fields = ['id', 'result__student', 'result__exam',
+                  'watched',  'created_at', 'updated_at']
         attrs = {
             'class': 'table table-hover',
         }
@@ -43,5 +43,5 @@ class FeedbackTable(tables.Table):
 class FeedbackFilter(django_filters.FilterSet):
     class Meta:
         model = Feedback
-        fields = ['id', 'student', 'exam',
-                  'content', 'created_at', 'updated_at']
+        fields = ['id', 'result__student', 'result__exam',
+                  'content', 'result__student__current_group', 'watched', 'created_at', 'updated_at']

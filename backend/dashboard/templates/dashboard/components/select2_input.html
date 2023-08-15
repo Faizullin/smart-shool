@@ -1,0 +1,25 @@
+{% load crispy_forms_tags %}
+
+<div class="select2-input">
+    {% crispy field.form %}
+</div>
+
+<script>
+    $(document).ready(function () {
+        var inputField = $('#{{ field.auto_id }}');
+        
+        inputField.select2({
+            ajax: {
+                url: '{{ autocomplete_url }}',
+                dataType: 'json',
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                delay: 250,
+                cache: true
+            }
+        });
+    });
+</script>

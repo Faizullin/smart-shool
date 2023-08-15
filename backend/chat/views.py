@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -30,12 +30,11 @@ class ChatMessageListView(generics.ListAPIView):
         if last_message_id:
             try:
                 last_message_id = int(last_message_id)
-                if last_message_id != -1:  
+                if last_message_id != -1:
                     queryset = queryset.filter(id__gt=last_message_id)
                 else:
                     queryset = []
             except ValueError:
-                # If last_message_id is not a valid integer, ignore it and return the entire queryset
                 pass
 
         return queryset
@@ -75,13 +74,12 @@ class ChatListMyView(generics.ListAPIView):
     serializer_class = ChatRoomSerializer
 
     def get_queryset(self):
-        return ChatRoom.objects.filter(owner_id=self.request.user.pk)
+        return ChatRoom.objects.filter(Q(owner_id=self.request.user.pk) | Q(recipient_id=self.request.user.pk))
 
 
 class ChatMessageNewView(APIView):
     authentication_classes = [JWTAuthentication, ]
     permission_classes = (permissions.IsAuthenticated,)
-    
 
     def post(self, request, chat_id):
         serializer = ChatRecieveMessageSerializer(data=request.data)
@@ -99,7 +97,7 @@ class ChatMessageNewView(APIView):
             lang=lang,
             type='m'
         )
-        
+
         if settings.USE_WS:
             async_task(
                 process_user_message,

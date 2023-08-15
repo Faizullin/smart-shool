@@ -2,13 +2,7 @@
 <script src="/static/s/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="/static/s/assets/js/pcoded.min.js"></script>
 <script src="/static/s/assets/js/dark-mode.js"></script>
-<script src="/static/ckeditor/ckeditor-init.js"></script>
-<script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
-
 <script>
-  function getToken() {
-    return $('#dashboard-form input[name=csrfmiddlewaretoken]').val()
-  }
   $(document).ready(function () {
     var modal = $('#dashboard-form-modal')
     var saveButton = $('#save-button'),
@@ -22,7 +16,7 @@
       $.ajax({
         type: 'POST',
         url,
-        headers: { 'X-CSRF-Token': getToken() },
+        headers: { 'X-CSRF-Token': $('#dashboard-form input[name=csrfmiddlewaretoken]').val() },
         processData: false,
         contentType: false,
         data,
@@ -36,10 +30,10 @@
         error: (response) => {
           if (response.status === 400) {
             $('#dashboard-form-modal .modal-body').html(response.responseText)
+            saveButton.removeAttr('disabled')
           } else if (response.status === 500) {
             $('#dashboard-form-modal .modal-body').html(response.responseText)
           }
-          saveButton.removeAttr('disabled')
         }
       })
     })
@@ -65,12 +59,12 @@
     saveEditButton.click(function () {
       const form = $('#dashboard-form')
       var url = form.attr('action')
-      console.log(form.serialize())
+      console.log('DATA'.form.serialize())
       var data = new FormData(document.getElementById('dashboard-form'))
       $.ajax({
         type: 'POST',
         url,
-        headers: { 'X-CSRF-Token': getToken() },
+        headers: { 'X-CSRF-Token': $('#dashboard-form input[name=csrfmiddlewaretoken]').val() },
         processData: false,
         contentType: false,
         data,
@@ -87,7 +81,6 @@
           } else if (response.status === 500) {
             $('#dashboard-form-modal .modal-body').html(response.responseText)
           }
-          saveButton.removeAttr('disabled')
         }
       })
     })

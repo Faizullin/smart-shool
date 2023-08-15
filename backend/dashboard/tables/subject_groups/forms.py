@@ -5,4 +5,4 @@ from students.models import SubjectGroup
 class SubjectGroupForm(forms.ModelForm):    
     class Meta:
         model = SubjectGroup
-        fields = ['semester','subject','teacher']
+        fields = ['semester','title','subject','teacher']

@@ -1,0 +1,104 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block title %} Result {% endblock %}
+
+{% load render_table from django_tables2 %}
+{% block content %}
+
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /> -->
+<section class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="page-header">
+                    <div class="page-block">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <div class="page-header-title">
+                                    <h5 class="m-b-10">{{ _("Dashboard Tables") }}</h5>
+                                </div>
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}"><i
+                                                class="feather icon-home"></i></a></li>
+                                    <li class="breadcrumb-item"><a href="#!">{{ _("Tables") }}</a></li>
+                                    <li class="breadcrumb-item"><a href="#">{{ _("Results") }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- [ breadcrumb ] end -->
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>{{ _("Result") }}</h5>
+                                        <span class="d-block m-t-5"></span>
+                                    </div>
+
+                                    <div class="card-block table-border-style">
+                                        <div class="mb-4">
+                                            <div class="d-none" id="chart_data" data-chart_data="{{ chart_data }}">
+                                            </div>
+                                            <div class="mb-4">
+                                                <canvas id="exam-this_user_data-chart" class="mx-auto col-12 col-md-9"></canvas>
+                                            </div>
+                                            <div class="mb-4">
+                                                <canvas id="exam-users_avg_data-chart" class="mx-auto col-12 col-md-9"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    $(document).ready(function () {
+        var ctx1 = document.getElementById('exam-this_user_data-chart').getContext('2d');
+        var ctx2 = document.getElementById('exam-users_avg_data-chart').getContext('2d');
+        const chart_data = $('#chart_data').data('chart_data')
+        console.log('chart_data', chart_data)
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: chart_data.results_data.this_user_data.map(e => e.date),
+                datasets: [{
+                    label: '{{ current_student }}',
+                    data: chart_data.results_data.this_user_data.map(e => e.total_marks),
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1,
+                }]
+            },
+        });
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: chart_data.results_data.users_avg_data.map(e => e.date),
+                datasets: [{
+                    label: 'Average Data',
+                    data: chart_data.results_data.users_avg_data.map(e => e.total_marks),
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1,
+                }]
+            },
+        });
+    })
+</script>
+{% endblock %}

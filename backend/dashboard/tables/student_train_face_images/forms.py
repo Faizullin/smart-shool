@@ -1,6 +1,6 @@
 
 from django import forms
-from students.models import StudentTrainFaceImage
+from accounts_face_recognition.models import StudentTrainFaceImage
 
 class StudentTrainFaceImageForm(forms.ModelForm):    
     class Meta:

@@ -1,0 +1,90 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block title %} AcademicConfig {% endblock %}
+
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+{% block content %}
+
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /> -->
+<section class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="page-header">
+                    <div class="page-block">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <div class="page-header-title">
+                                    <h5 class="m-b-10">{{ _("Dashboard Tables") }}</h5>
+                                </div>
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}"><i
+                                                class="feather icon-home"></i></a></li>
+                                    <li class="breadcrumb-item"><a href="#!">{{ _("Tables") }}</a></li>
+                                    <li class="breadcrumb-item"><a href="#">{{ _("AcademicConfigs") }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- [ breadcrumb ] end -->
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>{{ _("AcademicConfig") }}</h5>
+                                        <span class="d-block m-t-5"></span>
+                                        {% crispy last_config_form %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block javascripts %}
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '#save-config-button', function () {
+            const form = $('#dashboard-config-form')
+            const saveButton = $('#save-config-button')
+            var url = form.attr('action')
+            var data = new FormData(document.getElementById('dashboard-config-form'))
+            saveButton.attr('disabled', true)
+            $.ajax({
+                type: 'POST',
+                url,
+                headers: { 'X-CSRF-Token': $('#dashboard-config-form input[name=csrfmiddlewaretoken]').val() },
+                processData: false,
+                contentType: false,
+                data,
+                success: (response, data, d) => {
+                    if (response.success) {
+                        saveButton.attr('disabled',false)
+                        location.reload()
+                    }
+                },
+                error: (response) => {
+                    if (response.status === 400) {
+                        $('#dashboard-form-modal .modal-body').html(response.responseText)
+                        saveButton.attr('disabled',false)
+                    }
+                }
+            })
+        })
+    })
+</script>
+{% endblock %}

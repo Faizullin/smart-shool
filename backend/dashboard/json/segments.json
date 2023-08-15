@@ -77,24 +77,6 @@
         ]
     },
     {
-        "label": "Question",
-        "active": false,
-        "link": "dashboard:question_list",
-        "groups": [
-            "admin",
-            "teacher"
-        ]
-    },
-    {
-        "label": "Answer",
-        "active": false,
-        "link": "dashboard:answer_list",
-        "groups": [
-            "admin",
-            "teacher"
-        ]
-    },
-    {
         "label": "SubjectGroup",
         "active": false,
         "link": "dashboard:subjectgroup_list",
@@ -138,27 +120,17 @@
         ]
     },
     {
-        "label": "ChatMessage",
+        "label": "AcademicConfig",
         "active": false,
-        "link": "dashboard:chatmessage_list",
+        "link": "dashboard:academicconfig_list",
         "groups": [
-            "admin",
-            "teacher"
+            "admin"
         ]
     },
     {
-        "label": "QuestionTicket",
+        "label": "StudentAnswer",
         "active": false,
-        "link": "dashboard:questionticket_list",
-        "groups": [
-            "admin",
-            "teacher"
-        ]
-    },
-    {
-        "label": "UserAnswer",
-        "active": false,
-        "link": "dashboard:useranswer_list",
+        "link": "dashboard:studentanswer_list",
         "groups": [
             "admin",
             "teacher"

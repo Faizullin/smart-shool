@@ -1,0 +1,99 @@
+{% extends 'layouts/base.html' %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block title %}
+  Quizzes
+{% endblock %}
+
+{% block content %}
+  <section class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+      <div class="pcoded-content">
+        <div class="pcoded-inner-content">
+          <!-- [ breadcrumb ] start -->
+          <div class="page-header">
+            <div class="page-block">
+              <div class="row align-items-center">
+                <div class="col-md-12">
+                  <div class="page-header-title">
+                    <h5 class="m-b-10">{{ _('Dashboard Tables') }}</h5>
+                  </div>
+                  <ul class="breadcrumb">
+                    <li class="breadcrumb-item">
+                      <a href=""><i class="feather icon-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                      <a href="#!">{{ _('Tables') }}</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                      <a href="#">{{ _('Articles') }}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <form id="dashboard-form" action="{{ edit_url }}" enctype="multipart/form-data" method="POST">
+            <h1>Edit Quiz</h1>
+            {% csrf_token %}
+            {% load crispy_forms_tags %}
+            <div class="mt-4">
+              {% crispy quiz_form %}
+              {{ question_formset.management_form|crispy }}
+              {{ question_formset.non_form_errors }}
+              <div id="questions-formset">
+                {% for form in question_formset.forms %}
+                  <div class="question-form mb-4 border px-2 py-4">
+                    {{ form }}
+                    <div class="ml-5 mt-4">
+                      {% if form.nested %}
+                        {{ form.nested.management_form }}
+                        {{ form.nested.non_form_errors }}
+
+                        {% for answer_form in form.nested.forms %}
+                          <div class="mb-2">
+                            {{ answer_form }}
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+    const ITEM_KEY = 'item-key'
+    $(document).ready(function () {
+      $(document).on('click', '.add-question', function () {
+        console.log('ADD', $('#questions_form-template'))
+        const answer_form_template = $('#questions_form-template')
+        answer_form_template.data(ITEM_KEY, '')
+        $('#questions-formset').append(answer_form_template.html())
+      })
+      $(document).on('click', '.remove-question', function () {
+        $(this).parent().remove()
+      })
+      $(document).on('click', '.add-answer', function () {
+        console.log('ADD', $(this).parent().find('.question-answers-formset'))
+        const answer_form_template = $('#answer_form-template')
+        answer_form_template.data(ITEM_KEY, '')
+        $(this).parent().find('.question-answers-formset').append(answer_form_template.html())
+      })
+      $(document).on('click', '.remove-answer', function () {
+        $(this).parent().remove()
+      })
+    })
+  </script>
+{% endblock %}

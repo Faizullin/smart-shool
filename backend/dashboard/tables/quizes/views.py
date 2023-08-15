@@ -1,16 +1,19 @@
+from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, Http404, HttpResponseBadRequest
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 import django_tables2 as tables
-from django_filters.views import FilterView 
+from django_filters.views import FilterView
 
 from dashboard.get_context_processors import get_context
 from exams.models import Quiz
+from exams.models import Answer, Question, Quiz
 
-from .forms import QuizForm
+from .forms import *
 from .tables import QuizTable, QuizFilter
+
 
 class QuizListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Quiz
@@ -26,34 +29,62 @@ class QuizListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
             'filterset': QuizFilter(self.request.GET, queryset=Quiz.objects.all())
         })
         return context
-    
+
     def get_queryset(self, *args, **kwargs):
         return Quiz.objects.all()
+
 
 @login_required()
 def quiz_create(request):
     if request.method == 'POST':
-        form = QuizForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'success': True})
-        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form , 'edit_url': reverse('dashboard:quiz_create') }))
+        quiz_form = QuizForm(request.POST)
+        if quiz_form.is_valid():
+            quiz = quiz_form.save()
+            question_formset = QuestionFormSet(request.POST, instance=quiz)
+            if question_formset.is_valid():
+                question_formset.save()
+                return redirect(reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk,}))
+            else:
+                return redirect(reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk,}))
+        else:
+            question_formset = QuestionFormSet(instance=Quiz())
     else:
-        form = QuizForm()
-    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:quiz_create')})
+        quiz_form = QuizForm()
+        question_formset = QuestionFormSet(instance=Quiz())
+    context = {
+        'quiz_form': quiz_form,
+        'question_formset': question_formset,
+        'edit_url': reverse('dashboard:quiz_create'),
+    }
+    context.update(get_context(context=context, segment='dashboard:quiz_list'))
+    return render(request, 'dashboard/tables/quizes/form.html', context)
+
 
 @login_required()
 def quiz_edit(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
     if request.method == 'POST':
-        form = QuizForm(request.POST, instance=quiz)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'success': True})
-        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk}) }))
+        quiz_form = QuizForm(request.POST, instance=quiz)
+        if quiz_form.is_valid():
+            updated_quiz = quiz_form.save()
+            question_formset = QuestionFormSet(request.POST, instance=updated_quiz)
+            question_formset.is_valid()
+            if question_formset.is_valid():
+                question_formset.save()
+                return redirect(reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk,}))
+        else:
+            question_formset = QuestionFormSet(instance=Quiz())
     else:
-        form = QuizForm(instance=quiz)
-    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk}) })
+        quiz_form = QuizForm(instance=quiz)
+        question_formset = QuestionFormSet(instance=quiz)
+    context = {
+        'quiz_form': quiz_form,
+        'question_formset': question_formset,
+        'edit_url': reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk}),
+    }
+    context.update(get_context(context=context, segment='dashboard:quiz_list'))
+    return render(request, 'dashboard/tables/quizes/form.html', context)
+
 
 @login_required
 def quiz_delete(request, pk):

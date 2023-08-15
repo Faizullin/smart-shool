@@ -5,4 +5,4 @@ from exams.models import Exam
 class ExamForm(forms.ModelForm):
     class Meta:
         model = Exam
-        fields = ['exam_type','exam_date','subject_group']
+        fields = ['exam_type','exam_date','subject']
