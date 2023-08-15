@@ -1,0 +1,121 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block title %} Article {% endblock %}
+
+{% load render_table from django_tables2 %}
+{% block content %}
+
+<section class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="page-header">
+                    <div class="page-block">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <div class="page-header-title">
+                                    <h5 class="m-b-10">{{ _("Dashboard Tables") }}</h5>
+                                </div>
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="">
+                                            <i class="feather icon-home"></i>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumb-item"><a href="#!">{{ _("Tables") }}</a></li>
+                                    <li class="breadcrumb-item"><a href="#">{{ _("Articles") }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form id="dashboard-form" action="{{ edit_url }}" enctype="multipart/form-data" method="POST">
+                  <h1>Edit Article</h1>
+                  <form method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="form-group">
+                          <label for="title">Article Title</label>
+                          <input type="text" class="form-control" id="title" name="title" value="{{ article.title }}" required>
+                      </div>
+                      <div class="form-group">
+                          <label for="featured_image">Featured Image</label>
+                          <input type="file" class="form-control-file" id="featured_image" name="featured_image" {% if not article.featured_image_url %}required{% endif %}>
+                          {% if article.featured_image_url %}
+                            <img id="featured_image__img" src="{{ article.featured_image_url }}" alt="">
+                          {% endif %}
+                      </div>
+                      <div class="form-group">
+                          <label for="subject">Subject</label>
+                          <select class="form-control" id="subject" name="subject" required>
+                              {% for subject in subjects %}
+                                  {% if subject.id == article.subject.id %}
+                                      <option value="{{ subject.id }}" selected>{{ subject.title }}</option>
+                                  {% else %}
+                                      <option value="{{ subject.id }}">{{ subject.title }}</option>
+                                  {% endif %}
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          <label for="content">Content</label>
+                          <textarea class="form-control" id="content" name="content" required>{{ article.content }}</textarea>
+                      </div>
+                      <div class="form-check">
+                          <input type="checkbox" class="form-check-input" id="force_highlighted" name="force_highlighted" {% if article.force_highlighted %}checked{% endif %}>
+                          <label class="form-check-label" for="force_highlighted">Force Highlighted</label>
+                      </div>
+                      <div class="form-group">
+                          <label for="status">Status</label>
+                          <select class="form-control" id="status" name="status" required>
+                              <option value="draft" {% if article.status == 'draft' %}selected{% endif %}>Draft</option>
+                              <option value="published" {% if article.status == 'published' %}selected{% endif %}>Published</option>
+                          </select>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                    <script src="/static/ckeditor/ckeditor-init.js"></script>
+                    <script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+                    <script>
+                      
+                    </script>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  $(document).ready(function () {
+    // Get the file input element
+    CKEDITOR.replace('content');
+    var fileInput = $('#featured_image');
+    console.log("change gu",  )
+  
+    // Add an event listener for when a file is selected
+    fileInput.on('change', function(e) {
+      var file = e.target.files[0];
+      
+      if (file) {
+        // Create a FileReader object to read the file
+        var reader = new FileReader();
+        
+        // Set up the onload event handler
+        reader.onload = function(e) {
+          // Update the image source with the uploaded image data
+          console.log("change to",  e.target.result)
+          $('#featured_image__img').attr('src', e.target.result);
+        };
+        
+        // Read the file as a data URL
+        reader.readAsDataURL(file);
+      }
+    });
+  })
+</script>
+{% endblock javascripts %}

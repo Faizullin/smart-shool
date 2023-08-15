@@ -1,0 +1,106 @@
+<script src="/static/s/assets/js/vendor-all.min.js"></script>
+<script src="/static/s/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/s/assets/js/pcoded.min.js"></script>
+<script src="/static/s/assets/js/dark-mode.js"></script>
+<script src="/static/ckeditor/ckeditor-init.js"></script>
+<script src="/static/ckeditor/ckeditor/ckeditor.js"></script>
+
+<script>
+  function getToken() {
+    return $('#dashboard-form input[name=csrfmiddlewaretoken]').val()
+  }
+  $(document).ready(function () {
+    var modal = $('#dashboard-form-modal')
+    var saveButton = $('#save-button'),
+      saveEditButton = $('#save-edit-button')
+  
+    saveButton.click(function () {
+      const form = $('#dashboard-form')
+      var url = form.attr('action')
+      var data = new FormData(document.getElementById('dashboard-form'))
+      saveButton.attr('disabled', true)
+      $.ajax({
+        type: 'POST',
+        url,
+        headers: { 'X-CSRF-Token': getToken() },
+        processData: false,
+        contentType: false,
+        data,
+        success: (response, data, d) => {
+          if (response.success) {
+            modal.modal('hide')
+            $('#dashboard-form-modal .modal-body').html('')
+            location.reload()
+          }
+        },
+        error: (response) => {
+          if (response.status === 400) {
+            $('#dashboard-form-modal .modal-body').html(response.responseText)
+          } else if (response.status === 500) {
+            $('#dashboard-form-modal .modal-body').html(response.responseText)
+          }
+          saveButton.removeAttr('disabled')
+        }
+      })
+    })
+    $('.edit-button').click(function () {
+      openEditModalProf(this)
+    })
+    $('.create-button').click(function () {
+      openEditModalProf(this)
+    })
+    openEditModalProf = (el) => {
+      const loadUrl = $(el).data('load-url')
+      const url = $(el).data('url')
+      //var url = form.attr('item-id');
+      $.get(loadUrl || url, {}, (response) => {
+        if (response) {
+          modal.find('.modal-body').html(response)
+          modal.modal('show')
+        } else {
+          form.html(response)
+        }
+      })
+    }
+    saveEditButton.click(function () {
+      const form = $('#dashboard-form')
+      var url = form.attr('action')
+      console.log(form.serialize())
+      var data = new FormData(document.getElementById('dashboard-form'))
+      $.ajax({
+        type: 'POST',
+        url,
+        headers: { 'X-CSRF-Token': getToken() },
+        processData: false,
+        contentType: false,
+        data,
+        success: (response, data, d) => {
+          if (response.success) {
+            modal.modal('hide')
+            $('#dashboard-form-modal .modal-body').html('')
+            location.reload()
+          }
+        },
+        error: (response) => {
+          if (response.status === 400) {
+            $('#dashboard-form-modal .modal-body').html(response.responseText)
+          } else if (response.status === 500) {
+            $('#dashboard-form-modal .modal-body').html(response.responseText)
+          }
+          saveButton.removeAttr('disabled')
+        }
+      })
+    })
+    // document.body.classList.add('dark')
+  })
+</script>
+<style>
+  .error {
+    border: 1px solid red !important;
+  }
+  
+  .error-text {
+    color: red !important;
+    font-size: 12px !important;
+  }
+</style>

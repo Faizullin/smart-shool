@@ -1,0 +1,75 @@
+<!-- [ navigation menu ] start -->
+<nav class="pcoded-navbar">
+    <div class="navbar-wrapper">
+        <div class="navbar-brand header-logo">
+            <a href="{% url 'dashboard:index' %}" class="b-brand">
+                <div class="b-bg">
+                    <i class="feather icon-trending-up"></i>
+                </div>
+                <span class="b-title">{{ _("Dashboard") }}</span>
+            </a>
+            <a class="mobile-menu" id="mobile-collapse" href="{% url 'dashboard:index' %}"><span></span></a>
+        </div>
+        <div class="navbar-content scroll-div">
+            <ul class="nav pcoded-inner-navbar">
+                <li class="nav-item pcoded-menu-caption">
+                    <label>{{ _("Navigation") }}</label>
+                </li>
+                <li data-username="User Dashboard Page" 
+                    class="nav-item {% if 'dashboard:index' in segment %} active {% endif %}">
+                    <a href="{% url 'dashboard:index' %}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-shop"></i></span>
+                            <span class="pcoded-mtext">{{ _("Welcome") }}</span></a>
+                </li>
+                <li data-username="Profile Dashboard Page" 
+                    class="nav-item {% if 'dashboard:profile' in segment %} active {% endif %}">
+                    <a href="{% url 'dashboard:profile' %}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-shop"></i></span>
+                            <span class="pcoded-mtext">{{ _("Profile") }}</span></a>
+                </li>
+                <li data-username="Profile Dashboard Page" 
+                    class="nav-item {% if 'dashboard:storage' in segment %} active {% endif %}">
+                    <a href="#" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-shop"></i></span>
+                            <span class="pcoded-mtext">{{ _("Storage") }}</span></a>
+                </li>
+
+                <li class="nav-item pcoded-menu-caption">
+                    <label>{{ _("Tables") }}</label>
+                </li>
+                {% for table in tables %}
+                    {% with show_link=False %}
+                        {% for group in user.groups.all %}
+                            {% if group.name in table.groups and not show_link %}
+                                {% with show_link=True %}
+                                    <li data-username="Dashboard Page" 
+                                        class="nav-item {% if table.active %} active {% endif %}">
+                                        <a href="{% url table.link %}" class="nav-link">
+                                            <span class="pcoded-micon"><i class="feather icon-shop"></i></span>
+                                                <span class="pcoded-mtext">{{ table.label }}</span></a>
+                                    </li>
+                                {% endwith %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endwith %}                        
+                {% endfor %}
+                
+
+                <li class="nav-item pcoded-menu-caption">
+                    <label>{{ _("Group list") }}</label>
+                </li>
+                <li class="nav-item pcoded-menu-caption">
+                    <label>{{ _("Action") }}</label>
+                </li>
+
+
+                <li data-username="Disabled Menu" class="nav-item">
+                    <a href="{% url 'dashboard:auth_logout' %}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-power"></i></span><span class="pcoded-mtext">{{ _("Logout") }}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- [ navigation menu ] end -->

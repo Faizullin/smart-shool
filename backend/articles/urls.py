@@ -1,0 +1,15 @@
+from django.urls import path
+from .views import *
+
+app_name = 'articles'
+
+urlpatterns = [
+    path('api/articles/',
+         ArticleListView.as_view(),
+         name='list'
+         ),
+    path('api/articles/<int:pk>/',
+         ArticleRetrieveView.as_view(),
+         name='retrieve'
+         ),
+]

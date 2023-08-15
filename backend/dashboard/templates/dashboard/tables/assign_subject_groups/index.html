@@ -1,0 +1,108 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block title %} Assign students {% endblock %}
+
+{% load render_table from django_tables2 %}
+{% block content %}
+
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /> -->
+        <section class="pcoded-main-container">
+            <div class="pcoded-wrapper">
+    
+                <div class="pcoded-content">
+                    <div class="pcoded-inner-content">
+                        <!-- [ breadcrumb ] start -->
+                        <div class="page-header">
+                            <div class="page-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-12">
+                                        <div class="page-header-title">
+                                            <h5 class="m-b-10">{{ _("Dashboard Tables") }}</h5>
+                                        </div>
+                                        <ul class="breadcrumb">
+                                            <li class="breadcrumb-item">
+                                                <a href="{% url 'dashboard:index'  %}">
+                                                    <i class="feather icon-home"></i>
+                                                </a>
+                                            </li>
+                                            <li class="breadcrumb-item"><a href="#!">{{ _("Tables") }}</a></li>
+                                            <li class="breadcrumb-item"><a href="#">{{ _("Assign students") }}</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- [ breadcrumb ] end -->
+                        <div class="main-body">
+                            <div class="page-wrapper">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="card">
+                                            <form class="card-header" action="{% url 'dashboard:assign_subject_groups_save' %}" method="post">
+                                                <h5>{{ _("Student") }}</h5>
+                                                <span class="d-block m-t-5"></span>
+                                                {% csrf_token %}
+                                                <button class="btn btn-primary create-button" type="submit">Save</button>
+                                            </form>
+    
+                                            <div class="card-block table-border-style">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">#</th>
+                                                                <th scope="col">First name</th>
+                                                                <th scope="col">Last name</th>
+                                                                <th scope="col">Theory score</th>
+                                                              </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for subject_key, val in data.items %}
+                                                            <tr class="mb-3">
+                                                                <th scope="row">
+                                                                    <h3>{{ subject_key }}</h3>
+                                                                </th>
+                                                            </tr>
+                                                            <tr class="mb-1">
+                                                                <th scope="row">
+                                                                    <h4>High</h4>
+                                                                </th>
+                                                            </tr>
+                                                            {% for student in val.0 %}
+                                                                <tr>
+                                                                    <th scope="row">{{ student.pk }}</th>
+                                                                    <td>{{ student.first_name }}</td>
+                                                                    <td>{{ student.last_name }}</td>
+                                                                    <td>{{ student.initial_score }}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                            <tr class="mb-1">
+                                                                <th scope="row">
+                                                                    <h4>Low</h4>
+                                                                </th>
+                                                            </tr>
+                                                            {% for student in val.1 %}
+                                                                <tr>
+                                                                    <th scope="row">{{ student.pk }}</th>
+                                                                    <td>{{ student.first_name }}</td>
+                                                                    <td>{{ student.last_name }}</td>
+                                                                    <td>{{ student.initial_score }}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}

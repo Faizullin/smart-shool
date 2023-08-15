@@ -1,0 +1,68 @@
+<style>
+  /* Colors */
+  :root {
+    --color-default: #222222;
+    --color-primary: #008374;
+    --color-secondary: #f85a40;
+    --color-primary-herobar-light: #008d7d;
+    --color-primary-herobar-light-hover: #009786;
+    --color-link-hover: #00b6a1;
+  }
+  /* Colors */
+  /* :root {
+              --color-default: #222222;
+              --color-primary: royalblue;
+              --color-secondary: #EEA47F;
+              --color-primary-herobar-light: rgb(12, 43, 136);
+              --color-primary-herobar-light-hover: royalblue;
+              --color-link-hover: royalblue;
+          } */
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: var(--color-default);
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 24px;
+  }
+  
+  .content {
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 1px solid #dddddd;
+  }
+  
+  .btn {
+    display: inline-block;
+    background-color: var(--color-primary);
+    color: #ffffff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .btn:hover {
+    background-color: var(--color-link-hover);
+  }
+</style>
+
+{% block content %}
+{% endblock %}

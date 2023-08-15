@@ -1,0 +1,158 @@
+{% extends "layouts/base.html" %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block title %} Student {% endblock %}
+
+{% load render_table from django_tables2 %}
+{% block content %}
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /> -->
+    <section class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+
+            <div class="pcoded-content">
+                <div class="pcoded-inner-content">
+                    <!-- [ breadcrumb ] start -->
+                    <div class="page-header">
+                        <div class="page-block">
+                            <div class="row align-items-center">
+                                <div class="col-md-12">
+                                    <div class="page-header-title">
+                                        <h5 class="m-b-10">{{ _("Dashboard Tables") }}</h5>
+                                    </div>
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{% url 'dashboard:index' %}"><i class="feather icon-home"></i></a></li>
+                                        <li class="breadcrumb-item"><a href="#!">{{ _("Tables") }}</a></li>
+                                        <li class="breadcrumb-item"><a href="#">{{ _("Students") }}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- [ breadcrumb ] end -->
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>{{ _("My Student") }}</h5>
+                                            <span class="d-block m-t-5"></span><button class="btn btn-primary create-button" data-toggle="modal" data-target="#dashboard-form-modal" data-url="{% url 'dashboard:my_student_create' %}">Create</button>
+                                            {% if filterset %}
+                                                <form action="" method="get" class="form form-inline">
+                                                    {{ filterset.form.as_p }}
+                                                    <input type="submit" />
+                                                </form>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="card-block table-border-style">
+                                            <div class="table-responsive">
+                                                {% render_table table  %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="dashboard-form-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Student</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="save-button" type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% comment %} <script>
+        $(document).ready(function () {
+            var modal = $('#dashboard-form-modal')
+            var openButton = $('#filters-button')
+            
+            openButton.click(function () {
+                const form = $('#dashboard-form')
+                var url = form.attr('action')
+                var data = new FormData(document.getElementById('dashboard-form'))
+                $.ajax({
+                    type: 'POST',
+                    url,
+                    headers: {'X-CSRF-Token': $('#dashboard-form input[name=csrfmiddlewaretoken]').val(), },
+                    processData: false,
+                    contentType: false,
+                    data,
+                    success: (response, data, d) => {
+                    if (response.success) {
+                        modal.modal('hide')
+                        $('#dashboard-form-modal .modal-body').html('')
+                        location.reload()
+                    }
+                    },
+                    error: (response) => {
+                    if (response.status === 400) {
+                        $('#dashboard-form-modal .modal-body').html(response.responseText)
+                    }
+                    }
+                })
+            })
+            $('.edit-button').click(function () {
+            openEditModalProf(this)
+            })
+            $('.create-button').click(function () {
+            openEditModalProf(this)
+            })
+            openEditModalProf = (el) => {
+            const loadUrl = $(el).data('load-url')
+            const url = $(el).data('url')
+            //var url = form.attr('item-id');
+            $.get(loadUrl || url, {}, (response) => {
+                if (response) {
+                modal.find('.modal-body').html(response)
+                modal.modal('show')
+                } else {
+                form.html(response)
+                }
+            })
+            }
+            saveEditButton.click(function () {
+            const form = $('#dashboard-form')
+            var url = form.attr('action')
+            console.log(form.serialize())
+            var data = new FormData(document.getElementById('dashboard-form'))
+            $.ajax({
+                type: 'POST',
+                url,
+                headers: {'X-CSRF-Token': $('#dashboard-form input[name=csrfmiddlewaretoken]').val(), },
+                processData: false,
+                contentType: false,
+                data,
+                success: (response, data, d) => {
+                if (response.success) {
+                    modal.modal('hide')
+                    $('#dashboard-form-modal .modal-body').html('')
+                    location.reload()
+                }
+                },
+                error: (response) => {
+                if (response.status === 400) {
+                    $('#dashboard-form-modal .modal-body').html(response.responseText)
+                }
+                }
+            })
+            })
+            document.body.classList.add('dark')
+        })
+    </script>        {% endcomment %}
+{% endblock %}

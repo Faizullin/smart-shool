@@ -1,0 +1,49 @@
+@import "assets/css/main.css";
+@import "assets/css/_header.css";
+@import "assets/css/_reset-styles.css";
+
+/* Fonts */
+:root {
+  --font-default: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-primary: "Montserrat", sans-serif;
+  --font-secondary: "Poppins", sans-serif;
+}
+
+/* Colors */
+/* :root {
+  --color-default: #222222;
+  --color-primary: #008374;
+  --color-secondary: #f85a40;
+  --color-primary-herobar-light: #008d7d;
+  --color-primary-herobar-light-hover: #009786;
+  --color-link-hover: #00b6a1;
+  --color-navbar-bg: rgba(0, 106, 93, 0.8);
+  --color-navbar-dropdown-link: rgba(0, 106, 93, 0.8);
+} */
+
+/* Colors */
+:root {
+  --color-default: #222222;
+  --color-primary: royalblue;
+  --color-secondary: #EEA47F;
+  --color-primary-herobar-light: rgb(12, 43, 136);
+  --color-primary-herobar-light-hover: royalblue;
+  --color-link-hover: #222222;
+  --color-navbar-bg: rgba(65, 105, 225, 0.8);
+  --color-navbar-dropdown-link: rgba(65, 105, 225, 0.8);
+}
+
+/* Smooth scroll behavior */
+:root {
+  scroll-behavior: smooth;
+}
+
+#root {
+  height: 100hv;
+}
+
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

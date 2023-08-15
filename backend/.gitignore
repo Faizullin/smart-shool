@@ -1,0 +1,14 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/venv
+/.vscode
+/static
+*.log
+*.pot
+*.pyc
+__pycache__
+
+
+
+/chat/bot-auth-settings.json
