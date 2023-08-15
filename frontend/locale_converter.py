@@ -18,6 +18,7 @@ keys_to_lookup = [i for i in inp_data.keys() if not i in old_keys]
 print("Want update",len(keys_to_lookup),"keys")
 
 translator = Translator()
+counter = 0
 for key in keys_to_lookup:
     value = inp_data[key]
     translated_value = value
@@ -29,5 +30,11 @@ for key in keys_to_lookup:
     except Exception as err:
         print("Translate:",value,"==>",err)
     output_data[key] = translated_value
-with open(output_path,'w+') as f:
-    f.write(json.dumps(output_data))
+    if counter % 10 == 0:
+        print('save')
+        with open(output_path,'w+', encoding='utf-8') as f:
+            f.write(json.dumps(output_data, ensure_ascii=False,))
+    counter += 1
+print('save')
+with open(output_path,'w+', encoding='utf-8') as f:
+    f.write(json.dumps(output_data, ensure_ascii=False,))
