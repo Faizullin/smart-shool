@@ -8,12 +8,12 @@ import json
 
 from django.conf import settings
 from .models import ChatMessage, ChatRoom, QuestionTicket
-from accounts.models import User
+from accounts.models import User, Group
 from academics.models import AcademicSession
 from students.models import Student
 from django.template import Template, Context
 from results.models import Result
-from chat.models import ChatRoom, get_bot
+from .models import ChatRoom, get_bot
 
 # Create your views here.
 
@@ -121,6 +121,8 @@ def get_response(input_value: ChatMessage, language_code: str, user_id=None, rai
 def get_chat_room_name(chat_room):
     return 'chat_%s' % chat_room
 
+def get_support_staff_user():
+    return Group.objects.get(name='admin').user_set.first()
 
 def process_query(query, input_value: ChatMessage, user_id=None):
     query_action = query.query_result.action
@@ -132,6 +134,7 @@ def process_query(query, input_value: ChatMessage, user_id=None):
             )
             return 'Wait!. Ticket aleary created with id: ' + str(ticket.pk)
         except QuestionTicket.DoesNotExist:
+            support_user = get_support_staff_user()
             ticket = QuestionTicket.objects.create(
                 requested_chat_room=input_value.chat_room,
                 requested_chat_message=input_value,

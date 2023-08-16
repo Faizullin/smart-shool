@@ -26,7 +26,7 @@ class StudentListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         context = get_context(
             context=context, segment='dashboard:student_list')
         context.update({
-            'filterset': StudentFilter(self.request.GET, queryset=Student.objects.all()),
+            'filterset': StudentFilter(self.request.GET),
             'autocomplete_url': reverse('dashboard:user_autocomplete'),
         })
         return context

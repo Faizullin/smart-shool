@@ -26,7 +26,7 @@ class SubjectGroupListView(LoginRequiredMixin, tables.SingleTableMixin, FilterVi
         context = super().get_context_data()
         context = get_context(context=context, segment='dashboard:subjectgroup_list')
         context.update({
-            "filterset": SubjectGroupFilter(),
+            "filterset": SubjectGroupFilter(self.request.GET),
         })
         return context
     

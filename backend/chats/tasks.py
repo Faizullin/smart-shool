@@ -6,8 +6,8 @@ from .serializers import ChatSendMessageSerializer
 
 def process_user_message(
     user_chat_message_id,
-    send_ws = True,
-    user_id = None,
+    send_ws=True,
+    user_id=None,
 ):
     bot = User.objects.filter(groups__name='bot').last()
     chatMessage = ChatMessage.objects.get(id=user_chat_message_id)

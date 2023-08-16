@@ -30,7 +30,7 @@ class CertificateListView(LoginRequiredMixin, tables.SingleTableMixin, FilterVie
         context = get_context(
             context=context, segment='dashboard:certificate_list')
         context.update({
-            "filterset": CertificateFilter(),
+            "filterset": CertificateFilter(self.request.GET),
         })
         return context
 

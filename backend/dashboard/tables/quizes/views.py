@@ -26,7 +26,7 @@ class QuizListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         context = super().get_context_data()
         context = get_context(context=context, segment='dashboard:quiz_list')
         context.update({
-            'filterset': QuizFilter(self.request.GET, queryset=Quiz.objects.all())
+            'filterset': QuizFilter(self.request.GET)
         })
         return context
 
@@ -43,9 +43,9 @@ def quiz_create(request):
             question_formset = QuestionFormSet(request.POST, instance=quiz)
             if question_formset.is_valid():
                 question_formset.save()
-                return redirect(reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk,}))
+                return redirect(reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk, }))
             else:
-                return redirect(reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk,}))
+                return redirect(reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk, }))
         else:
             question_formset = QuestionFormSet(instance=Quiz())
     else:
@@ -67,11 +67,12 @@ def quiz_edit(request, pk):
         quiz_form = QuizForm(request.POST, instance=quiz)
         if quiz_form.is_valid():
             updated_quiz = quiz_form.save()
-            question_formset = QuestionFormSet(request.POST, instance=updated_quiz)
+            question_formset = QuestionFormSet(
+                request.POST, instance=updated_quiz)
             question_formset.is_valid()
             if question_formset.is_valid():
                 question_formset.save()
-                return redirect(reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk,}))
+                return redirect(reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk, }))
         else:
             question_formset = QuestionFormSet(instance=Quiz())
     else:

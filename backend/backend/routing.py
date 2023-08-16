@@ -1,4 +1,4 @@
-from chat.routing import websocket_urlpatterns as chat_websocket_urlpatterns
+from chats.routing import websocket_urlpatterns as chat_websocket_urlpatterns
 
 websocket_urlpatterns = [
 ]

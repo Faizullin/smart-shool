@@ -4,7 +4,7 @@ from django.http import JsonResponse, Http404, HttpResponseBadRequest
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 import django_tables2 as tables
-from django_filters.views import FilterView 
+from django_filters.views import FilterView
 
 from dashboard.get_context_processors import get_context
 from exams.models import StudentAnswer
@@ -12,6 +12,7 @@ from exams.operations import save_student_answer_result_score
 
 from .forms import StudentAnswerForm
 from .tables import StudentAnswerTable, StudentAnswerFilter
+
 
 class StudentAnswerListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
     model = StudentAnswer
@@ -22,14 +23,16 @@ class StudentAnswerListView(LoginRequiredMixin, tables.SingleTableMixin, FilterV
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context = get_context(context=context, segment='dashboard:studentanswer_list')
+        context = get_context(
+            context=context, segment='dashboard:studentanswer_list')
         context.update({
-            "filterset": StudentAnswerFilter(),
+            "filterset": StudentAnswerFilter(self.request.GET),
         })
         return context
-    
+
     def get_queryset(self, *args, **kwargs):
         return StudentAnswer.objects.all()
+
 
 @login_required()
 def studentanswer_create(request):
@@ -40,10 +43,11 @@ def studentanswer_create(request):
             save_student_answer_result_score(instance)
             instance.save()
             return JsonResponse({'success': True})
-        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form , 'edit_url': reverse('dashboard:studentanswer_create') }))
+        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:studentanswer_create')}))
     else:
         form = StudentAnswerForm()
-    return render(request, 'dashboard/tables/form_base.html', {'form': form,'edit_url': reverse('dashboard:studentanswer_create')})
+    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:studentanswer_create')})
+
 
 @login_required()
 def studentanswer_edit(request, pk):
@@ -55,10 +59,11 @@ def studentanswer_edit(request, pk):
             save_student_answer_result_score(instance)
             instance.save()
             return JsonResponse({'success': True})
-        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:studentanswer_edit', kwargs={'pk': studentanswer.pk}) }))
+        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:studentanswer_edit', kwargs={'pk': studentanswer.pk})}))
     else:
         form = StudentAnswerForm(instance=studentanswer)
-    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:studentanswer_edit', kwargs={'pk': studentanswer.pk}) })
+    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:studentanswer_edit', kwargs={'pk': studentanswer.pk})})
+
 
 @login_required
 def studentanswer_delete(request, pk):

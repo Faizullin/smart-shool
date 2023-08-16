@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'dashboard',
     'django_q',
     'accounts',
-    'chat',
+    'chats',
     'academics',
     'accounts_face_recognition',
     'articles',

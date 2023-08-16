@@ -30,7 +30,7 @@ class ExamListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         context = super().get_context_data()
         context = get_context(context=context, segment='dashboard:exam_list')
         context.update({
-            'filterset': ExamFilter(self.request.GET, queryset=Exam.objects.all())
+            'filterset': ExamFilter(self.request.GET)
         })
         return context
 

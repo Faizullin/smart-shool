@@ -135,5 +135,23 @@
             "admin",
             "teacher"
         ]
+    },
+    {
+        "label": "Chat",
+        "active": false,
+        "link": "dashboard:chat_list",
+        "groups": [
+            "admin",
+            "teacher"
+        ]
+    },
+    {
+        "label": "ChatMessage",
+        "active": false,
+        "link": "dashboard:chatmessage_list",
+        "groups": [
+            "admin",
+            "teacher"
+        ]
     }
 ]

@@ -23,7 +23,7 @@ class UserListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         context = super().get_context_data()
         context = get_context(context=context, segment='dashboard:user_list')
         context.update({
-            "filterset": UserFilter(),
+            "filterset": UserFilter(self.request.GET),
         })
         return context
     

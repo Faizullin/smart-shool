@@ -6,11 +6,21 @@ from accounts.models import User
 
 
 class ChatRoom(models.Model):
+    OPEN = 'open'
+    CLOSED = 'closed'
+    STATUS_CHOICES = [
+        (OPEN, 'Open'),
+        (CLOSED, 'Closed')
+    ]
+
     bot_chat_id = models.CharField(
         max_length=20, unique=True, null=False, blank=True, )
     title = models.CharField(max_length=100)
     owner = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.SET_NULL,)
+    users = models.ManyToManyField(User)
+    status = models.CharField(
+        max_length=6, choices=STATUS_CHOICES, default=OPEN)
 
     def __str__(self):
         return self.title
@@ -98,6 +108,7 @@ def get_or_generate_chat_room(room_id=None, owner: User = None) -> ChatRoom:
             owner=owner,
         )
     return chat_room
+
 
 def get_bot() -> User:
     return User.objects.filter(groups__name='bot').last()

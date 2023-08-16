@@ -1,8 +1,8 @@
 import asyncio
 import json
 import random
-from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import AnonymousUser
+from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from .models import ChatMessage, ChatRoom, get_or_generate_chat_room
 from .tasks import process_user_message

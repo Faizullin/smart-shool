@@ -25,7 +25,7 @@ class FeedbackListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         context = super().get_context_data()
         context = get_context(context=context, segment='dashboard:feedback_list')
         context.update({
-            "filterset": FeedbackFilter(),
+            "filterset": FeedbackFilter(self.request.GET),
         })
         return context
     

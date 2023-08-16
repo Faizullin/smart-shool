@@ -26,11 +26,8 @@ class StudentListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         context = super().get_context_data()
         context = get_context(
             context=context, segment='dashboard:my_student_list')
-
-        queryset = Student.objects.all()
-
         context.update({
-            'filterset': StudentFilter(self.request.GET, queryset=queryset, request=self.request)
+            'filterset': StudentFilter(self.request.GET, queryset=self.get_queryset(), request=self.request)
         })
         return context
 

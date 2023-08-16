@@ -27,7 +27,7 @@ class StudentTrainFaceImageListView(LoginRequiredMixin, tables.SingleTableMixin,
         context = get_context(
             context=context, segment='dashboard:studenttrainfaceimage_list')
         context.update({
-            "filterset": StudentTrainFaceImageFilter(),
+            "filterset": StudentTrainFaceImageFilter(self.request.GET),
         })
         return context
 

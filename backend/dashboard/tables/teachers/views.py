@@ -25,7 +25,7 @@ class TeacherListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         context = get_context(
             context=context, segment='dashboard:teacher_list')
         context.update({
-            "filterset": TeacherFilter(),
+            "filterset": TeacherFilter(self.request.GET),
         })
         return context
 

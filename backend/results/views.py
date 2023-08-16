@@ -61,7 +61,7 @@ def get_results_data(request, validated_data, basic_queryset):
     end_date = validated_data.get('end_date')
     group_by = validated_data.get('group_by')
     if not end_date:
-        end_date = datetime.datetime.now().date() + datetime.timedelta(days=1)
+        end_date = datetime.datetime.now().date() + datetime.timedelta(days=2)
     if not start_date:
         start_date = end_date - datetime.timedelta(days=30)
     queryset = basic_queryset.filter(updated_at__range=[start_date, end_date])

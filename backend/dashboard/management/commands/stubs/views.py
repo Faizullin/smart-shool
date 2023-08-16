@@ -23,7 +23,7 @@ class {ModelName}ListView(LoginRequiredMixin, tables.SingleTableMixin, FilterVie
         context = super().get_context_data()
         context = get_context(context=context, segment='dashboard:{verbal_url_name}_list')
         context.update({
-            "filterset": {ModelName}Filter(),
+            "filterset": {ModelName}Filter(self.request.GET, queryset = self.get_queryset()),
         })
         return context
     

@@ -89,6 +89,11 @@ class ChatMessageNewView(APIView):
         message = validated_data['message']
         lang = validated_data['lang']
         chat_room = get_or_generate_chat_room(chat_id, user)
+        if chat_room.status == ChatRoom.CLOSED:
+            return Response({
+                'type': 'e',
+                'msg': 'Chat is closed. No new messages can be added.',
+            })
 
         chat_message = ChatMessage.objects.create(
             chat_room=chat_room,

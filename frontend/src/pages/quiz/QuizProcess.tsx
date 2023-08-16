@@ -10,63 +10,9 @@ import SecondaryButton from '../../components/form/auth/SecondaryButton';
 import { AxiosError } from 'axios';
 import 'regenerator-runtime/runtime';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { IMarked } from '../../components/quiz/QuestionItem';
 
 
-
-// const get_recorded_data = (chunks: any[]) => {
-//     return new Blob(chunks, { type: 'video/webm' });
-// }
-
-const QuizQuestionItem = ({ question, index, onMark, marked, recognizedValue }: {
-    question: IQuestion, index: number, marked?: string[] | string, onMark: (question: IQuestion, answer_id: string) => void, recognizedValue: string
-}) => {
-
-    // React.useEffect(() => {
-    //     if (question.question_type === 'o') {
-    //         setRecognizedValue(marked as string)
-    //     }
-    // }, [marked])
-
-    return (
-        <div className='mb-3'>
-            <p>
-                {index} {")"} <span>{question.prompt}</span>
-            </p>
-            <div className='mt-3 ml-8'>
-                {
-                    question.question_type === 'c' &&
-                    question.answers.map((answer, a_index) => (
-                        <div key={answer.id} className='mb-2'>
-                            <label htmlFor={`answer=${answer.id}`} className='mr-1'>
-                                <span className={`mr-1 ${answer.correct ? 'font-bold' : ''}`} >
-                                    {a_index + 1} {")"}
-                                </span>
-                                <input type="checkbox" name=""
-                                    id={`answer=${answer.id}`}
-                                    onChange={() => onMark(question, `${answer.id}`)}
-                                    checked={marked?.includes(`${answer.id}`) || false} />
-                            </label>
-                            {answer.content}
-                        </div>
-                    ))
-                }
-                {
-                    question.question_type === 'o' &&
-                    (
-                        <div className='mb-2 mt-6'>
-                            <textarea
-                                value={recognizedValue}
-                                readOnly={true}
-                                className="border rounded-lg p-2 w-full"
-                                placeholder="Speak to fill the textarea..."
-                            />
-                        </div>
-                    )
-                }
-            </div>
-        </div>
-    )
-}
 
 export interface IQuizProcessProps {
 }
@@ -105,7 +51,7 @@ export default function QuizProcess(_: IQuizProcessProps) {
         resetTranscript,
         listening,
     } = useSpeechRecognition();
-    
+
 
     if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
         return null;
@@ -113,46 +59,32 @@ export default function QuizProcess(_: IQuizProcessProps) {
     if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
         console.log('Your browser does not support speech recognition software! Try Chrome desktop, maybe?');
     }
-
-    const startListeng = () => {
-        SpeechRecognition.startListening({
-            continuous: true,
-            language: 'ru',
-        });
-    }
-    const stopListeng = () => {
-        SpeechRecognition.stopListening()
-    }
-    const handleMicroClick = () => {
-        !listening ? startListeng() : stopListeng()
-    }
-
-    const handleMark = (question: IQuestion, answer_id: string) => {
+    const handleMark = (question: IQuestion, answer: IMarked) => {
         const question_id = question.id
-        let answer: any;
+        let final_answer: IMarked;
 
         if (question.question_type === 'c') {
-            let old_answer_ids: string[] = []
+            let old_answer_ids: IMarked[] = []
             if (Object.keys(marked).includes(question_id)) {
                 old_answer_ids = marked[question_id] as string[]
             }
-            if (old_answer_ids.includes(answer_id)) {
-                old_answer_ids = old_answer_ids.filter(element => element !== answer_id)
+            if (old_answer_ids.includes(answer)) {
+                old_answer_ids = old_answer_ids.filter(element => element !== answer)
             } else {
-                old_answer_ids.push(answer_id)
+                old_answer_ids.push(answer)
             }
-            answer = old_answer_ids
+            final_answer = old_answer_ids as string[]
         } else if (question.question_type === 'o') {
-            answer = answer_id
+            final_answer = answer
         } else {
             console.log("Unrecognized question type: ", question.question_type)
             return
         }
 
-        console.log("save mark", question_id, answer)
+        console.log("save mark", question_id, final_answer)
         setMarked(marked => ({
             ...marked,
-            [question_id]: answer
+            [question_id]: final_answer,
         }))
     }
 
@@ -169,7 +101,7 @@ export default function QuizProcess(_: IQuizProcessProps) {
         a.href = url;
         a.download = 'recorded-video.webm';
         a.click();
-        return ;
+        return;
 
 
 
@@ -203,26 +135,9 @@ export default function QuizProcess(_: IQuizProcessProps) {
         sessionStorage.clear()
         navigate('/dashboard/exams')
     }
-
     const handleQuestionPageChange = (page: number) => {
-        console.log("Changed currentQuestionPage", currentQuestionPage)
-        const question = questions[currentQuestionPage]
-        if (listening && question.question_type === 'o') {
-            handleMark(question, transcript)
-            resetTranscript();
-        }
         setCurrentQuestionPage(page)
     }
-
-    React.useEffect(() => {
-        if (finalTranscript !== '') {
-            console.log('Got final result:', finalTranscript);
-            const question = questions[currentQuestionPage]
-            if (listening && question.question_type === 'o') {
-                handleMark(question, transcript)
-            }
-        }
-    }, [interimTranscript, finalTranscript]);
 
     React.useEffect(() => {
         if (!quiz_id) return;
@@ -270,16 +185,16 @@ export default function QuizProcess(_: IQuizProcessProps) {
     //             }
 
     //             mediaRecorderRef.current = new MediaRecorder(stream);
-                
+
     //             mediaRecorderRef.current.ondataavailable = (event: any) => {
     //                 if (event.data.size > 0) {
     //                     (chunksRef.current as any[]).push(event.data);
     //                 }
     //             };
-    
+
     //             mediaRecorderRef.current.onstop = () => {
     //                 // const blob = new Blob(chunksRef.current, { type: 'video/webm' });
-    
+
     //                 // Now you can submit the recorded video to your Django backend
     //                 // using a POST request or another suitable method.
     //                 // Example using fetch:
@@ -287,10 +202,10 @@ export default function QuizProcess(_: IQuizProcessProps) {
     //                 //   method: 'POST',
     //                 //   body: blob,
     //                 // });
-    
+
     //                 chunksRef.current = [];
     //             };
-    
+
     //             mediaRecorderRef.current.start();
     //             // setIsRecording(true);
     //         })
@@ -308,7 +223,7 @@ export default function QuizProcess(_: IQuizProcessProps) {
     return (
         <QuizLayout listening={listening} onMicroClick={handleMicroClick}>
             <section id='blog'>
-            <video ref={recordVideoRef} autoPlay muted />
+                <video ref={recordVideoRef} autoPlay muted />
                 <div className="container mx-auto" data-aos="fade-up">
                     <div className="pt-5">
                         {

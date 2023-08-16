@@ -26,7 +26,7 @@ class AcademicConfigListView(LoginRequiredMixin, tables.SingleTableMixin, Filter
         context = get_context(
             context=context, segment='dashboard:academicconfig_list')
         context.update({
-            "filterset": AcademicConfigFilter(),
+            "filterset": AcademicConfigFilter(self.request.GET),
             'last_config_form': AcademicConfigForm(instance=last_academic_config)
         })
         return context

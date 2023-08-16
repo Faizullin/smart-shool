@@ -32,7 +32,7 @@ class ResultListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         context = super().get_context_data()
         context = get_context(context=context, segment='dashboard:result_list')
         context.update({
-            "filterset": ResultFilter(),
+            "filterset": ResultFilter(self.request.GET),
         })
         return context
 
@@ -84,22 +84,28 @@ def result_stats(request, pk):
     student = result.student
     serializer = ResultStatsSerializer(data=request.GET)
     serializer.is_valid(raise_exception=True)
-    result_filter = ResultFilter(request.GET, queryset=Result.objects.all())
+    result_filter = ResultFilter(request.GET, )
     validated_data = serializer.validated_data
-    results_queryset = get_results_data(
+
+    results_student_queryset = get_results_data(
+        request, validated_data, result_filter.qs.filter(student=student))
+    results_avg_queryset = get_results_data(
         request, validated_data, result_filter.qs)
-    formatted_results_data = serializer.to_representation(results_queryset)
+    formatted_student_results_data = serializer.to_representation(
+        results_student_queryset)
+    formatted_avg_results_data = serializer.to_representation(
+        results_avg_queryset)
     context = {
         'chart_data': json.dumps(
             {
                 'results_data': {
-                    "this_user_data": formatted_results_data,
-                    "users_avg_data": formatted_results_data,
+                    "this_user_data": formatted_student_results_data,
+                    "users_avg_data": formatted_avg_results_data,
                 },
             }
         ),
         'current_student': student,
+        'filterset': result_filter,
     }
     context = get_context(context=context, segment='dashboard:exam_list')
-
     return render(request, 'dashboard/tables/results/stats.html', context)

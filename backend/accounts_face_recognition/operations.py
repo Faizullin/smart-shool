@@ -1,8 +1,8 @@
 import pickle, math, pickle, os
 from tqdm import tqdm
-import face_recognition
-from face_recognition.face_recognition_cli import image_files_in_folder
-from sklearn import neighbors
+# import face_recognition
+# from face_recognition.face_recognition_cli import image_files_in_folder
+# from sklearn import neighbors
 from pathlib import Path
 from django.core.files import File
 from students.models import Student  

@@ -40,6 +40,12 @@
                                     <div class="card-header">
                                         <h5>{{ _("Result") }}</h5>
                                         <span class="d-block m-t-5"></span>
+                                        {% if filterset %}
+                                        <form action="" method="get" class="form form-inline">
+                                            {{ filterset.form.as_p }}
+                                            <input type="submit" />
+                                        </form>
+                                        {% endif %}
                                     </div>
 
                                     <div class="card-block table-border-style">
@@ -47,10 +53,14 @@
                                             <div class="d-none" id="chart_data" data-chart_data="{{ chart_data }}">
                                             </div>
                                             <div class="mb-4">
-                                                <canvas id="exam-this_user_data-chart" class="mx-auto col-12 col-md-9"></canvas>
+                                                <h3 class="my-4">{{ current_student }}</h3>
+                                                <canvas id="exam-this_user_data-chart"
+                                                    class="mx-auto col-12 col-md-9"></canvas>
                                             </div>
                                             <div class="mb-4">
-                                                <canvas id="exam-users_avg_data-chart" class="mx-auto col-12 col-md-9"></canvas>
+                                                <h3 class="my-4">Average Data</h3>
+                                                <canvas id="exam-users_avg_data-chart"
+                                                    class="mx-auto col-12 col-md-9"></canvas>
                                             </div>
                                         </div>
                                     </div>
@@ -77,26 +87,58 @@
             type: 'line',
             data: {
                 labels: chart_data.results_data.this_user_data.map(e => e.date),
-                datasets: [{
-                    label: '{{ current_student }}',
-                    data: chart_data.results_data.this_user_data.map(e => e.total_marks),
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1,
-                }]
+                datasets: [
+                    {
+                        label: "Theory Marks",
+                        data: chart_data.results_data.this_user_data.map(e => e.theory_marks),
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        tension: 0.1,
+                    },
+                    {
+                        label: "Practical Marks",
+                        data: chart_data.results_data.this_user_data.map(e => e.practical_marks),
+                        borderColor: 'rgb(20, 143, 119)',
+                        backgroundColor: 'rgba(20, 143, 119, 0.5)',
+                        tension: 0.1,
+                    },
+                    {
+                        label: "Total Marks",
+                        data: chart_data.results_data.this_user_data.map(e => e.total_marks),
+                        borderColor: 'rgb(53, 162, 235)',
+                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                        tension: 0.1,
+                    },
+                ],
             },
         });
         new Chart(ctx2, {
             type: 'line',
             data: {
                 labels: chart_data.results_data.users_avg_data.map(e => e.date),
-                datasets: [{
-                    label: 'Average Data',
-                    data: chart_data.results_data.users_avg_data.map(e => e.total_marks),
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1,
-                }]
+                datasets: [
+                    {
+                        label: "Theory Marks",
+                        data: chart_data.results_data.users_avg_data.map(e => e.theory_marks),
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        tension: 0.1,
+                    },
+                    {
+                        label: "Practical Marks",
+                        data: chart_data.results_data.users_avg_data.map(e => e.practical_marks),
+                        borderColor: 'rgb(20, 143, 119)',
+                        backgroundColor: 'rgba(20, 143, 119, 0.5)',
+                        tension: 0.1,
+                    },
+                    {
+                        label: "Total Marks",
+                        data: chart_data.results_data.users_avg_data.map(e => e.total_marks),
+                        borderColor: 'rgb(53, 162, 235)',
+                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                        tension: 0.1,
+                    },
+                ],
             },
         });
     })

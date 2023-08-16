@@ -4,13 +4,14 @@ from django.http import JsonResponse, Http404, HttpResponseBadRequest
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 import django_tables2 as tables
-from django_filters.views import FilterView 
+from django_filters.views import FilterView
 
 from dashboard.get_context_processors import get_context
 from exams.models import Practical
 
 from .forms import PracticalForm
 from .tables import PracticalTable, PracticalFilter
+
 
 class PracticalListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Practical
@@ -21,14 +22,16 @@ class PracticalListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context = get_context(context=context, segment='dashboard:practical_list')
+        context = get_context(
+            context=context, segment='dashboard:practical_list')
         context.update({
-            "filterset": PracticalFilter(),
+            "filterset": PracticalFilter(self.request.GET),
         })
         return context
-    
+
     def get_queryset(self, *args, **kwargs):
         return Practical.objects.all()
+
 
 @login_required()
 def practical_create(request):
@@ -37,10 +40,11 @@ def practical_create(request):
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})
-        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form , 'edit_url': reverse('dashboard:practical_create') }))
+        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:practical_create')}))
     else:
         form = PracticalForm()
-    return render(request, 'dashboard/tables/form_base.html', {'form': form,'edit_url': reverse('dashboard:practical_create')})
+    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:practical_create')})
+
 
 @login_required()
 def practical_edit(request, pk):
@@ -50,10 +54,11 @@ def practical_edit(request, pk):
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})
-        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:practical_edit', kwargs={'pk': practical.pk}) }))
+        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:practical_edit', kwargs={'pk': practical.pk})}))
     else:
         form = PracticalForm(instance=practical)
-    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:practical_edit', kwargs={'pk': practical.pk}) })
+    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:practical_edit', kwargs={'pk': practical.pk})})
+
 
 @login_required
 def practical_delete(request, pk):
