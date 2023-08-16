@@ -11,4 +11,4 @@ __pycache__
 
 
 
-/chat/bot-auth-settings.json
+./chats/bot-auth-settings.json
