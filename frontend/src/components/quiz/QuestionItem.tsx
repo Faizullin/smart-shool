@@ -3,12 +3,11 @@ import { IQuestion } from "../../models/IQuiz";
 import 'regenerator-runtime/runtime';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
-export type IMarked = string[] | string
+export type IMarked = string[]
 
 interface Props {
     index: number
     question: IQuestion
-    onNext: () => void
     marked?: IMarked
     onMark: (question: IQuestion, answer: IMarked) => any,
 }
@@ -40,22 +39,33 @@ const QuestionItem: React.FC<Props> = ({ index, question, onMark, marked, }) => 
         if (finalTranscript !== '') {
             console.log('Got final result:', finalTranscript);
             if (listening && question.question_type === 'o') {
-                onMark(question, transcript)
+                onMark(question, [transcript])
             }
         }
     }, [interimTranscript, finalTranscript]);
     React.useEffect(() => {
-        startListeng()
+        if (question.question_type === 'o') {
+            if (!listening) {
+                console.log("Start")
+                startListeng()
+            }
+        } else if (question.question_type === 'c') {
+            if (listening) {
+                console.log("Stop")
+                stopListeng()
+            }
+        }
         return () => {
             stopListeng()
             resetTranscript()
         }
-    }, []);
+    }, [question.question_type ]);
     return (
         <div className='mb-3'>
             <p>
                 {index} {")"} <span>{question.prompt}</span>
             </p>
+            {listening ? 'True' : "False"} {question.question_type}
             <div className='mt-3 ml-8'>
                 {
                     question.question_type === 'c' &&
@@ -67,7 +77,7 @@ const QuestionItem: React.FC<Props> = ({ index, question, onMark, marked, }) => 
                                 </span>
                                 <input type="checkbox" name=""
                                     id={`answer=${answer.id}`}
-                                    onChange={() => onMark(question, `${answer.id}`)}
+                                    onChange={() => onMark(question, [`${answer.id}`])}
                                     checked={marked?.includes(`${answer.id}`) || false} />
                             </label>
                             {answer.content}

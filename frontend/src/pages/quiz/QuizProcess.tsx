@@ -10,7 +10,7 @@ import SecondaryButton from '../../components/form/auth/SecondaryButton';
 import { AxiosError } from 'axios';
 import 'regenerator-runtime/runtime';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { IMarked } from '../../components/quiz/QuestionItem';
+import QuestionItem, { IMarked } from '../../components/quiz/QuestionItem';
 
 
 
@@ -22,8 +22,8 @@ interface IQuizConfig {
     lazy: boolean,
 }
 
-type Marked = {
-    [key: string]: Array<string> | string;
+type IMarkedObj = {
+    [key: string]: IMarked;
 }
 
 export default function QuizProcess(_: IQuizProcessProps) {
@@ -34,21 +34,17 @@ export default function QuizProcess(_: IQuizProcessProps) {
         lazy: false,
     })
     const [questions, setQuestions] = React.useState<IQuestion[]>([])
-    const [marked, setMarked] = React.useState<Marked>({})
+    const [marked, setMarked] = React.useState<IMarkedObj>({})
     const [currentQuestionPage, setCurrentQuestionPage] = React.useState<number>(0)
     // const [isRecording, setIsRecording] = React.useState<boolean>(false);
     const recordVideoRef = React.useRef<HTMLVideoElement | null>(null);
     // const mediaRecorderRef = React.useRef<any>(null);
-    const chunksRef = React.useRef([]);
+    // const chunksRef = React.useRef([]);
 
     const quiz_id = params.id
 
 
     const {
-        transcript,
-        interimTranscript,
-        finalTranscript,
-        resetTranscript,
         listening,
     } = useSpeechRecognition();
 
@@ -64,16 +60,16 @@ export default function QuizProcess(_: IQuizProcessProps) {
         let final_answer: IMarked;
 
         if (question.question_type === 'c') {
-            let old_answer_ids: IMarked[] = []
+            let old_answer_ids: IMarked = []
             if (Object.keys(marked).includes(question_id)) {
-                old_answer_ids = marked[question_id] as string[]
+                old_answer_ids = marked[question_id]
             }
-            if (old_answer_ids.includes(answer)) {
-                old_answer_ids = old_answer_ids.filter(element => element !== answer)
+            if (old_answer_ids.includes(answer[0])) {
+                old_answer_ids = old_answer_ids.filter(element => element !== answer[0])
             } else {
-                old_answer_ids.push(answer)
+                old_answer_ids.push(answer[0])
             }
-            final_answer = old_answer_ids as string[]
+            final_answer = old_answer_ids
         } else if (question.question_type === 'o') {
             final_answer = answer
         } else {
@@ -93,36 +89,33 @@ export default function QuizProcess(_: IQuizProcessProps) {
         if (!quiz_id) return;
 
 
-        const blob = new Blob(chunksRef.current, { type: 'video/webm' });
-        const url = URL.createObjectURL(blob);
+        // const blob = new Blob(chunksRef.current, { type: 'video/webm' });
+        // const url = URL.createObjectURL(blob);
 
-        // Create an anchor element to prompt the user to download the recorded video
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'recorded-video.webm';
-        a.click();
-        return;
-
-
-
-        // const recored_data = get_recorded_data(chunksRef.current)
-        // const data: any = {
-        //     questions: []
-        // }
-        // const formData = new FormData()
+        // // Create an anchor element to prompt the user to download the recorded video
+        // const a = document.createElement('a');
+        // a.href = url;
+        // a.download = 'recorded-video.webm';
+        // a.click();
+        // return;
+        //const recored_data = get_recorded_data(chunksRef.current)
+        const data: any = {
+            questions: []
+        }
+        const formData = new FormData()
         // console.log('record', recored_data)
         // formData.append('record', recored_data, 'recorded-video.webm');
-        // Object.keys(marked).forEach((element: string) => {
-        //     data.questions.push({
-        //         'answers': marked[element],
-        //         'id': element,
-        //     })
-        // })
-        // formData.append('questions', data.questions)
-        // ExamService.fetchSubmitQuiz(quiz_id, data).then(_ => {
-        //     sessionStorage.clear()
-        //     navigate('/dashboard/results/')
-        // })
+        Object.keys(marked).forEach((element: string) => {
+            data.questions.push({
+                'answers': marked[element],
+                'id': element,
+            })
+        })
+        formData.append('questions', data.questions)
+        ExamService.fetchSubmitQuiz(quiz_id, data).then(_ => {
+            sessionStorage.clear()
+            navigate('/dashboard/results/')
+        })
     }
 
     // const handleQuizConfigChange = (e: any) => {
@@ -145,7 +138,7 @@ export default function QuizProcess(_: IQuizProcessProps) {
             // startRecording()
             ExamService.fetchQuestions(quiz_id).then(response => {
                 const tmpQuestions = response.data
-                const tmpMarked: Marked = {}
+                const tmpMarked: IMarkedObj = {}
                 tmpQuestions.forEach(element => {
                     tmpMarked[element.id] = []
                 })
@@ -214,14 +207,8 @@ export default function QuizProcess(_: IQuizProcessProps) {
     //         });
     // };
 
-
-
-
-
-
-
     return (
-        <QuizLayout listening={listening} onMicroClick={handleMicroClick}>
+        <QuizLayout listening={listening} onMicroClick={() => {}}>
             <section id='blog'>
                 <video ref={recordVideoRef} autoPlay muted />
                 <div className="container mx-auto" data-aos="fade-up">
@@ -232,7 +219,7 @@ export default function QuizProcess(_: IQuizProcessProps) {
                                     {quizConfig.paginted ?
                                         (
                                             questions[currentQuestionPage] && (
-                                                <QuizQuestionItem recognizedValue={transcript}
+                                                <QuestionItem
                                                     marked={marked[questions[currentQuestionPage].id]}
                                                     question={questions[currentQuestionPage]}
                                                     index={currentQuestionPage + 1}
@@ -240,7 +227,7 @@ export default function QuizProcess(_: IQuizProcessProps) {
                                             )
                                         ) :
                                         questions.map((question, index) => (
-                                            <QuizQuestionItem key={question.id} recognizedValue={transcript}
+                                            <QuestionItem key={question.id} 
                                                 marked={marked[question.id]}
                                                 question={question} index={index + 1} onMark={handleMark} />
                                         ))

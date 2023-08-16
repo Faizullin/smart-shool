@@ -1,0 +1,14 @@
+{
+    "type": "service_account",
+    "project_id": "newagent-aylc",
+    "private_key_id": "0f0a55694656415362dd8336c5c14ea4e47c379f",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDLIun9vT63Ik3o\nefmGmUhS3SgEji6dKOhJqHQ4hu/Cqx36Ugb7uYPff4B/mxWrai1cMa0E+X+nmuS+\nl05RVT3tozV3x5tvB6U5vD4sYiitcMTvUIj9f+ZO4hpp3ffpwbS29paorQCEw7co\nbMzHgJWG9MhXEH4lBk1ArWwCkVySqFyWu1RNI4Eqv4Cv3F2KGwyvB+8fSQ43mC4g\nV4wLKndpMffsFI2a3CpgdwHh1kldkx1XdYeRdptvyTXFr91lbXBRY41Oa5gOSH79\nDgRbFNmKzMYqZahR3TF0Po03pxrq00suR2gMdpADpqYM8H7ndmlV1LTsvx/POdv3\nmc5BKUMtAgMBAAECggEADn+L7tHCd6SppdWK0yn+iPeC4yxYtFvWlGdDAEPVOfIn\nnhWbrPy1Jk791120wrq9yQ48mJXMICTEfbvj2Zc5Z8wVxVpIRDjp+IBweY958sMR\nMzluxZUK1Yd6tiKjDpqGMObRovFSD6e+W1LEnNqXEX5IDDq/nhngiqS2CErirg7Y\ne2IbfFPemfte7gD26pn5Ng0cD0BMYO9STE6mpWUs7u+LEAMjPj5WjN0f4Cjvkts0\nK7xtKCHWmxEq3E2A28z7qgXpi8O31nGxZW1A2aqrl6xnHkZc6qkCb4iM7RLsEEdd\n3CweqBOLUP6aduRp8GkAMk8eADqVIJRDS8rYZjn8EQKBgQD4/JblfknUDpQKUK7l\n0zHo+Yt0fsodG94jsEA72fcKTWIowaJ7/RyB/w3iZZuiH9Js6bpKaA0uJqdJbvyF\noF6pRB7V2hbPnGFO5prTpl+8Nv7xD/iy0wt48lr47Auc4yeo0EfJyCK01T0IG5ab\nyo0LMxzgQyVMEbllWf/qbQ2BOQKBgQDQ27Q+Sxh0m/5QnWlYwtINu8M9LDPDUFa4\nY/GbVYYo/a8irk6I9jAjrSXDtvb+fguc+bLC+T/mrqRSVG/MDfeE6QFsFNcP9+Fz\nLiPRA8OTlIzMECMsHWBXk/pgZ4cuDu0OdPx7CZBWu3vYJgIU+0+D/ewbvOqB0+t3\nrgovhC51lQKBgH/fabfvRgdsfUdW7JwH/SgDkUWBIFgWyd1WVYbniGJ4H6OC3uoC\nsjNpRD4zpNx8r1tUJmK0UaCUJXInV/VgyXzxCU0XNoPlcmxNLtLoLV7Cd+hiJX3h\nuZCiF2qj/8rRNrsSTOwqpvhsU23ojU7xlcJcu8XJdkw9BhQxRqek3jyxAoGAFbPe\nxOJUxjk3cfUJb1m/LgImxYKEVnVQrZRlFLkMWdISks3+Byld0zc4x1+JxuQeHM+t\njakMxNG87XksrM1+vObhaPO5bUVavfc7bYqwlfNHtiSvIvRigHc1+zKGz3hplaj+\nW2KhBwIwWkOIz9lVZ+fI0xEMZTU6MJN7J3jawwkCgYB+vA00RUIc6hNWVUJfBzkr\ndGYYlhcnXke+7BcSuMYglzEbsFojuCZrd+IZA/QNl7uVZuik+TwBX+B4ZBupoqwU\nehPsGOmaM0r0RPadK6keJVAzTMmfXaFU8zn2vd3p+/uz3R72fpGT6H5D7snTcmug\nbtUuLrur+fMetgA1Z8u4nA==\n-----END PRIVATE KEY-----\n",
+    "client_email": "smart-speech-shool@newagent-aylc.iam.gserviceaccount.com",
+    "client_id": "101834203391598925083",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/smart-speech-shool%40newagent-aylc.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+  }
+  

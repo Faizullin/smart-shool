@@ -37,4 +37,4 @@ class StudentAnswerTable(tables.Table):
 class StudentAnswerFilter(django_filters.FilterSet):
     class Meta:
         model = StudentAnswer
-        fields = ['id', 'student', 'question', 'question__type', 'score']
+        fields = ['id', 'student', 'question', 'question__type', 'question__quiz', 'score']

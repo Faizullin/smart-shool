@@ -49,5 +49,5 @@ if settings.DEBUG:
         re_path(r'^models/(?P<path>.*)$', serve, {
             'document_root': settings.FACE_DETECT_MODEL_ROOT,
         }),
-        re_path(r'^(?!static|media).*$',  include('spa_app.urls')),
+        re_path(r'^(?!static|media).*',  include('spa_app.urls')),
     ]

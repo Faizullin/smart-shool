@@ -18,7 +18,7 @@ class StudentForm(forms.ModelForm):
             self.fields['hasFaceId'].initial = True
             self.fields['hasFaceId'].widget.attrs['readonly'] = True
         
-        self.fields['user'].widget.attrs['class'] = 'select2-autocomplete'
+        # self.fields['user'].widget.attrs['class'] = 'select2-autocomplete'
         # self.fields['user'].queryset = User.objects.all()
         
 

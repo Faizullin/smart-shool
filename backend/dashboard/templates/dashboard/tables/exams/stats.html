@@ -72,8 +72,6 @@
     $(document).ready(function () {
         var ctx = document.getElementById('exam-attendance-chart').getContext('2d');
         const chart_data = $('#chart_data').data('chart_data')
-        console.log('chart_data', chart_data)
-        console.log('attendance_data', chart_data.attendance_data.data)
         var myChart = new Chart(ctx, {
             type: 'doughnut',
             data: {

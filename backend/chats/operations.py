@@ -121,33 +121,39 @@ def get_response(input_value: ChatMessage, language_code: str, user_id=None, rai
 def get_chat_room_name(chat_room):
     return 'chat_%s' % chat_room
 
+
 def get_support_staff_user():
     return Group.objects.get(name='admin').user_set.first()
+
 
 def process_query(query, input_value: ChatMessage, user_id=None):
     query_action = query.query_result.action
     if query_action == 'input.support-redirect':
-        try:
-            ticket = QuestionTicket.objects.get(
-                requested_chat_room=input_value.chat_room,
-                owner=input_value.owner,
-            )
+        ticket_queryset = QuestionTicket.objects.filter(
+            requested_chat_room=input_value.chat_room,
+            owner=input_value.owner,
+        )
+        if ticket_queryset.exists():
+            ticket = ticket_queryset.last()
             return 'Wait!. Ticket aleary created with id: ' + str(ticket.pk)
-        except QuestionTicket.DoesNotExist:
+        else:
             support_user = get_support_staff_user()
+            new_chat_room, created = ChatRoom.objects.get_or_create(
+                bot_chat_id=input_value.chat_room.bot_chat_id + '-t',
+                owner=support_user,
+            )
+            new_chat_room.status = ChatRoom.OPEN
+            new_chat_room.title = 'Ticket to ' + input_value.chat_room.title
+            new_chat_room.users.add(input_value.owner, support_user)
+            new_chat_room.save()
             ticket = QuestionTicket.objects.create(
                 requested_chat_room=input_value.chat_room,
                 requested_chat_message=input_value,
+                to_chat_room=new_chat_room,
                 msg='',
-                owner=input_value.owner,
+                owner=support_user,
             )
-            new_chat_room, created = ChatRoom.objects.get_or_create(
-                bot_chat_id=input_value.chat_room.bot_chat_id + '-t',
-                owner=get_bot(),
-            )
-            new_chat_room.title = 'Ticket to ' + input_value.chat_room.title
-            new_chat_room.save()
-            return f'/redirect to {new_chat_room.pk}'
+            return f'/redirect to {ticket.to_chat_room.title}'
     elif query_action == 'input.support-student-creds':
         output_raw_txt = str(query.query_result.fulfillment_text)
         output_raw_txt = output_raw_txt.replace('{', '{{')

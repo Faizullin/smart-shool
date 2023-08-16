@@ -70,7 +70,7 @@ export default function ExamIndex(_: IExamIndexProps) {
             exam.theory_passed ? (
               <p className='text-blue'>Passed</p>
             ) : (
-              <button onClick={(e) => handleStartQuiz(exam.quiz_id)}
+              <button onClick={(_) => handleStartQuiz(exam.quiz_id)}
                 className="font-medium bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-2 border border-blue-500 hover:border-transparent rounded mx-1 my-1"
               >
                 <FormattedMessage id='app.dashboard.exams.start_quiz.label' />
@@ -79,7 +79,7 @@ export default function ExamIndex(_: IExamIndexProps) {
           }
           {
             !exam.practical_files_provided &&
-            <button onClick={(e) => handleSubmitProject(exam)}
+            <button onClick={(_) => handleSubmitProject(exam)}
               className="font-medium bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-2 border border-blue-500 hover:border-transparent rounded mx-1 my-1"
             >
               <FormattedMessage id='app.dashboard.exams.submit_project.label' />

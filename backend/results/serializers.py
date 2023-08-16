@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import *
-from articles.serializers import SubjectSerializer
 from certificates.models import Certificate
+from academics.models import get_current_academic_config
 
 
 class ExamSerializer(serializers.ModelSerializer):
@@ -16,13 +16,13 @@ class ExamSerializer(serializers.ModelSerializer):
 
 class ResultWithFeedbackSerializer(serializers.ModelSerializer):
     exam = ExamSerializer()
-    hasCertificate = serializers.SerializerMethodField()
+    access = serializers.SerializerMethodField()
     feedback_watched = serializers.SerializerMethodField()
 
     class Meta:
         model = Result
         fields = ['id', 'exam', 'practical_marks', 'feedback_watched',
-                  'theory_marks', 'total_marks', 'hasCertificate']
+                  'theory_marks', 'total_marks', 'access']
 
     def get_feedback_watched(self, obj: Result):
         try:
@@ -31,10 +31,13 @@ class ResultWithFeedbackSerializer(serializers.ModelSerializer):
         except Feedback.DoesNotExist:
             return True
 
-    def get_hasCertificate(self, obj: Result):
+    def get_access(self, obj: Result):
         certificte_queryset = Certificate.objects.filter(
             student=self.context['student'], subject=obj.exam.subject)
-        return certificte_queryset.exists()
+        if certificte_queryset.exists():
+            return False
+        else:
+            return obj.total_marks > get_current_academic_config().theory_pass_min
 
 
 class FeedbackSerializer(serializers.ModelSerializer):

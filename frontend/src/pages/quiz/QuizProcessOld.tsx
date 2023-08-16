@@ -25,7 +25,7 @@ const QuizQuestionItem = ({ question, index, onMark, marked }: { question: IQues
                                 </span>
                                 <input type="checkbox" name=""
                                     id={`answer=${answer.id}`}
-                                    onChange={(e) => onMark(`${question.id}`, `${answer.id}`)}
+                                    onChange={(_) => onMark(`${question.id}`, `${answer.id}`)}
                                     checked={marked?.includes(`${answer.id}`) || false} />
                             </label>
                             {answer.content}
@@ -37,9 +37,6 @@ const QuizQuestionItem = ({ question, index, onMark, marked }: { question: IQues
     )
 }
 
-export interface IQuizProcessProps {
-}
-
 interface IQuizConfig {
     paginted: boolean,
     lazy: boolean,
@@ -49,10 +46,10 @@ type Marked = {
     [key: string]: Array<string>;
 }
 
-export default function QuizProcess(props: IQuizProcessProps) {
+export default function QuizProcess() {
     const navigate = useNavigate()
     const params = useParams();
-    const [quizConfig, setQuizConfig] = React.useState<IQuizConfig>({
+    const [quizConfig,] = React.useState<IQuizConfig>({
         paginted: true,
         lazy: false,
     })
@@ -80,7 +77,7 @@ export default function QuizProcess(props: IQuizProcessProps) {
                     }
 
                 }
-                
+
             })
         }
     }, [quizConfig.lazy])
@@ -114,19 +111,19 @@ export default function QuizProcess(props: IQuizProcessProps) {
                 'id': element,
             })
         })
-        ExamService.fetchSubmitQuiz(quiz_id, data).then(response => {
+        ExamService.fetchSubmitQuiz(quiz_id, data).then(_ => {
             sessionStorage.clear()
             navigate('/dashboard/results/')
         })
     }
 
-    const handleQuizConfigChange = (e: any) => {
-        setQuizConfig(quizConfig => ({
-            ...quizConfig,
-            ...e,
-        }))
-    }
-    const handleQuit = (e: any) => {
+    // const handleQuizConfigChange = (e: any) => {
+    //     setQuizConfig(quizConfig => ({
+    //         ...quizConfig,
+    //         ...e,
+    //     }))
+    // }
+    const handleQuit = (_: any) => {
         sessionStorage.clear()
         navigate('/dashboard/exams')
     }
@@ -136,7 +133,7 @@ export default function QuizProcess(props: IQuizProcessProps) {
     }
 
     return (
-        <QuizLayout>
+        <QuizLayout listening={false} onMicroClick={() => { }}>
             <section id='blog'>
                 <div className="container mx-auto" data-aos="fade-up">
                     <div className="pt-5">

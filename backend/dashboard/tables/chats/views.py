@@ -7,9 +7,9 @@ import django_tables2 as tables
 from django_filters.views import FilterView
 
 from dashboard.get_context_processors import get_context
-from chats.models import ChatRoom
+from chats.models import ChatRoom, ChatMessage
 
-from .forms import ChatForm
+from .forms import ChatForm, ChatSendForm
 from .tables import ChatTable, ChatFilter
 
 
@@ -69,5 +69,31 @@ def chat_delete(request, pk):
 
 
 @login_required
-def chat_start(request):
-    return ''
+def chat_start(request, pk):
+    chat_room = get_object_or_404(ChatRoom, pk=pk)
+    if request.method == 'POST':
+        form = ChatSendForm(request.POST)
+        if form.is_valid():
+            content = form.cleaned_data['msg']
+            lang = form.cleaned_data['lang']
+            message = ChatMessage.objects.create(
+                msg=content, lang=lang, chat_room=chat_room, owner=request.user)
+            return redirect(reverse('dashboard:chat_start', kwargs={'pk': chat_room.pk}))
+    else:
+        form = ChatSendForm()
+    chat_messages = chat_room.chat_messages.all()
+    chat_room.opened = chat_room.status == ChatRoom.OPEN
+    context = {
+        'chat_room': chat_room,
+        'chat_messages': chat_messages,
+        'form': form,
+    }
+    context = get_context(context, 'dashboard:chat_list')
+    return render(request, 'dashboard/tables/chats/chat.html', context)
+
+@login_required
+def chat_status_change(request, pk):
+    chat_room = get_object_or_404(ChatRoom, pk=pk)
+    chat_room.status = ChatRoom.OPEN if chat_room.status == ChatRoom.CLOSED else ChatRoom.CLOSED
+    chat_room.save()
+    return redirect(reverse('dashboard:chat_start', kwargs={'pk': chat_room.pk}))

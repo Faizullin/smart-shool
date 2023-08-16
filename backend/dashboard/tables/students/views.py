@@ -27,7 +27,6 @@ class StudentListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
             context=context, segment='dashboard:student_list')
         context.update({
             'filterset': StudentFilter(self.request.GET),
-            'autocomplete_url': reverse('dashboard:user_autocomplete'),
         })
         return context
 
@@ -48,7 +47,6 @@ def student_create(request):
     return render(request, 'dashboard/tables/form_base.html', {
         'form': form,
         'edit_url': reverse('dashboard:student_create'),
-        'autocomplete_url': reverse('dashboard:user_autocomplete'),
     })
 
 

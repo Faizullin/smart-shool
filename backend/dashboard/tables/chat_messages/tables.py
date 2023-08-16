@@ -5,23 +5,6 @@ from chats.models import ChatMessage
 
 
 class ChatMessageTable(tables.Table):
-    chats = tables.TemplateColumn(
-        '<div class="dropdown">'
-        '<button class="btn btn-secondary dropdown-toggle" type="button" '
-        'data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-        'Chat Actions</button>'
-        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
-        '<a class="dropdown-item" href="{% url \'dashboard:chat_list\' %}?id={{ record.pk }}">Show chat</a>'
-        '<a class="dropdown-item" href="{% url \'dashboard:chat_start\' %}?id={{ record.pk }}">Start chatting</a>'
-        '<form method="post" action="{% url \'dashboard:chatmessage_delete\' pk=record.pk %}">'
-        '{% csrf_token %}'
-        '<button class=" delete-button dropdown-item" type="submit">Delete</button>'
-        '</form>'
-        '</a>'
-        '</div>'
-        '</div>',
-        verbose_name='Chat Actions'
-    )
     actions = tables.TemplateColumn(
         '<div class="dropdown">'
         '<button class="btn btn-secondary dropdown-toggle" type="button" '

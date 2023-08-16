@@ -107,5 +107,5 @@ def result_stats(request, pk):
         'current_student': student,
         'filterset': result_filter,
     }
-    context = get_context(context=context, segment='dashboard:exam_list')
+    context = get_context(context=context, segment='dashboard:result_list')
     return render(request, 'dashboard/tables/results/stats.html', context)

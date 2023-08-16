@@ -12,14 +12,14 @@ class ExamSerializer(serializers.ModelSerializer):
     quiz_id = serializers.SerializerMethodField(
         read_only=True
     )
-    subject= serializers.SerializerMethodField(
+    subject = serializers.SerializerMethodField(
         read_only=True
     )
 
     class Meta:
         model = Exam
         fields = ['id', 'exam_type',
-                  'practical_files_provided', 'theory_passed', 'subject','quiz_id']
+                  'practical_files_provided', 'theory_passed', 'subject', 'quiz_id']
 
     def get_practical_files_provided(self, obj):
         practical_queryset = Practical.objects.filter(
@@ -30,19 +30,17 @@ class ExamSerializer(serializers.ModelSerializer):
             path = request.build_absolute_uri(practical.practical_file.url)
             return f'<a href="{path}">{ practical.title }({ practical.practical_file })</a>'
         return False
-    
+
     def get_subject(self, obj: Exam):
         return str(obj.subject)
 
     def get_theory_passed(self, obj):
         result_queryset = Result.objects.filter(
             exam=obj, student=self.context['student'])
-        if result_queryset.exists():
-            return result_queryset.last().theory_marks > 60
-        return False
+        return result_queryset.exists()
 
     def get_quiz_id(self, obj: Exam):
-        quiz = Quiz.objects.filter(exam = obj)
+        quiz = Quiz.objects.filter(exam=obj)
         if quiz.exists():
             return quiz.last().pk
 
@@ -77,10 +75,11 @@ class QuizQuestionAnswerSerializer(serializers.ModelSerializer):
 
 class QuizQuestionSerializer(serializers.ModelSerializer):
     answers = QuizQuestionAnswerSerializer(many=True, read_only=True)
+    question_type = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Question
-        fields = ['id', 'quiz', 'prompt', 'answers']
+        fields = ['id', 'quiz', 'prompt', 'answers', 'question_type']
 
     def get_start_date_time(self, obj):
         return obj.start_date_time.strftime('%d %B %Y')
@@ -88,15 +87,18 @@ class QuizQuestionSerializer(serializers.ModelSerializer):
     def get_end_date_time(self, obj):
         return obj.end_date_time.strftime('%d %B %Y')
 
+    def get_question_type(self, obj: Question):
+        return obj.type
+
 
 class AnswerSubmitSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    # answer = serializers.CharField()
 
 
 class QuestionSubmitSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    answers = serializers.ListField(child=serializers.IntegerField())
+    answers = serializers.ListField(
+        child=serializers.CharField(),)
 
 
 class QuizSubmitSerializer(serializers.Serializer):
@@ -110,6 +112,6 @@ class ExamProjectSubmitSerializer(serializers.ModelSerializer):
         fields = ['exam', 'student', 'practical_file', 'title']
 
     def create(self, validated_data):
-        student = Student.objects.get(user = self.context['request'].user)
+        student = Student.objects.get(user=self.context['request'].user)
         validated_data['student'] = student
         return super().create(validated_data)

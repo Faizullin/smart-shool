@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import FaceIdDetector from '../../components/face_id/FaceIdDetector';
 import Layout from '../../components/layouts/Layout';
+import PrimaryButton from '../../components/form/auth/PrimaryButton';
 
 const requiredImageSize = 3;
 

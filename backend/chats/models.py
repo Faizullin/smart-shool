@@ -17,7 +17,7 @@ class ChatRoom(models.Model):
         max_length=20, unique=True, null=False, blank=True, )
     title = models.CharField(max_length=100)
     owner = models.ForeignKey(
-        User, null=True, blank=True, on_delete=models.SET_NULL,)
+        User, null=True, blank=True, on_delete=models.SET_NULL, related_name='chat_rooms_owned')
     users = models.ManyToManyField(User)
     status = models.CharField(
         max_length=6, choices=STATUS_CHOICES, default=OPEN)
@@ -47,10 +47,10 @@ class ChatMessage(models.Model):
         default='en',
     )
     chat_room = models.ForeignKey(
-        ChatRoom, null=True, blank=True, on_delete=models.SET_NULL)
+        ChatRoom, null=True, blank=True, on_delete=models.SET_NULL, related_name='chat_messages')
     msg = models.CharField(max_length=1000, null=True, blank=True)
     owner = models.ForeignKey(
-        User, null=True, blank=True, on_delete=models.SET_NULL)
+        User, null=True, blank=True, on_delete=models.SET_NULL, related_name='chat_messages_owned')
     recipient = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL,
                                   verbose_name='recipient', related_name='to_user', db_index=True)
     type = models.CharField(
@@ -73,9 +73,11 @@ class QuestionTicket(models.Model):
     )
 
     requested_chat_room = models.ForeignKey(
-        ChatRoom, null=True, blank=True, on_delete=models.SET_NULL)
+        ChatRoom, null=True, blank=True, on_delete=models.SET_NULL, related_name='question_tickets_from')
     requested_chat_message = models.ForeignKey(
         ChatMessage, null=True, blank=True, on_delete=models.SET_NULL)
+    to_chat_room = models.ForeignKey(
+        ChatRoom, null=True, blank=True, on_delete=models.SET_NULL, related_name='question_tickets_to')
     msg = models.CharField(max_length=1000, null=True, blank=True)
     owner = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.SET_NULL)
@@ -101,12 +103,16 @@ def get_or_generate_chat_room(room_id=None, owner: User = None) -> ChatRoom:
             title='Chat-' + bot_session_id,
             owner=owner,
         )
+        chat_room.users.add(owner)
+        chat_room.save()
     else:
         chat_room = ChatRoom.objects.create(
             bot_chat_id=bot_session_id,
             title='Chat-' + bot_session_id,
             owner=owner,
         )
+        chat_room.users.add(owner, get_bot())
+        chat_room.save()
     return chat_room
 
 

@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 
 from .serializers import *
-from .models import ChatMessage, ChatRoom, get_or_generate_chat_room
+from .models import ChatMessage, ChatRoom, get_or_generate_chat_room, get_bot
 from .tasks import process_user_message
 from django_q.tasks import async_task
 
@@ -74,7 +74,7 @@ class ChatListMyView(generics.ListAPIView):
     serializer_class = ChatRoomSerializer
 
     def get_queryset(self):
-        return ChatRoom.objects.filter(Q(owner_id=self.request.user.pk) | Q(recipient_id=self.request.user.pk))
+        return ChatRoom.objects.filter(Q(users=self.request.user))
 
 
 class ChatMessageNewView(APIView):
@@ -102,15 +102,16 @@ class ChatMessageNewView(APIView):
             lang=lang,
             type='m'
         )
-
-        if settings.USE_WS:
-            async_task(
-                process_user_message,
-                chat_message.pk,
-                False,
-                user.pk
-            )
-        else:
-            process_user_message(chat_message.pk, False, user.pk)
+        bot_user = get_bot()
+        if bot_user in  chat_room.users.all():
+            if settings.USE_WS:
+                async_task(
+                    process_user_message,
+                    chat_message.pk,
+                    False,
+                    user.pk
+                )
+            else:
+                process_user_message(chat_message.pk, False, user.pk)
 
         return Response(ChatSendMessageSerializer(chat_message).data)

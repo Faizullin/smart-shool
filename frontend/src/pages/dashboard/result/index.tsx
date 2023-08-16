@@ -2,8 +2,6 @@ import * as React from 'react';
 import Table from '../../../components/table/Table';
 import DashboardLayout from '../../../components/layouts/DashboardLayout';
 import ExamService from '../../../services/ExamService';
-
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -156,7 +154,7 @@ const TableTab: React.FC<{ intl: IntlShape }> = ({ intl }) => {
         id: 'app.table.columns.actions.label'
       }), render: (result: any, key: string | number) => (
         <td key={key} className="px-6 py-4 text-right">
-          <button onClick={(e) => handleShowFeedback(result.exam.id)}
+          <button onClick={(_) => handleShowFeedback(result.exam.id)}
             className="relative font-medium bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-2 border border-blue-500 hover:border-transparent rounded mx-1 my-1"
           >
             <FormattedMessage id='app.dashboard.results.show_feedback.label' />
@@ -165,8 +163,8 @@ const TableTab: React.FC<{ intl: IntlShape }> = ({ intl }) => {
             }
           </button>
           {
-            result.exam.exam_type === 'f' && !result.hasCertificate && (
-              <button onClick={(e) => handleRequestCert(result.exam.id)}
+            result.exam.exam_type === 'f' && result.access && (
+              <button onClick={(_) => handleRequestCert(result.exam.id)}
                 className="font-medium bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-2 border border-blue-500 hover:border-transparent rounded mx-1 my-1"
               >
                 <FormattedMessage id='app.dashboard.results.request_certficate.label' />
