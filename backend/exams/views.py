@@ -121,8 +121,10 @@ class QuizSubmitView(APIView):
                 student_answer.score = int(score)
                 student_answer.save()
             elif question.type == 'o':
-                
-                result_text = submitted_question['answers']
+                result_text = ''
+                result_arr = submitted_question['answers']
+                if len(result_arr) > 0:
+                    result_text = '\n'.join(result_arr)
                 student_answer, created = StudentAnswer.objects.get_or_create(
                     question=question,
                     student=student,

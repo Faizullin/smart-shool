@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
 import { addMessagesData, fetchChatMessages, fetchChatRoomsMy, fetchChatUsers, fetchSendMessage } from '../../../redux/store/reducers/chatSlice';
 import { IChatMessage, IChatRoom } from '../../../models/IChat';
 import { FormattedMessage } from 'react-intl';
+import { ILangOption, Lang } from '../../../lang/LangConfig';
 
 const default_uri = (window as any).BASE_API_URL
 let TAPI_URL = ''
@@ -14,15 +15,10 @@ if (default_uri !== undefined) {
     TAPI_URL = '/ws'
 }
 
-interface ILangOption {
-    code: string
-    name: string
-}
 const languageOptions: ILangOption[] = [
     { code: 'en', name: 'English' },
     { code: 'ru', name: 'Russian' },
     { code: 'kk', name: 'Kazakh' },
-    // Add more languages as needed
 ];
 
 type ConnectionType = 'ws' | 'api'
@@ -41,7 +37,7 @@ export default function ChatForm({ chat_room }: IChatFormProps) {
     const { user } = useAppSelector(state => state.auth)
     const [messageBody, setMessageBody] = React.useState<string>('')
     const [isConnectionOpen, setIsConnectionOpen] = React.useState<boolean>(false)
-    const [selectedLanguage, setSelectedLanguage] = React.useState<string>('en');
+    const [selectedLanguage, setSelectedLanguage] = React.useState<Lang>('en');
     const { token } = useAppSelector(state => state.auth)
     const ws = React.useRef<WebSocket | null>(null);
     const messageContainerRef = React.useRef<HTMLDivElement>(null);
@@ -96,7 +92,7 @@ export default function ChatForm({ chat_room }: IChatFormProps) {
     const handleNewMessageChange = (event: any) => {
         setMessageBody(event.target.value);
     };
-    const handleLanguageSelect = (langCode: string) => {
+    const handleLanguageSelect = (langCode: Lang) => {
         setSelectedLanguage(langCode);
     };
     const handleSubmit = (event: any) => {

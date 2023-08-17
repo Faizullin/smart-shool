@@ -2,6 +2,7 @@ import React from "react";
 import { IQuestion } from "../../models/IQuiz";
 import 'regenerator-runtime/runtime';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { Lang } from "../../lang/LangConfig";
 
 export type IMarked = string[]
 
@@ -9,10 +10,11 @@ interface Props {
     index: number
     question: IQuestion
     marked?: IMarked
-    onMark: (question: IQuestion, answer: IMarked) => any,
+    onMark: (question: IQuestion, answer: IMarked) => any
+    lang?: Lang
 }
 
-const QuestionItem: React.FC<Props> = ({ index, question, onMark, marked, }) => {
+const QuestionItem: React.FC<Props> = ({ index, question, onMark, marked, lang, }) => {
     const {
         transcript,
         interimTranscript,
@@ -27,9 +29,10 @@ const QuestionItem: React.FC<Props> = ({ index, question, onMark, marked, }) => 
         console.log('Your browser does not support speech recognition software! Try Chrome desktop, maybe?');
     }
     const startListeng = () => {
+        const lang_to_use = lang ? lang : 'en'
         SpeechRecognition.startListening({
             continuous: true,
-            language: 'ru',
+            language: lang_to_use,
         });
     }
     const stopListeng = () => {

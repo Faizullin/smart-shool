@@ -9,6 +9,11 @@ const messages = {
     'ru': Russian,
 };
 
+export interface ILangOption {
+    code: Lang
+    name: string
+}
+
 export default class LangConfig {
     getLang(): Lang {
         const dLang = localStorage.getItem('lang') || 'en'
