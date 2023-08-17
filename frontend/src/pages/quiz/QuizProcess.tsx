@@ -44,16 +44,13 @@ export default function QuizProcess(_: IQuizProcessProps) {
     const [questions, setQuestions] = React.useState<IQuestion[]>([])
     const [marked, setMarked] = React.useState<IMarkedObj>({})
     const [currentQuestionPage, setCurrentQuestionPage] = React.useState<number>(0)
-    // const [isRecording, setIsRecording] = React.useState<boolean>(false);
     const recordVideoRef = React.useRef<HTMLVideoElement | null>(null);
-    // const mediaRecorderRef = React.useRef<any>(null);
-    // const chunksRef = React.useRef([]);
-
     const quiz_id = params.id
 
 
     const {
         listening,
+        resetTranscript
     } = useSpeechRecognition();
 
 
@@ -103,8 +100,6 @@ export default function QuizProcess(_: IQuizProcessProps) {
             questions: []
         }
         const formData = new FormData()
-        // console.log('record', recored_data)
-        // formData.append('record', recored_data, 'recorded-video.webm');
         Object.keys(marked).forEach((element: string) => {
             data.questions.push({
                 'answers': marked[element],
@@ -117,7 +112,6 @@ export default function QuizProcess(_: IQuizProcessProps) {
             navigate('/dashboard/results/')
         })
     }
-
     // const handleQuizConfigChange = (e: any) => {
     //     setQuizConfig(quizConfig => ({
     //         ...quizConfig,
@@ -132,10 +126,10 @@ export default function QuizProcess(_: IQuizProcessProps) {
         setCurrentQuestionPage(page)
     }
 
+
     React.useEffect(() => {
         if (!quiz_id) return;
         if (!quizConfig.lazy && questions.length === 0) {
-            // startRecording()
             ExamService.fetchQuestions(quiz_id).then(response => {
                 const tmpQuestions = response.data
                 const tmpMarked: IMarkedObj = {}
@@ -150,62 +144,29 @@ export default function QuizProcess(_: IQuizProcessProps) {
                     if (error.response.status.toString().startsWith('4')) {
                         return alert(error.response.data.message)
                     }
-
                 }
-
             })
         }
     }, [quizConfig.lazy])
 
-    // React.useEffect(() => {
-    //     console.log("Changed currentQuestionPage", currentQuestionPage)
-    //     const question = questions[currentQuestionPage]
-    //     if(listening) {
-    //         handleMark(question, transcript)
-    //         resetTranscript();
-    //     }
-    // },[currentQuestionPage])
+    React.useEffect(() => {
+        console.log("Marked change ", marked)
+    }, [marked])
 
-
-
-
-    // const startRecording = () => {
-    //     navigator.mediaDevices
-    //         .getUserMedia({ video: { width: 300 }, audio: true, })
-    //         .then((stream: any) => {
-    //             if (recordVideoRef.current) {
-    //                 recordVideoRef.current.srcObject = stream;
-    //             }
-
-    //             mediaRecorderRef.current = new MediaRecorder(stream);
-
-    //             mediaRecorderRef.current.ondataavailable = (event: any) => {
-    //                 if (event.data.size > 0) {
-    //                     (chunksRef.current as any[]).push(event.data);
-    //                 }
-    //             };
-
-    //             mediaRecorderRef.current.onstop = () => {
-    //                 // const blob = new Blob(chunksRef.current, { type: 'video/webm' });
-
-    //                 // Now you can submit the recorded video to your Django backend
-    //                 // using a POST request or another suitable method.
-    //                 // Example using fetch:
-    //                 // fetch('your-django-api-url', {
-    //                 //   method: 'POST',
-    //                 //   body: blob,
-    //                 // });
-
-    //                 chunksRef.current = [];
-    //             };
-
-    //             mediaRecorderRef.current.start();
-    //             // setIsRecording(true);
-    //         })
-    //         .catch(err => {
-    //             console.error("error:", err);
-    //         });
-    // };
+    React.useEffect(() => {
+        // const currentQuestion = questions[currentQuestionPage]
+        resetTranscript()
+    }, [currentQuestionPage])
+    React.useEffect(() => {
+        if (selectedLanguage) {
+            SpeechRecognition.stopListening().then(() => {
+                SpeechRecognition.startListening({
+                    continuous: true,
+                    language: selectedLanguage,
+                })
+            })
+        }
+    }, [selectedLanguage])
 
     return (
         <QuizLayout listening={listening} onMicroClick={() => { }}>
@@ -223,15 +184,15 @@ export default function QuizProcess(_: IQuizProcessProps) {
                                                     marked={marked[questions[currentQuestionPage].id]}
                                                     question={questions[currentQuestionPage]}
                                                     index={currentQuestionPage + 1}
-                                                    onMark={handleMark} 
-                                                    lang={selectedLanguage}/>
+                                                    onMark={handleMark}
+                                                    lang={selectedLanguage} />
                                             )
                                         ) :
                                         questions.map((question, index) => (
                                             <QuestionItem key={question.id}
                                                 marked={marked[question.id]}
                                                 question={question} index={index + 1} onMark={handleMark}
-                                                lang={selectedLanguage}/>
+                                                lang={selectedLanguage} />
                                         ))
                                     }
                                 </div>

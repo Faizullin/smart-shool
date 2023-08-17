@@ -59,8 +59,8 @@ export default function FaceIdDetector({ detectLimit, onDetect, onFullDetect, on
                     video.play();
                 }
             })
-            .catch(err => {
-                console.error("error:", err);
+            .catch(error => {
+                console.error("error:", error);
             });
     }
 

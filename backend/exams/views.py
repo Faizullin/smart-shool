@@ -34,9 +34,9 @@ class ExamListView(ListAPIView):
     def get_queryset(self):
         student = Student.objects.get(user=self.request.user)
         if student.current_group:
-            return Exam.objects.filter(Q(subject=student.current_group.subject) | Q(exam_type='i'))
+            return Exam.objects.filter(Q(subject=student.current_group.subject) | Q(exam_type='i')).order_by('-id')
         else:
-            return Exam.objects.filter(exam_type='i')
+            return Exam.objects.filter(exam_type='i').order_by('-id')
 
 
 class QuizListView(ListAPIView):
@@ -81,7 +81,6 @@ class QuizSubmitView(APIView):
         student = Student.objects.get(user=request.user)
         current_acacdemic_session = AcademicSession.objects.last()
         exam = quiz.exam
-        
 
         existing_result = Result.objects.filter(exam=exam, student=student)
         if existing_result.exists():
@@ -91,15 +90,16 @@ class QuizSubmitView(APIView):
         serializer = QuizSubmitSerializer(data=input_data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
-        
+
         questions_queryset = quiz.questions.all()
         total_questions_count = quiz.questions_count
         total_correct_answers = 0
         # Iterate over each submitted question
         for submitted_question in validated_data['questions']:
             # Retrieve the corresponding question object
-            print("Data submitted_question", submitted_question['answers'], submitted_question)
-            
+            print("Data submitted_question",
+                  submitted_question['answers'], submitted_question)
+
             try:
                 question = questions_queryset.get(id=submitted_question['id'])
             except Question.DoesNotExist:
@@ -107,8 +107,10 @@ class QuizSubmitView(APIView):
             if question.type == 'c':
                 correct_answer_ids = question.answers.filter(
                     correct=True).values_list('id', flat=True)
-                print("CHECK",set([str(i) for i in correct_answer_ids]) == set(submitted_question['answers']),correct_answer_ids,submitted_question['answers'])
-                score = set([str(i) for i in correct_answer_ids]) == set(submitted_question['answers'])
+                print("CHECK", set([str(i) for i in correct_answer_ids]) == set(
+                    submitted_question['answers']), correct_answer_ids, submitted_question['answers'])
+                score = set([str(i) for i in correct_answer_ids]
+                            ) == set(submitted_question['answers'])
                 if score:
                     total_correct_answers += 1
                 selected_answer = question.answers.get(
@@ -128,9 +130,9 @@ class QuizSubmitView(APIView):
                 student_answer, created = StudentAnswer.objects.get_or_create(
                     question=question,
                     student=student,
-
                 )
                 student_answer.answer_text = result_text
+                student_answer.score = 0
                 student_answer.save()
 
         score_percent = (total_correct_answers / total_questions_count) * 100

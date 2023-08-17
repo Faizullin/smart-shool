@@ -38,7 +38,9 @@ export default function Layout({ children }: ILayoutProps) {
       <Header>
         <Navbar />
       </Header>
-      {children}
+      <div className='flex-grow'>
+        {children}
+      </div>
       <Footer />
     </>
   )

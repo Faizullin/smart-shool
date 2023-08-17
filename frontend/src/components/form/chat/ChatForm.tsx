@@ -158,7 +158,6 @@ export default function ChatForm({ chat_room }: IChatFormProps) {
                     }
                 })
                 return () => {
-                    console.log("Cleaning up...");
                     if (ws.current !== null) {
                         ws.current.close();
                     }

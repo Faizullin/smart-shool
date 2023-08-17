@@ -129,7 +129,7 @@ const TableTab: React.FC<{ intl: IntlShape }> = ({ intl }) => {
       }),
       render: (result: any, key: string | number) => (
         <td key={key} className="px-6">
-          {result.subject}
+          {result.exam.subject}
         </td>
       )
     },

@@ -1,21 +1,28 @@
-import os, json
+import os
+import json
+import sys
 from googletrans import Translator, constants
 
-vv=True
+if len(sys.argv) > 1:
+    output_lang = sys.argv[1]
+else:
+    sys.exit()
+
+vv = True
 inp_lang = 'en'
-output_lang = 'kk'
-inp_path = './src/lang/en.json'
-output_path = os.path.join('./src/lang',output_lang+'.json')
+inp_path = '.\\src\\lang\\en.json'
+output_path = os.path.join('.\\src\\lang', output_lang+'.json')
 output_data = dict()
 
-with open(inp_path,'r') as f:
+with open(inp_path, 'r') as f:
     inp_data = json.loads(f.read())
 if os.path.exists(output_path) and os.path.isfile(output_path):
-    with open(output_path,'r') as f:
+    with open(output_path, 'r', encoding='utf-8') as f:
         output_data = json.loads(f.read())
+
 old_keys = output_data.keys()
 keys_to_lookup = [i for i in inp_data.keys() if not i in old_keys]
-print("Want update",len(keys_to_lookup),"keys")
+print("Want update", len(keys_to_lookup), "keys")
 
 translator = Translator()
 counter = 0
@@ -23,18 +30,19 @@ for key in keys_to_lookup:
     value = inp_data[key]
     translated_value = value
     try:
-        translation = translator.translate(value, dest=output_lang, src=inp_lang)
+        translation = translator.translate(
+            value, dest=output_lang, src=inp_lang)
         translated_value = translation.text
         if vv:
-            print("Translated", value,"==>",translated_value)
+            print("Translated", value, "==>", translated_value)
     except Exception as err:
-        print("Translate:",value,"==>",err)
+        print("Translate:", value, "==>", err)
     output_data[key] = translated_value
     if counter % 10 == 0:
         print('save')
-        with open(output_path,'w+', encoding='utf-8') as f:
+        with open(output_path, 'w+', encoding='utf-8') as f:
             f.write(json.dumps(output_data, ensure_ascii=False,))
     counter += 1
 print('save')
-with open(output_path,'w+', encoding='utf-8') as f:
+with open(output_path, 'w+', encoding='utf-8') as f:
     f.write(json.dumps(output_data, ensure_ascii=False,))

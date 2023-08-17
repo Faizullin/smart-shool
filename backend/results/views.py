@@ -20,7 +20,6 @@ class ResultListView(ListAPIView):
     serializer_class = ResultWithFeedbackSerializer
 
     permission_classes = [permissions.IsAuthenticated, IsStudent]
-    ordering = ['-id']
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -30,7 +29,7 @@ class ResultListView(ListAPIView):
 
     def get_queryset(self):
         student = Student.objects.get(user_id=self.request.user.pk)
-        return Result.objects.filter(student=student)
+        return Result.objects.filter(student=student).order_by('-id')
 
 
 class ExamFeedbackRetrieve(RetrieveAPIView):

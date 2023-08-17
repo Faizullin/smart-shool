@@ -15,6 +15,7 @@ interface Props {
 }
 
 const QuestionItem: React.FC<Props> = ({ index, question, onMark, marked, lang, }) => {
+    const [transcriptText, setTranscriptText] = React.useState<string>("")
     const {
         transcript,
         interimTranscript,
@@ -29,6 +30,7 @@ const QuestionItem: React.FC<Props> = ({ index, question, onMark, marked, lang, 
         console.log('Your browser does not support speech recognition software! Try Chrome desktop, maybe?');
     }
     const startListeng = () => {
+        console.log("Start")
         const lang_to_use = lang ? lang : 'en'
         SpeechRecognition.startListening({
             continuous: true,
@@ -36,25 +38,26 @@ const QuestionItem: React.FC<Props> = ({ index, question, onMark, marked, lang, 
         });
     }
     const stopListeng = () => {
+        console.log("Stop")
         SpeechRecognition.stopListening()
     }
     React.useEffect(() => {
         if (finalTranscript !== '') {
-            console.log('Got final result:', finalTranscript);
             if (listening && question.question_type === 'o') {
                 onMark(question, [transcript])
             }
         }
     }, [interimTranscript, finalTranscript]);
     React.useEffect(() => {
+        setTranscriptText(transcript)
+    }, [transcript]);
+    React.useEffect(() => {
         if (question.question_type === 'o') {
             if (!listening) {
-                console.log("Start")
                 startListeng()
             }
         } else if (question.question_type === 'c') {
             if (listening) {
-                console.log("Stop")
                 stopListeng()
             }
         }
@@ -62,7 +65,12 @@ const QuestionItem: React.FC<Props> = ({ index, question, onMark, marked, lang, 
             stopListeng()
             resetTranscript()
         }
-    }, [question.question_type ]);
+    }, [question.question_type]);
+    React.useEffect(() => {
+        if (question.question_type === 'o' && marked !== undefined) {
+            setTranscriptText(marked.join(' '))
+        }
+    }, [marked]);
     return (
         <div className='mb-3'>
             <p>
@@ -92,7 +100,7 @@ const QuestionItem: React.FC<Props> = ({ index, question, onMark, marked, lang, 
                     (
                         <div className='mb-2 mt-6'>
                             <textarea
-                                value={transcript}
+                                value={transcriptText}
                                 readOnly={true}
                                 className="border rounded-lg p-2 w-full"
                                 placeholder="Speak to fill the textarea..."

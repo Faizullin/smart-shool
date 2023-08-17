@@ -21,7 +21,7 @@ export default function FaceIdLogin(_: IFaceIdLoginProps) {
                 window.location.reload();
             })
         }).catch(error => {
-            console.log(error)
+            console.error("error:", error);
         })
         
     }

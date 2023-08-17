@@ -92,6 +92,8 @@
     "app.next.label": "Next",
     "app.send.label": "Send",
     "app.empty.label": "Empty",
+    "app.read.label": "Read",
+    "app.watch.label": "Watch",
     "app.dashboard.member_since.label": "Member Since",
     "app.dashboard.current_group.label": "Current Group",
     "app.dashboard.scheme.label": "Scheme",

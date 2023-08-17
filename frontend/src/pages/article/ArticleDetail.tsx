@@ -6,7 +6,6 @@ import Layout from '../../components/layouts/Layout';
 import Sidebar, { TriggerButton } from '../../components/sidebar/Sidebar';
 import Breadcrumbs from '../../components/Breadcrumbs';
 import FileViewer from '../../components/article/FileViewer';
-import { FormattedMessage } from 'react-intl';
 
 export interface IArticleDetailProps {
 }
@@ -42,7 +41,7 @@ export default function ArticleDetail(_: IArticleDetailProps) {
                                             <img src={article_payload?.featured_image} alt="" className='w-full' />
                                         </div>
                                         <div className='lg:w-2/3 w-full'>
-                                            <p className='ld:ml-[100px] text-xl'>{article_payload?.title}</p>
+                                            <p className='lg:ml-[20px] text-xl'>{article_payload?.title}</p>
                                         </div>
                                     </div>
                                     <div className='my-5'>
@@ -52,14 +51,8 @@ export default function ArticleDetail(_: IArticleDetailProps) {
                                         {article_payload?.file &&
                                             (
                                                 <div className='mb-4'>
-                                                    <a href={article_payload.file }>
-                                                        <FormattedMessage id='app.read.label' defaultMessage='Read' />
-                                                    </a>
                                                     <FileViewer src={article_payload.file} />
                                                 </div>)}
-                                        {/* <object data={article_payload?.file} type="application/pdf" width="100%" height="100%">
-                                            <p>Alternative text - include a link <a href="http://africau.edu/images/default/sample.pdf">to the PDF!</a></p>
-                                        </object> */}
                                     </div>
                                 </div>
                             </div>

@@ -1,8 +1,8 @@
-// Assuming you've already installed 'react-pdf' using npm or yarn
-import { Document, Page, pdfjs  } from 'react-pdf';
+import { FormattedMessage } from 'react-intl';
+import { Document, Page, pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-function FileViewer({ src }: {src: string}) {
+function FileViewer({ src }: { src: string }) {
   const isVideo = src.endsWith('.mp4');
   const isPDF = src.endsWith('.pdf');
 
@@ -15,10 +15,19 @@ function FileViewer({ src }: {src: string}) {
     );
   } else if (isPDF) {
     return (
-      <Document file={src}>
-        <Page pageNumber={1} />
-      </Document>
-    );
+      <>
+        {
+          isVideo && <FormattedMessage id='app.watch.label' defaultMessage='Watch' />
+        }
+        {
+          isPDF && <FormattedMessage id='app.read.label' defaultMessage='Read' />
+        }
+        <div className='my-4'></div>
+        <Document file={src}>
+          <Page pageNumber={1} />
+        </Document>
+      </>
+    )
   } else {
     return <div>Unsupported file format</div>;
   }

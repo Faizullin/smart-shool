@@ -23,10 +23,10 @@ export default function FaceIdVerify(_: IFaceIdVerifyProps) {
                 navigate(sessionData.for)
                 window.location.reload();
             }
-        }).catch(err => {
-            console.error("error:", err);
-            if (err.response?.message) {
-                alert(err.response.message)
+        }).catch(error => {
+            console.error("error:", error);
+            if (error.response?.message) {
+                alert(error.response.message)
             }
         });
     }

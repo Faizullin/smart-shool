@@ -1,6 +1,6 @@
 import django_tables2 as tables
 import django_filters
-from results.models import Result  # Replace Result with your specific model name
+from results.models import Result
 
 
 class ResultTable(tables.Table):
@@ -10,6 +10,13 @@ class ResultTable(tables.Table):
         'Stats</a>'
         '</div>',
         verbose_name='Stats'
+    )
+    student_answers = tables.TemplateColumn(
+        '<div class="dropdown">'
+        '<a class="btn btn-secondary" href="{% url \'dashboard:studentanswer_list\' %}?question__quiz={{ record.exam.quiz.pk }}&student={{ record.student.pk }}">'
+        'Student Answers</a>'
+        '</div>',
+        verbose_name='Student Answers'
     )
     actions = tables.TemplateColumn(
         '<div class="dropdown">'

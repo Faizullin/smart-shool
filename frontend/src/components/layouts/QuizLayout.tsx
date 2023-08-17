@@ -41,7 +41,9 @@ export default function QuizLayout({ children, listening, onMicroClick }: IQuizL
           <MicroButton onClick={onMicroClick} active={listening} />
         </div>
       </Header>
-      {children}
+      <div className='flex-grow'>
+        {children}
+      </div>
     </>
   )
 }
