@@ -6,19 +6,6 @@ from academics.models import SubjectGroup
 
 
 class StudentTable(tables.Table):
-    actions = tables.TemplateColumn(
-        '<div class="dropdown">'
-        '<button class="btn btn-secondary dropdown-toggle" type="button" '
-        'data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-        'Actions</button>'
-        '<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">'
-        '<a class="dropdown-item edit-button" data-url="{% url \'dashboard:student_edit\' pk=record.pk %}">Edit</a>'
-        '</a>'
-        '</div>'
-        '</div>',
-        verbose_name='Actions'
-    )
-
     class Meta:
         model = Student
         fields = ['id', 'first_name', 'last_name', 'current_group', 'user','updated_at']

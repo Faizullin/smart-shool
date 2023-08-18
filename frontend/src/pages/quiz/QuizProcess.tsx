@@ -9,9 +9,7 @@ import QuizLayout from '../../components/layouts/QuizLayout';
 import SecondaryButton from '../../components/form/auth/SecondaryButton';
 import { AxiosError } from 'axios';
 import 'regenerator-runtime/runtime';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import QuestionItem, { IMarked } from '../../components/quiz/QuestionItem';
-import { ILangOption, Lang } from '../../lang/LangConfig';
 
 
 
@@ -27,16 +25,9 @@ type IMarkedObj = {
     [key: string]: IMarked;
 }
 
-const languageOptions: ILangOption[] = [
-    { code: 'en', name: 'English' },
-    { code: 'ru', name: 'Russian' },
-    { code: 'kk', name: 'Kazakh' },
-];
-
 export default function QuizProcess(_: IQuizProcessProps) {
     const navigate = useNavigate()
     const params = useParams();
-    const [selectedLanguage, setSelectedLanguage] = React.useState<Lang>('en');
     const [quizConfig] = React.useState<IQuizConfig>({
         paginted: true,
         lazy: false,
@@ -44,25 +35,8 @@ export default function QuizProcess(_: IQuizProcessProps) {
     const [questions, setQuestions] = React.useState<IQuestion[]>([])
     const [marked, setMarked] = React.useState<IMarkedObj>({})
     const [currentQuestionPage, setCurrentQuestionPage] = React.useState<number>(0)
-    const recordVideoRef = React.useRef<HTMLVideoElement | null>(null);
     const quiz_id = params.id
 
-
-    const {
-        listening,
-        resetTranscript
-    } = useSpeechRecognition();
-
-
-    if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
-        return null;
-    }
-    if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
-        console.log('Your browser does not support speech recognition software! Try Chrome desktop, maybe?');
-    }
-    const handleLanguageSelect = (langCode: Lang) => {
-        setSelectedLanguage(langCode);
-    };
     const handleMark = (question: IQuestion, answer: IMarked) => {
         const question_id = question.id
         let final_answer: IMarked;
@@ -78,14 +52,10 @@ export default function QuizProcess(_: IQuizProcessProps) {
                 old_answer_ids.push(answer[0])
             }
             final_answer = old_answer_ids
-        } else if (question.question_type === 'o') {
-            final_answer = answer
         } else {
             console.log("Unrecognized question type: ", question.question_type)
             return
         }
-
-        console.log("save mark", question_id, final_answer)
         setMarked(marked => ({
             ...marked,
             [question_id]: final_answer,
@@ -99,14 +69,12 @@ export default function QuizProcess(_: IQuizProcessProps) {
         const data: any = {
             questions: []
         }
-        const formData = new FormData()
         Object.keys(marked).forEach((element: string) => {
             data.questions.push({
                 'answers': marked[element],
                 'id': element,
             })
         })
-        formData.append('questions', data.questions)
         ExamService.fetchSubmitQuiz(quiz_id, data).then(_ => {
             sessionStorage.clear()
             navigate('/dashboard/results/')
@@ -125,7 +93,6 @@ export default function QuizProcess(_: IQuizProcessProps) {
     const handleQuestionPageChange = (page: number) => {
         setCurrentQuestionPage(page)
     }
-
 
     React.useEffect(() => {
         if (!quiz_id) return;
@@ -149,29 +116,9 @@ export default function QuizProcess(_: IQuizProcessProps) {
         }
     }, [quizConfig.lazy])
 
-    React.useEffect(() => {
-        console.log("Marked change ", marked)
-    }, [marked])
-
-    React.useEffect(() => {
-        // const currentQuestion = questions[currentQuestionPage]
-        resetTranscript()
-    }, [currentQuestionPage])
-    React.useEffect(() => {
-        if (selectedLanguage) {
-            SpeechRecognition.stopListening().then(() => {
-                SpeechRecognition.startListening({
-                    continuous: true,
-                    language: selectedLanguage,
-                })
-            })
-        }
-    }, [selectedLanguage])
-
     return (
-        <QuizLayout listening={listening} onMicroClick={() => { }}>
+        <QuizLayout>
             <section id='blog'>
-                <video ref={recordVideoRef} autoPlay muted />
                 <div className="container mx-auto" data-aos="fade-up">
                     <div className="pt-5">
                         {
@@ -184,15 +131,13 @@ export default function QuizProcess(_: IQuizProcessProps) {
                                                     marked={marked[questions[currentQuestionPage].id]}
                                                     question={questions[currentQuestionPage]}
                                                     index={currentQuestionPage + 1}
-                                                    onMark={handleMark}
-                                                    lang={selectedLanguage} />
+                                                    onMark={handleMark} />
                                             )
                                         ) :
                                         questions.map((question, index) => (
                                             <QuestionItem key={question.id}
                                                 marked={marked[question.id]}
-                                                question={question} index={index + 1} onMark={handleMark}
-                                                lang={selectedLanguage} />
+                                                question={question} index={index + 1} onMark={handleMark} />
                                         ))
                                     }
                                 </div>
@@ -205,18 +150,6 @@ export default function QuizProcess(_: IQuizProcessProps) {
                                 <Pagination showOnlyPrimitive={false} page={currentQuestionPage} rowsPerPage={1} count={questions.length} onChangePage={handleQuestionPageChange} />
                             )
                         }
-                        <div className="language-options pb-4">
-                            {languageOptions.map((lang) => (
-                                <button
-                                    key={lang.code}
-                                    onClick={() => handleLanguageSelect(lang.code)}
-                                    className={`px-2 py-1 mr-2 ${selectedLanguage === lang.code ? 'bg-green-basic' : 'bg-default-basic'
-                                        } text-white rounded-lg`}
-                                >
-                                    {lang.name}
-                                </button>
-                            ))}
-                        </div>
                         <div className='mt-3 flex grid grid-cols-2 justify-between'>
                             <PrimaryButton onClick={handleSubmit} className='max-w-[300px]'>
                                 <FormattedMessage

@@ -44,14 +44,6 @@ export default function Navbar(_: INavbarProps) {
                             />
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/chat">
-                            <FormattedMessage
-                                id="app.url.chat.label"
-                                defaultMessage="Chat"
-                            />
-                        </NavLink>
-                    </li>
                     <LangSelect />
                     <AuthDropdown />
                 </ul>

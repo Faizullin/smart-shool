@@ -5,15 +5,12 @@ import Header from '../Header'
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import MicroButton from '../speech-recognition/MicroButton';
 
 type IQuizLayoutProps = {
   children: ReactNode
-  listening: boolean
-  onMicroClick: () => any
 }
 
-export default function QuizLayout({ children, listening, onMicroClick }: IQuizLayoutProps) {
+export default function QuizLayout({ children }: IQuizLayoutProps) {
   const dispath = useAppDispatch()
   const user = useAppSelector(state => state.auth.user)
 
@@ -37,9 +34,6 @@ export default function QuizLayout({ children, listening, onMicroClick }: IQuizL
   return (
     <>
       <Header>
-        <div className="container mx-auto flex items-center justify-between px-4">
-          <MicroButton onClick={onMicroClick} active={listening} />
-        </div>
       </Header>
       <div className='flex-grow'>
         {children}

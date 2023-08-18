@@ -19,7 +19,6 @@ import HasCompletedFaceIdRoute from "./HasCompletedFaceIdRoute";
 import ArticleDetail from "../pages/article/ArticleDetail";
 import CertificateIndex from "../pages/dashboard/certificate";
 import { FormattedMessage } from "react-intl";
-import ChatIndex from "../pages/chat";
 import React from "react";
 
 
@@ -171,17 +170,6 @@ const router = createBrowserRouter([
             </HasCompletedFaceIdRoute>
           </ProtectedRoute>
         ),
-      },
-      {
-        path: "chat",
-        element: (
-          <ProtectedRoute>
-            <ChatIndex />
-          </ProtectedRoute>
-        ),
-        handle: {
-          crumb: () => <span> <FormattedMessage id="app.url.chat.label" /> </span>,
-        },
       },
     ]
   },

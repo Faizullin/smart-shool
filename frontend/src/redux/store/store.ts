@@ -4,7 +4,6 @@ import articleSlice from "./reducers/articleSlice";
 import userSlice from "./reducers/userSlice";
 import studentSlice from "./reducers/studentSlice";
 import articleFilterSlice from "./reducers/articleFilterSlice";
-import chatSlice from "./reducers/chatSlice";
 
 export type AppDispatch = typeof store.dispatch;
 
@@ -14,7 +13,6 @@ const rootReducer = combineReducers({
     article: articleSlice,
     articleFilter: articleFilterSlice,
     student: studentSlice,
-    chat: chatSlice,
 })
   
 const store = configureStore({

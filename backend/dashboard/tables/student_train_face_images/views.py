@@ -74,5 +74,7 @@ def studenttrainfaceimage_delete(request, pk):
 
 @login_required
 def tudenttrainfaceimage_retrain(request):
-    retrain_faces()
+    res, message = retrain_faces()
+    if not res:
+        print("Error",message)
     return redirect(reverse('dashboard:studenttrainfaceimage_list'))

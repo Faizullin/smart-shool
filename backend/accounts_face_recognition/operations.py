@@ -63,7 +63,14 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
                     X.append(face_recognition.face_encodings(image, known_face_locations=face_bounding_boxes)[0])
                     y.append(class_dir)
                     print("Train process for",class_dir)
-
+        if len(X) == 0 and len(y) == 0:
+            if Path(model_save_path).is_file() and Path(model_save_path).exists():
+                os.remove(model_save_path)
+                print("write")
+                with open(model_save_path, 'rb+') as f:
+                    f.write('')
+            return False, "No face is provided (model was deleted)"
+        
         # Determine how many neighbors to use for weighting in the KNN classifier
         if n_neighbors is None:
             n_neighbors = int(round(math.sqrt(len(X))))
@@ -72,18 +79,19 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
 
         # Create and train the KNN classifier
         # knn_clf = neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
-        if model_save_path is not None and Path(model_save_path).is_file():
+        if model_save_path is not None and Path(model_save_path).is_file() and Path(model_save_path).exists():
             with open(model_save_path, 'rb') as f:
                 print("load")
                 knn_clf = pickle.load(f)
         else:
             knn_clf = neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
-
+        
         knn_clf.fit(X, y)
 
         # Save the trained KNN classifier
         if model_save_path is not None:
             path = Path(model_save_path)
+            print("write",path)
             with path.open(mode="wb") as f:
                 pickle.dump(knn_clf,f)
         print("end")
@@ -132,7 +140,7 @@ def start_train_by_student(student: Student):
     return result
 
 def retrain_faces():
-    return train(DATASET_PATH, model_save_path=MODEL_OUTPUT, n_neighbors=3 )[0]
+    return train(DATASET_PATH, model_save_path=MODEL_OUTPUT, n_neighbors=3 )
 
 def find_student_id_from_face(image):
     # image = 'media/uploads/face_train/6/image.jpg'

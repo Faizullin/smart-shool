@@ -23,9 +23,6 @@ def seed():
     groupStudent = GroupFactory(
         name="student"
     )
-    groupBot = GroupFactory(
-        name="bot"
-    )
     superuser1 = SuperuserFactory(
         username="admin",
         email="admin@example.com",
@@ -43,12 +40,6 @@ def seed():
         username="teacher2",
         password="password",
     )
-    bot = UserFactory(
-        approval_status=random.choice(["a"]),
-        email="bot@example.com",
-        username="bot",
-        password="password",
-    )
 
     superuser1.groups.set([groupAdmin])
     superuser1.save()
@@ -56,8 +47,6 @@ def seed():
     teacher1.save()
     teacher2.groups.set([groupTeacher])
     teacher2.save()
-    bot.groups.set([groupBot])
-    bot.save()
 
     for _ in range(2):
         academic_session = AcademicSessionFactory(

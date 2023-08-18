@@ -39,8 +39,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
-    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,9 +57,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'dashboard',
-    'django_q',
     'accounts',
-    'chats',
     'academics',
     'accounts_face_recognition',
     'articles',
@@ -232,59 +228,3 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_SEND_FROM_NAME = "notifier-bot@smedufacelearn.kz"
-
-
-ASGI_APPLICATION = 'backend.asgi.application'
-
-
-if USE_REDIS and USE_WS:
-    CHANNEL_LAYERS = {
-        'default': {
-            'BACKEND': 'channels_redis.core.RedisChannelLayer',
-            'CONFIG': {
-                "hosts": [os.getenv('REDIS_URL')],
-            },
-        },
-    }
-elif USE_WS:
-    CHANNEL_LAYERS = {
-        'default': {
-            'BACKEND': 'channels_redis.core.RedisChannelLayer',
-            'CONFIG': {
-                "hosts": ['redis://localhost:6379'],
-            },
-        },
-    }
-
-if USE_REDIS:
-    Q_CLUSTER = {
-        'name': 'myproject',
-        'workers': 8,
-        'recycle': 500,
-        'timeout': 60,
-        'compress': True,
-        'save_limit': 250,
-        'queue_limit': 500,
-        'cpu_affinity': 1,
-        'label': 'Django Q',
-        'redis': {
-            'host': os.getenv('REDIS_HOST'),  # '127.0.0.1',
-            'port': os.getenv('REDIS_PORT'),  # 6379,
-            'db': 0, }
-    }
-else:
-    Q_CLUSTER = {
-        'name': 'myproject',
-        'workers':   4,
-        'recycle': 500,
-        'timeout': 60,
-        'compress': True,
-        'save_limit': 250,
-        'queue_limit': 500,
-        'cpu_affinity': 1,
-        'label': 'Django Q',
-        'redis': {
-            'host': '127.0.0.1',  # '127.0.0.1',
-            'port': '6379',  # 6379,
-            'db': 0, }
-    }

@@ -8,7 +8,3 @@
 *.pot
 *.pyc
 __pycache__
-
-
-bot-auth-settings.json
-./chats/bot-auth-settings.json

@@ -1,7 +1,7 @@
 {
     "app.url.home": "Home",
     "app.url.about_us": "About Us",
-    "app.url.articles": "Theories",
+    "app.url.articles": "Articles",
     "app.herobar.welcome.to": "Welcome to",
     "app.herobar.welcome.info": "Sed autem laudantium dolores. Voluptatem itaque ea consequatur eveniet. Eum quas beatae cumque eum quaerat.",
     "app.herobar.welcome.get_started": "Get Started",
@@ -114,10 +114,8 @@
     "app.url.my_exams.label": "My Exams",
     "app.url.my_certificates.label": "My Certificates",
     "app.url.update_profile.label": "Update Profile",
-    "app.url.chat.label": "Contact Chat",
     "app.dashboard.update_password.current_password.label": "Current Password",
     "app.dashboard.update_password.confirm_password.label": "Confirm Password",
     "app.dashboard.update_password.new_password.label": "New Password",
-    "app.practical.submit.pl_submit_pdf.label": "Please submit pdf file",
-    "app.chat.new_chat.label": "New chat"
+    "app.practical.submit.pl_submit_pdf.label": "Please submit pdf file"
 }

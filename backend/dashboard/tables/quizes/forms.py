@@ -13,7 +13,7 @@ class QuizForm(forms.ModelForm):
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
-        fields = ['prompt','type']
+        fields = ['prompt']
 
 
 class AnswerForm(forms.ModelForm):
@@ -58,4 +58,4 @@ class BaseChildrenFormset(BaseInlineFormSet):
 
 
 QuestionFormSet = inlineformset_factory(
-    Quiz, Question, fields=['prompt','type'], formset=BaseChildrenFormset, extra=1)
+    Quiz, Question, fields=['prompt',], formset=BaseChildrenFormset, extra=1)

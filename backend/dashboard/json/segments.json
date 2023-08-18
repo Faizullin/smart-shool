@@ -135,35 +135,5 @@
             "admin",
             "teacher"
         ]
-    },
-    {
-        "label": "Chat",
-        "active": false,
-        "link": "dashboard:chat_list",
-        "groups": [
-            "admin",
-            "teacher",
-            "bot"
-        ]
-    },
-    {
-        "label": "ChatMessage",
-        "active": false,
-        "link": "dashboard:chatmessage_list",
-        "groups": [
-            "admin",
-            "teacher",
-            "bot"
-        ]
-    },
-    {
-        "label": "QuestionTicket",
-        "active": false,
-        "link": "dashboard:questionticket_list",
-        "groups": [
-            "admin",
-            "teacher",
-            "bot"
-        ]
     }
 ]
