@@ -56,8 +56,8 @@ export default function ExamIndex(_: IExamIndexProps) {
       dangerous: true,
     },
     {
-      key: 'subject_group', title: intl.formatMessage({
-        id: 'app.dashboard.exams.subject_group.label'
+      key: 'subject', title: intl.formatMessage({
+        id: 'app.dashboard.exams.subject.label'
       })
     },
     {

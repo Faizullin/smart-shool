@@ -57,7 +57,7 @@
     "app.dashboard.results.total_marks.label": "Жалпы белгілер",
     "app.dashboard.results.show_feedback.label": "Кері байланыс көрсету",
     "app.dashboard.results.stats.label": "Статистика",
-    "app.dashboard.results.table.label": "Үстел",
+    "app.dashboard.results.table.label": "Кесте",
     "app.dashboard.alert.no_student.bold": "Студент жоқ!",
     "app.dashboard.alert.no_student.description": "Студент ретінде тіркеліңіз",
     "app.dashboard.alert.face_id.bold": "Бет идентификаторы жоқ!",

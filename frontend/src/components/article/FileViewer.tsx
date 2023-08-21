@@ -8,21 +8,26 @@ function FileViewer({ src }: { src: string }) {
 
   if (isVideo) {
     return (
-      <video width="100%" controls>
-        <source src={src} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      <>
+        <div className='my-4'>
+          <a href={src}>
+            <FormattedMessage id='app.watch.label' defaultMessage='Watch' />
+          </a>
+        </div>
+        <video width="100%" controls>
+          <source src={src} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </>
     );
   } else if (isPDF) {
     return (
       <>
-        {
-          isVideo && <FormattedMessage id='app.watch.label' defaultMessage='Watch' />
-        }
-        {
-          isPDF && <FormattedMessage id='app.read.label' defaultMessage='Read' />
-        }
-        <div className='my-4'></div>
+        <div className='my-4'>
+          <a href={src}>
+            <FormattedMessage id='app.read.label' defaultMessage='Read' />
+          </a>
+        </div>
         <Document file={src}>
           <Page pageNumber={1} />
         </Document>

@@ -16,9 +16,6 @@ import os
 
 
 USE_SPA = True
-USE_WS = os.getenv('USE_WS', 'False') == 'True'
-USE_REDIS = os.getenv('USE_REDIS', 'False') == 'True'
-EMAIL_ENABLED = os.getenv('EMAIL_ENABLED', 'False') == 'True'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -222,9 +219,6 @@ else:
     EMAIL_HOST_PASSWORD = 'f1bd7debba9b5a'
     EMAIL_PORT = '2525'
 
-if USE_REDIS:
-    EMAIL_BACKEND = 'django_q_email.backends.DjangoQBackend'
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_SEND_FROM_NAME = "notifier-bot@smedufacelearn.kz"

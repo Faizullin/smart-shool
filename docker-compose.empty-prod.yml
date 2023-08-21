@@ -1,0 +1,43 @@
+version: '3'
+services:
+  web:
+      build:
+          context: ./backend
+          dockerfile: Dockerfile.prod
+      restart: always
+      command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+      volumes:
+          - static_data:/app/static
+          - media_data:/app/media
+      env_file:
+          - ./.env
+      expose:
+          - 8000
+      depends_on:
+          - db
+  nginx:
+      image: nginx
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - ./nginx/conf.d:/etc/nginx/conf.d
+        - /etc/letsencrypt:/etc/letsencrypt
+        - static_data:/app/static
+        - media_data:/app/media
+      depends_on:
+        - web
+  db:
+      image: postgres:13-alpine
+      restart: always
+      volumes:
+          - postgres_data:/var/lib/postgresql/data/
+      environment:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: database
+
+volumes:
+    postgres_data:
+    static_data:
+    media_data:
