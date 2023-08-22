@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --mode production &&  del ..\\backend\\spa_app\\static\\* /S && copy .\\dist\\static\\ ..\\backend\\spa_app\\static\\ && copy .\\dist\\index.html ..\\backend\\spa_app\\templates\\spa_app\\index.html",
+    "build": "del ..\\backend\\spa_app\\static\\* /S  && tsc && vite build --mode production && copy .\\dist\\static\\ ..\\backend\\spa_app\\static\\ && copy .\\dist\\index.html ..\\backend\\spa_app\\templates\\spa_app\\index.html",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
