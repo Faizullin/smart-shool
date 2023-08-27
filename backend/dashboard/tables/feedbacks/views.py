@@ -4,7 +4,7 @@ from django.http import JsonResponse, Http404, HttpResponseBadRequest
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 import django_tables2 as tables
-from django_filters.views import FilterView 
+from django_filters.views import FilterView
 
 from dashboard.get_context_processors import get_context
 from results.models import Feedback
@@ -14,7 +14,11 @@ from .forms import FeedbackForm
 from .tables import FeedbackTable, FeedbackFilter
 from dashboard.models import get_teacher_students_results_feedbacks_queryset
 
-class FeedbackListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+from dashboard.decorators import user_admin_or_teacher_required
+from dashboard.mixins import UserAdminOrTeacherRequiredMixin
+
+
+class FeedbackListView(LoginRequiredMixin, UserAdminOrTeacherRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Feedback
     table_class = FeedbackTable
     template_name = 'dashboard/tables/feedbacks/index.html'
@@ -23,30 +27,35 @@ class FeedbackListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context = get_context(context=context, segment='dashboard:feedback_list')
+        context = get_context(self.request, context=context,
+                              segment='dashboard:feedback_list')
         context.update({
             "filterset": FeedbackFilter(self.request.GET),
         })
         return context
-    
+
     def get_queryset(self, *args, **kwargs):
         if isUserTeacher(self.request.user):
             return get_teacher_students_results_feedbacks_queryset(self.request.user)
         return Feedback.objects.all()
 
-@login_required()
+
+@login_required
+@user_admin_or_teacher_required
 def feedback_create(request):
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})
-        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form , 'edit_url': reverse('dashboard:feedback_create') }))
+        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:feedback_create')}))
     else:
         form = FeedbackForm()
-    return render(request, 'dashboard/tables/form_base.html', {'form': form,'edit_url': reverse('dashboard:feedback_create')})
+    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:feedback_create')})
 
-@login_required()
+
+@login_required
+@user_admin_or_teacher_required
 def feedback_edit(request, pk):
     feedback = get_object_or_404(Feedback, pk=pk)
     if request.method == 'POST':
@@ -54,12 +63,14 @@ def feedback_edit(request, pk):
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})
-        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:feedback_edit', kwargs={'pk': feedback.pk}) }))
+        return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:feedback_edit', kwargs={'pk': feedback.pk})}))
     else:
         form = FeedbackForm(instance=feedback)
-    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:feedback_edit', kwargs={'pk': feedback.pk}) })
+    return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:feedback_edit', kwargs={'pk': feedback.pk})})
+
 
 @login_required
+@user_admin_or_teacher_required
 def feedback_delete(request, pk):
     feedback = get_object_or_404(Feedback, pk=pk)
     if request.method == 'POST':

@@ -45,7 +45,6 @@ $api.interceptors.response.use((config: AxiosResponse) => {
             localStorage.removeItem('student')
 
         } catch (e) {
-            console.log("Refresh token error")
             localStorage.removeItem('token')
             localStorage.removeItem('refreshToken')
             localStorage.removeItem('user')

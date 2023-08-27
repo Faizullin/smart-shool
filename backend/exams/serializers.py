@@ -112,6 +112,6 @@ class ExamProjectSubmitSerializer(serializers.ModelSerializer):
         fields = ['exam', 'student', 'practical_file', 'title']
 
     def create(self, validated_data):
-        student = Student.objects.get(user=self.context['request'].user)
+        student = self.context['request'].student
         validated_data['student'] = student
         return super().create(validated_data)

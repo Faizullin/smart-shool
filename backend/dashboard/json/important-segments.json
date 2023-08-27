@@ -1,0 +1,10 @@
+[
+    {
+        "label": "Storage",
+        "active": false,
+        "link": "dashboard:storage",
+        "groups": [
+            "admin"
+        ]
+    }
+]

@@ -29,7 +29,8 @@ class Article(models.Model):
         upload_to=article_featured_image_directory_path, null=True, blank=True)
     subject = models.ForeignKey(
         Subject,
-        on_delete=models.DO_NOTHING
+        on_delete=models.DO_NOTHING,
+        related_name='articles'
     )
     content = RichTextUploadingField(config_name='default')
     force_highlighted = models.BooleanField(default=False)

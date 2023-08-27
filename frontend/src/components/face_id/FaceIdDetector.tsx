@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as faceapi from 'face-api.js';
 import { FormattedMessage } from 'react-intl';
 import Loader from '../loader/Loader';
+import { useNavigate } from 'react-router-dom';
 
 export interface IFaceIdProps {
     detectLimit: number
@@ -23,6 +24,7 @@ function dataURLtoFile(dataURL: string, filename: string): File {
 }
 
 export default function FaceIdDetector({ detectLimit, onDetect, onFullDetect, onCountChange }: IFaceIdProps) {
+    const navigate = useNavigate()
     const [modelsLoaded, setModelsLoaded] = React.useState(false);
     const [captureVideo, setCaptureVideo] = React.useState(false);
     const [_, setCapturedImage] = React.useState<File | null>(null);
@@ -35,7 +37,7 @@ export default function FaceIdDetector({ detectLimit, onDetect, onFullDetect, on
 
     React.useEffect(() => {
         const loadModels = async () => {
-            const MODEL_URL = import.meta.env.BASE_URL + '/models'
+            const MODEL_URL = "https://cdn.jsdelivr.net/gh/cgarciagl/face-api.js@0.22.2/weights" //import.meta.env.BASE_URL + '/models'
             Promise.all([
                 faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
                 faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
@@ -125,14 +127,25 @@ export default function FaceIdDetector({ detectLimit, onDetect, onFullDetect, on
         setCaptureVideo(false);
     }
 
+    const quitWebcam = () => {
+        closeWebcam()
+        navigate("/dashboard/exams")
+        window.location.reload()
+    }
+
     return (
         <div className='py-12'>
             <div className='flex justify-center'>
                 {
                     captureVideo && modelsLoaded ?
+                        <>
                         <button onClick={closeWebcam} style={{ cursor: 'pointer', backgroundColor: 'green', color: 'white', padding: '15px', fontSize: '25px', border: 'none', borderRadius: '10px' }}>
-                            <FormattedMessage id='app.face_id.close.label' />
+                            <FormattedMessage id='app.close.label' />
                         </button>
+                        <button onClick={quitWebcam} className='ml-4' style={{ cursor: 'pointer', backgroundColor: 'grey', color: 'white', padding: '15px', fontSize: '25px', border: 'none', borderRadius: '10px' }}>
+                            <FormattedMessage id='app.quit.label'defaultMessage="Quit" />
+                        </button>
+                        </>
                         :
                         <button onClick={startVideo} style={{ cursor: 'pointer', backgroundColor: 'green', color: 'white', padding: '15px', fontSize: '25px', border: 'none', borderRadius: '10px' }}>
                             <FormattedMessage id='app.face_id.open.label' />

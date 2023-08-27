@@ -25,17 +25,24 @@ const initialState: IInitialState = {
 
 export const fetchArticleList = createAsyncThunk(
   'article/fetchArticleList',
-  async (_, { rejectWithValue, getState, dispatch }) => {
+  async (params: any, { rejectWithValue, getState, dispatch }) => {
     const { articleFilter } = getState() as RootState
-    let params = { ...articleFilter.filters } as any
-    if (params.sort) {
-      delete params['sort']
+    let filterParams = { ...articleFilter.appliedFilters } as any
+    if (filterParams.sort) {
+      delete filterParams['sort']
     }
-    params.ordering = getSortField(articleFilter.filters.sort)
+    if (filterParams.subjects !== undefined) {
+      delete filterParams['subjects']
+      if (articleFilter.appliedFilters.subjects !== undefined && articleFilter.appliedFilters.subjects.length > 0) {
+        filterParams.subject = articleFilter.appliedFilters.subjects[0].id
+      }
+    }
+    filterParams.ordering = getSortField(articleFilter.filters.sort)
     params = {
-      ...params,
+      ...filterParams,
       page: articleFilter.pagination.page + 1,
       limit: articleFilter.pagination.pageSize,
+      ...params,
     }
     try {
       const response = await ArticleService.getAll(params);

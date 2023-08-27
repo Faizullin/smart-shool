@@ -42,11 +42,7 @@ if settings.DEBUG:
                           document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
-
+if settings.USE_SPA:
     urlpatterns += [
-        # Serve files from the "models" folder as a static endpoint
-        re_path(r'^models/(?P<path>.*)$', serve, {
-            'document_root': settings.FACE_DETECT_MODEL_ROOT,
-        }),
         re_path(r'^(?!static|media).*',  include('spa_app.urls')),
     ]

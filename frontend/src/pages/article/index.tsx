@@ -4,11 +4,12 @@ import { fetchArticleList } from '../../redux/store/reducers/articleSlice';
 import Layout from '../../components/layouts/Layout';
 import Breadcrumbs from '../../components/Breadcrumbs';
 import Sidebar, { TriggerButton } from '../../components/sidebar/Sidebar';
-import { ISortProps, setPage, setPageSize, setSorting } from '../../redux/store/reducers/articleFilterSlice';
+import { setPage, setPageSize, setSorting } from '../../redux/store/reducers/articleFilterSlice';
 import Table from '../../components/table/Table';
 import { IArticle } from '../../models/IArticle';
 import { useNavigate } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { IArticleFiltersSortProps } from '../../models/IArticleFIlters';
 
 export interface IArticleIndexProps {
 }
@@ -27,14 +28,14 @@ export default function ArticleIndex(_: IArticleIndexProps) {
   }
 
   React.useEffect(() => {
-    dispatch(fetchArticleList());
+    dispatch(fetchArticleList({}));
   }, [dispatch, pagination.page, pagination.pageSize, filters.sort]);
 
   const handlePageChange = (page: number) => {
     dispatch(setPage(page));
   };
 
-  const handleSortingChange = (sorting: ISortProps) => {
+  const handleSortingChange = (sorting: IArticleFiltersSortProps) => {
     dispatch(setSorting(sorting));
   };
 

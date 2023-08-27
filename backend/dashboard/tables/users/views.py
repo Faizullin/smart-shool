@@ -12,7 +12,10 @@ from accounts.models import User
 from .forms import UserForm
 from .tables import UserTable, UserFilter
 
-class UserListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+from dashboard.decorators import user_admin_required
+from dashboard.mixins import UserAdminRequiredMixin
+
+class UserListView(LoginRequiredMixin, UserAdminRequiredMixin, tables.SingleTableMixin, FilterView):
     model = User
     table_class = UserTable
     template_name = 'dashboard/tables/users/index.html'
@@ -21,7 +24,7 @@ class UserListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context = get_context(context=context, segment='dashboard:user_list')
+        context = get_context(self.request, context=context, segment='dashboard:user_list')
         context.update({
             "filterset": UserFilter(self.request.GET),
         })
@@ -30,7 +33,8 @@ class UserListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
     def get_queryset(self, *args, **kwargs):
         return User.objects.all()
 
-@login_required()
+@login_required
+@user_admin_required
 def user_create(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
@@ -42,7 +46,8 @@ def user_create(request):
         form = UserForm()
     return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:user_create')})
 
-@login_required()
+@login_required
+@user_admin_required
 def user_edit(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
@@ -56,6 +61,7 @@ def user_edit(request, pk):
     return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:user_edit', kwargs={'pk': user.pk}) })
 
 @login_required
+@user_admin_required
 def user_delete(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':

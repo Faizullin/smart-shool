@@ -1,19 +1,29 @@
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import { ChangeEvent, useState } from "react";
 import { Fragment } from "react";
 import Icon from '@mdi/react';
-import { mdiClose, mdiMagnify, } from "@mdi/js";
+import { mdiClose, mdiMagnify, mdiMinus, mdiPlus, } from "@mdi/js";
 import { fetchArticleList } from "../../redux/store/reducers/articleSlice";
 import { useAppDispatch } from "../../hooks/redux";
 import { setFilters } from "../../redux/store/reducers/articleFilterSlice";
 import { FormattedMessage, useIntl } from "react-intl";
+import { IArticleFilters } from "../../models/IArticleFIlters";
 
 interface IMobileSidebarProps {
     open: boolean
     setOpen: (data: any) => any
+    filters: IArticleFilters
+    filtersData: {
+        subjects: Array<{
+            active: boolean
+            value: any
+        }>
+        search: string,
+    }
+    onFiltersChange: (filter_field: string, value: any) => any
 }
 
-export default function MobileSidebar({ open, setOpen, }: IMobileSidebarProps) {
+export default function MobileSidebar({ open, setOpen, filtersData, onFiltersChange }: IMobileSidebarProps) {
     const dispatch = useAppDispatch()
     const intl = useIntl()
     const [data, setData] = useState<{
@@ -28,13 +38,18 @@ export default function MobileSidebar({ open, setOpen, }: IMobileSidebarProps) {
             "keyword": event.target.value,
         }));
     }
-
+    const handleFiltersClick = (e: any, filter_field: string, value: any) => {
+        e.preventDefault();
+        onFiltersChange(filter_field, value)
+    }
     const handleSubmit = (event: ChangeEvent<HTMLFormElement>) => {
         event.preventDefault();
         dispatch(setFilters({
             search: data.keyword
         }))
-        dispatch(fetchArticleList()).then(() => {
+        dispatch(fetchArticleList({
+            search: data.keyword
+        })).then(() => {
             setOpen(false)
         })
     }
@@ -99,6 +114,43 @@ export default function MobileSidebar({ open, setOpen, }: IMobileSidebarProps) {
                                             })} />
                                     </form>
                                 </div>
+                                <Disclosure as="div" className="border-b border-gray-200 py-6 px-4 ">
+                                    {({ open }) => (
+                                        <>
+                                            <h3 className="-my-3 flow-root">
+                                                <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                                                    <span className="text-lg text-gray-900">Subjects</span>
+                                                    <span className="ml-6 flex items-center">
+                                                        {open ? (
+                                                            <Icon path={mdiMinus}
+                                                                size={1}
+                                                                className="w-6 h-6" />
+                                                        ) : (
+                                                            <Icon path={mdiPlus}
+                                                                size={1}
+                                                                className="w-6 h-6" />
+                                                        )}
+                                                    </span>
+                                                </Disclosure.Button>
+                                            </h3>
+                                            <Disclosure.Panel className="pt-6">
+                                                <div className="space-y-4">
+                                                    {filtersData.subjects.map((item, _) => (
+                                                        <div key={item.value.id} className="flex items-center">
+                                                            <a
+                                                                href="#"
+                                                                className="ml-3 text-gray-600"
+                                                                onClick={(e) => handleFiltersClick(e, 'subjects', item.value)}
+                                                            >
+                                                                {item.value.title}
+                                                            </a>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </Disclosure.Panel>
+                                        </>
+                                    )}
+                                </Disclosure>
                             </div>
                         </Dialog.Panel>
                     </Transition.Child>

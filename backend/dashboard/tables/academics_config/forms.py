@@ -9,7 +9,7 @@ from academics.models import AcademicConfig
 class AcademicConfigForm(forms.ModelForm):
     class Meta:
         model = AcademicConfig
-        fields = ['high_group_total_min', 'theory_pass_min','email_enabled']
+        fields = ['assign_groups_theory_min', 'email_enabled']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -19,6 +19,8 @@ class AcademicConfigForm(forms.ModelForm):
             self.helper.form_action = reverse(
                 'dashboard:academicconfig_edit', kwargs={'pk': self.instance.pk})
             self.helper.form_id = 'dashboard-config-form'
-            self.helper.add_input(Submit('submit', 'Save', css_id='save-config-button'))
+            self.helper.add_input(
+                Submit('submit', 'Save', css_id='save-config-button'))
         else:
-            self.helper.add_input(Submit('submit', 'Save', css_id='save-config-button'))
+            self.helper.add_input(
+                Submit('submit', 'Save', css_id='save-config-button'))

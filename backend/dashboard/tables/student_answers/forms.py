@@ -15,4 +15,4 @@ class StudentAnswerForm(forms.ModelForm):
             self.fields['selected_answer'].queryset = Answer.objects.none()
     class Meta:
         model = StudentAnswer
-        fields = ['question', 'student', 'selected_answer', 'answer_text', 'score']
+        fields = ['question', 'student', 'selected_answer', 'score']

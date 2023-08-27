@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
-import { ISortProps } from "../../redux/store/reducers/articleFilterSlice";
 import Icon from "@mdi/react";
 import { mdiChevronDown, mdiChevronUp, mdiPageFirst, mdiPageLast, mdiPageNext, mdiPagePrevious } from "@mdi/js";
 import { FormattedMessage } from "react-intl";
+import { IArticleFiltersSortProps } from "../../models/IArticleFIlters";
 
 
 interface ITableProps {
@@ -21,7 +21,7 @@ interface ITableProps {
   onChangePage?: (data?: any) => any,
   onChangeRowsPerPage?: (data?: any) => any,
   onSortingChange?: (data?: any) => any,
-  sorting?: ISortProps
+  sorting?: IArticleFiltersSortProps
 }
 
 const Table = ({ data, columns, page, pageSize, count, onChangePage, onChangeRowsPerPage, sorting, onSortingChange, rowsPerPageOptions }: ITableProps) => {

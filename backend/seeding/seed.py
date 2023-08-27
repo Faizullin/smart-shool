@@ -9,11 +9,8 @@ def seed():
     random.seed(42)  # Set a seed for consistent data generation
 
     academic_config = AcademicConfig.objects.create(
-        high_group_total_min=100,
-        theory_pass_min=70,
-        email_enabled=0,
+        email_enabled=False,
     )
-
     groupAdmin = GroupFactory(
         name="admin"
     )

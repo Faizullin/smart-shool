@@ -1,60 +1,197 @@
-{% extends "layouts/base.html" %}
+{% extends 'layouts/base.html' %}
 
-{% block title %} Page Blank {% endblock %} 
+{% block title %}
+Page Blank
+{% endblock %}
 
 <!-- Specific CSS goes HERE -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+
+{% endblock %}
+
+{% load crispy_forms_tags %}
 
 {% block content %}
-
-    <!-- [ Main Content ] start -->
-    <div class="pcoded-main-container">
-        <div class="pcoded-wrapper">
-            <div class="pcoded-content">
-                <div class="pcoded-inner-content">
-                    <!-- [ breadcrumb ] start -->
-                    <div class="page-header">
-                        <div class="page-block">
-                            <div class="row align-items-center">
-                                <div class="col-md-12">
-                                    <div class="page-header-title">
-                                        <h5 class="m-b-10">{{ _("Dashboard") }}</h5>
-                                    </div>
-                                    <ul class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
-                                        <li class="breadcrumb-item"><a href="javascript:">{{ _("Welcome") }}</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- [ breadcrumb ] end -->
-                    <div class="main-body">
-                        <div class="page-wrapper">
-                            <!-- [ Main Content ] start -->
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5>{{ _("Hello card") }}</h5>
-                                        </div>
-                                        <div class="card-block">
-                                            <p>{{ _("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.") }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- [ Main Content ] end -->
-                        </div>
-                    </div>
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+  <div class="pcoded-wrapper">
+    <div class="pcoded-content">
+      <div class="pcoded-inner-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+          <div class="page-block">
+            <div class="row align-items-center">
+              <div class="col-md-12">
+                <div class="page-header-title">
+                  <h5 class="m-b-10">{{ _('Dashboard') }}</h5>
                 </div>
+                <ul class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/"><i class="feather icon-home"></i></a>
+                  </li>
+                  <li class="breadcrumb-item">
+                    <a href="javascript:">{{ _('Welcome') }}</a>
+                  </li>
+                </ul>
+              </div>
             </div>
+          </div>
         </div>
+        <!-- [ breadcrumb ] end -->
+        <div class="main-body">
+          <div class="page-wrapper">
+            <!-- [ Main Content ] start -->
+            <div class="row">
+              <div class="col-sm-12">
+                <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
+
+                <div class="row">
+                  <div class="col-xl-6 col-xxl-5 d-flex">
+                    <div class="w-100">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="card">
+                            <a class="card-body"
+                              href="{% if request.user.group_name == 'teacher'  %}{% url 'dashboard:my_student_list' %}{% else %}{% url 'dashboard:student_list' %}{% endif %}">
+                              <div class="row">
+                                <div class="col mt-0">
+                                  <h5 class="card-title">Students</h5>
+                                </div>
+
+                                <div class="col-auto">
+                                  <div class="stat text-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round" class="feather feather-users align-middle">
+                                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                      <circle cx="9" cy="7" r="4"></circle>
+                                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                  </div>
+                                </div>
+                              </div>
+                              <h1 class="mt-1 mb-3">{{ students_count }}</h1>
+                              {% comment %} <div class="mb-0">
+                                <span class="text-danger"><i class="mdi mdi-arrow-bottom-right"></i> -3.65%</span>
+                                <span class="text-muted">Since last week</span>
+                              </div> {% endcomment %}
+                            </a>
+                          </div>
+                          <div class="card">
+                            <a class="card-body" href="{% url 'dashboard:result_list' %}?checked=false">
+                              <div class="row">
+                                <div class="col mt-0">
+                                  <h5 class="card-title">Unchecked Results</h5>
+                                </div>
+
+                                <div class="col-auto">
+                                  <div class="stat text-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round" class="feather feather-truck align-middle">
+                                      <rect x="1" y="3" width="15" height="13"></rect>
+                                      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                      <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                    </svg>
+                                  </div>
+                                </div>
+                              </div>
+                              <h1 class="mt-1 mb-3">{{ unchecked_results_count }}</h1>
+                              {% comment %} <div class="mb-0">
+                                <span class="text-success"><i class="mdi mdi-arrow-bottom-right"></i> 5.25%</span>
+                                <span class="text-muted">Since last week</span>
+                              </div> {% endcomment %}
+                            </a>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="card">
+                            <a class="card-body" href="{% url 'dashboard:result_list' %}?feedback__isnull=True">
+                              <div class="row">
+                                <div class="col mt-0">
+                                  <h5 class="card-title">No feedback results</h5>
+                                </div>
+
+                                <div class="col-auto">
+                                  <div class="stat text-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round" class="feather feather-shopping-cart align-middle">
+                                      <circle cx="9" cy="21" r="1"></circle>
+                                      <circle cx="20" cy="21" r="1"></circle>
+                                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                    </svg>
+                                  </div>
+                                </div>
+                              </div>
+                              <h1 class="mt-1 mb-3">{{ no_feedback_count }}</h1>
+                              {% comment %} <div class="mb-0">
+                                <span class="text-danger"><i class="mdi mdi-arrow-bottom-right"></i> -2.25%</span>
+                                <span class="text-muted">Since last week</span>
+                              </div> {% endcomment %}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xl-6 col-xxl-7">
+                    <div class="card flex-fill w-100">
+                      <div class="card-header">
+                        <h5 class="card-title mb-0">Configuration</h5>
+                      </div>
+                      <div class="card-body py-3">
+                        {% crispy last_config_form %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- [ Main Content ] end -->
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- [ Main Content ] end -->
+  </div>
+</div>
+<!-- [ Main Content ] end -->
+{% endblock %}
 
-{% endblock content %}
-
-<!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+<!-- Specific Page JS goes HERE -->
+{% block javascripts %}
+<script>
+  $(document).ready(function () {
+    $(document).on('click', '#save-config-button', function () {
+      const form = $('#dashboard-config-form')
+      const saveButton = $('#save-config-button')
+      var url = form.attr('action')
+      var data = new FormData(document.getElementById('dashboard-config-form'))
+      saveButton.attr('disabled', true)
+      $.ajax({
+        type: 'POST',
+        url,
+        headers: { 'X-CSRF-Token': $('#dashboard-config-form input[name=csrfmiddlewaretoken]').val() },
+        processData: false,
+        contentType: false,
+        data,
+        success: (response, data, d) => {
+          if (response.success) {
+            saveButton.attr('disabled', false)
+            location.reload()
+          }
+        },
+        error: (response) => {
+          if (response.status === 400) {
+            $('#dashboard-form-modal .modal-body').html(response.responseText)
+            saveButton.attr('disabled', false)
+          }
+        }
+      })
+    })
+  })
+</script>
+{% endblock %}

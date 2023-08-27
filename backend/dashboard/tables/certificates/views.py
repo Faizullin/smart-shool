@@ -13,12 +13,14 @@ from accounts.permissions import isUserTeacher
 
 from .forms import CertificateForm
 from .tables import CertificateTable, CertificateFilter
-from dashboard.models import get_teacher_certificates_queryset
+from dashboard.decorators import user_admin_or_teacher_required
+from dashboard.mixins import UserAdminOrTeacherRequiredMixin
 
+from dashboard.models import get_teacher_certificates_queryset
 from certificates.operations import generate_cert
 
 
-class CertificateListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+class CertificateListView(LoginRequiredMixin, UserAdminOrTeacherRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Certificate
     table_class = CertificateTable
     template_name = 'dashboard/tables/certificates/index.html'
@@ -28,7 +30,7 @@ class CertificateListView(LoginRequiredMixin, tables.SingleTableMixin, FilterVie
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context = get_context(
-            context=context, segment='dashboard:certificate_list')
+            self.request, context=context, segment='dashboard:certificate_list')
         context.update({
             "filterset": CertificateFilter(self.request.GET),
         })
@@ -40,7 +42,8 @@ class CertificateListView(LoginRequiredMixin, tables.SingleTableMixin, FilterVie
         return Certificate.objects.all()
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def certificate_create(request):
     if request.method == 'POST':
         form = CertificateForm(request.POST)
@@ -59,7 +62,8 @@ def certificate_create(request):
     return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:certificate_create')})
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def certificate_edit(request, pk):
     certificate = get_object_or_404(Certificate, pk=pk)
     if request.method == 'POST':
@@ -80,6 +84,7 @@ def certificate_edit(request, pk):
 
 
 @login_required
+@user_admin_or_teacher_required
 def certificate_delete(request, pk):
     certificate = get_object_or_404(Certificate, pk=pk)
     if request.method == 'POST':

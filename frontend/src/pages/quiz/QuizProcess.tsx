@@ -10,6 +10,8 @@ import SecondaryButton from '../../components/form/auth/SecondaryButton';
 import { AxiosError } from 'axios';
 import 'regenerator-runtime/runtime';
 import QuestionItem, { IMarked } from '../../components/quiz/QuestionItem';
+import { useAppDispatch } from '../../hooks/redux';
+import { openErrorModal } from '../../redux/store/reducers/errorModalSlice';
 
 
 
@@ -26,6 +28,7 @@ type IMarkedObj = {
 }
 
 export default function QuizProcess(_: IQuizProcessProps) {
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const params = useParams();
     const [quizConfig] = React.useState<IQuizConfig>({
@@ -38,7 +41,7 @@ export default function QuizProcess(_: IQuizProcessProps) {
     const quiz_id = params.id
 
     const handleMark = (question: IQuestion, answer: IMarked) => {
-        const question_id = question.id
+        const question_id = `${question.id}`
         let final_answer: IMarked;
 
         if (question.question_type === 'c') {
@@ -78,6 +81,13 @@ export default function QuizProcess(_: IQuizProcessProps) {
         ExamService.fetchSubmitQuiz(quiz_id, data).then(_ => {
             sessionStorage.clear()
             navigate('/dashboard/results/')
+        }).catch(error => {
+            if (error.response.status) {
+                dispatch(openErrorModal({
+                    status: error.response.status,
+                    message: error.response?.data?.message || "",
+                }))
+            }
         })
     }
     // const handleQuizConfigChange = (e: any) => {
@@ -101,7 +111,7 @@ export default function QuizProcess(_: IQuizProcessProps) {
                 const tmpQuestions = response.data
                 const tmpMarked: IMarkedObj = {}
                 tmpQuestions.forEach(element => {
-                    tmpMarked[element.id] = []
+                    tmpMarked[`${element.id}`] = []
                 })
                 setQuestions(tmpQuestions)
                 setMarked(tmpMarked)

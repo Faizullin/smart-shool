@@ -14,4 +14,7 @@ export default class ArticleService{
     static async getById(id: string): Promise<AxiosResponse<IArticle>> {
         return $api.get<IArticle>(`/articles/${id}/`)
     }
+    static async getFilters(): Promise<AxiosResponse<any>> {
+        return $api.get<any>(`/articles/filters/`)
+    }
 }

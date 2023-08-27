@@ -13,8 +13,11 @@ from exams.operations import save_student_answer_result_score
 from .forms import StudentAnswerForm
 from .tables import StudentAnswerTable, StudentAnswerFilter
 
+from dashboard.decorators import user_admin_or_teacher_required
+from dashboard.mixins import UserAdminOrTeacherRequiredMixin
 
-class StudentAnswerListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+
+class StudentAnswerListView(LoginRequiredMixin, UserAdminOrTeacherRequiredMixin, tables.SingleTableMixin, FilterView):
     model = StudentAnswer
     table_class = StudentAnswerTable
     template_name = 'dashboard/tables/student_answers/index.html'
@@ -24,7 +27,7 @@ class StudentAnswerListView(LoginRequiredMixin, tables.SingleTableMixin, FilterV
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context = get_context(
-            context=context, segment='dashboard:studentanswer_list')
+            self.request, context=context, segment='dashboard:studentanswer_list')
         context.update({
             "filterset": StudentAnswerFilter(self.request.GET),
         })
@@ -34,7 +37,8 @@ class StudentAnswerListView(LoginRequiredMixin, tables.SingleTableMixin, FilterV
         return StudentAnswer.objects.all()
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def studentanswer_create(request):
     if request.method == 'POST':
         form = StudentAnswerForm(request.POST)
@@ -49,7 +53,8 @@ def studentanswer_create(request):
     return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:studentanswer_create')})
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def studentanswer_edit(request, pk):
     studentanswer = get_object_or_404(StudentAnswer, pk=pk)
     if request.method == 'POST':
@@ -66,6 +71,7 @@ def studentanswer_edit(request, pk):
 
 
 @login_required
+@user_admin_or_teacher_required
 def studentanswer_delete(request, pk):
     studentanswer = get_object_or_404(StudentAnswer, pk=pk)
     if request.method == 'POST':

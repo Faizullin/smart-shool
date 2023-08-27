@@ -14,7 +14,10 @@ from .forms import StudentForm
 from .tables import StudentTable, StudentFilter
 
 
-class StudentListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+from dashboard.decorators import user_admin_required
+from dashboard.mixins import UserAdminRequiredMixin
+
+class StudentListView(LoginRequiredMixin, UserAdminRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Student
     table_class = StudentTable
     template_name = 'dashboard/tables/students/index.html'
@@ -24,7 +27,7 @@ class StudentListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context = get_context(
-            context=context, segment='dashboard:student_list')
+            self.request, context=context, segment='dashboard:student_list')
         context.update({
             'filterset': StudentFilter(self.request.GET),
         })
@@ -34,7 +37,8 @@ class StudentListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         return Student.objects.all()
 
 
-@login_required()
+@login_required
+@user_admin_required
 def student_create(request):
     if request.method == 'POST':
         form = StudentForm(request.POST)
@@ -50,7 +54,8 @@ def student_create(request):
     })
 
 
-@login_required()
+@login_required
+@user_admin_required
 def student_edit(request, pk):
     student = get_object_or_404(Student, pk=pk)
     if request.method == 'POST':
@@ -65,6 +70,7 @@ def student_edit(request, pk):
 
 
 @login_required
+@user_admin_required
 def student_delete(request, pk):
     student = get_object_or_404(Student, pk=pk)
     if request.method == 'POST':

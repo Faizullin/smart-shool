@@ -22,7 +22,6 @@ class FaceIdRetrainView(APIView):
 
     def post(self, request):
         results = retrain_faces()
-
         return Response({'success': results}, status=status.HTTP_201_CREATED)
 
 
@@ -32,12 +31,11 @@ class FaceIdLoginView(APIView):
     def post(self, request):
         image_file = request.FILES.get('image')
         if not image_file:
-            return Response({'error': 'Image file not provided.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Image file not provided.'}, status=status.HTTP_400_BAD_REQUEST)
 
         student = find_student_from_face(image_file)
-        print("student", student)
         if not student:
-            return Response({'error': f"Student not found. {student}"}, status=status.HTTP_200_OK)
+            return Response({'message': f"Student not found. {student}"}, status=status.HTTP_200_OK)
         user = student.user
         refresh = RefreshToken.for_user(user)
         response_data = {
@@ -54,21 +52,30 @@ class FaceIdVerifyView(APIView):
     def post(self, request):
         image_file = request.FILES.get('image')
         if not image_file:
-            return Response({'error': 'Image file not provided.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Image file not provided.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        student_me = request.student
         student = find_student_from_face(image_file)
-        print("student", student)
         if not student:
             return Response(
                 {
                     'success': False,
-                    'error': f"Student not found. {student}"
+                    'message': f"Student not found. {student}"
+                },
+                status=status.HTTP_403_FORBIDDEN
+            )
+        elif student_me.pk != student.pk:
+            return Response(
+                {
+                    'success': False,
+                    'message': f"Not your face"
+                },
+                status=status.HTTP_403_FORBIDDEN
+            )
+        else:
+            return Response(
+                {
+                    'success': student.user_id == request.user.pk,
                 },
                 status=status.HTTP_200_OK
             )
-        return JsonResponse(
-            {
-                'success': student.user_id == request.user.pk,
-            },
-            status=status.HTTP_200_OK
-        )

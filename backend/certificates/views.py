@@ -34,7 +34,7 @@ class CertificateSubmitView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsStudent]
 
     def post(self, request):
-        student = get_object_or_404(Student, user=request.user)
+        student = request.student
         cert = generate_cert(student=student)
         return Response(data=CertificateSerializer(cert).data)
 
@@ -46,7 +46,7 @@ class CertificateListMyView(ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsStudent]
 
     def get_queryset(self):
-        student = Student.objects.get(user_id=self.request.user.pk)
+        student = self.request.student
         return Certificate.objects.filter(student=student)
 
 

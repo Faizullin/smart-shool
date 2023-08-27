@@ -46,19 +46,15 @@ class SubjectGroup(models.Model):
 
 
 class AcademicConfig(models.Model):
-    high_group_total_min = models.PositiveIntegerField(
-        'Pass Minimum total marks',
+    assign_groups_theory_min = models.PositiveIntegerField(
+        'Pass Minimum theory marks',
         default=50,
     )
-    theory_pass_min = models.PositiveIntegerField(
-        'Pass Minimum theory marks',
-        default=70,
-    )
-    email_enabled = models.PositiveIntegerField(default=0, null=False)
+    email_enabled = models.BooleanField(default=False, null=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
-def get_current_academic_config():
+def get_current_academic_config() -> AcademicConfig:
     return AcademicConfig.objects.last()

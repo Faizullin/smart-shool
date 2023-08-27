@@ -5,11 +5,12 @@ from academics.models import get_current_academic_config
 
 
 class ExamSerializer(serializers.ModelSerializer):
-    subject = serializers.SerializerMethodField(read_only = True)
+    subject = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Exam
-        fields = ['id', 'exam_type','subject']
-    
+        fields = ['id', 'exam_type', 'subject']
+
     def get_subject(self, obj: Exam):
         return obj.subject.title
 
@@ -33,11 +34,11 @@ class ResultWithFeedbackSerializer(serializers.ModelSerializer):
 
     def get_access(self, obj: Result):
         certificte_queryset = Certificate.objects.filter(
-            student=self.context['student'], subject=obj.exam.subject)
+            student=self.context['request'].student, subject=obj.exam.subject)
         if certificte_queryset.exists():
             return False
         else:
-            return obj.total_marks > get_current_academic_config().theory_pass_min
+            return obj.total_marks > get_current_academic_config().assign_groups_theory_min
 
 
 class FeedbackSerializer(serializers.ModelSerializer):

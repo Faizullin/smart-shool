@@ -7,6 +7,7 @@ import Navbar from '../Navbar'
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import ErrorDetailModal from '../modal/ErrorDetailModal'
 
 type ILayoutProps = {
   children: ReactNode
@@ -42,6 +43,7 @@ export default function Layout({ children }: ILayoutProps) {
         {children}
       </div>
       <Footer />
+      <ErrorDetailModal />
     </>
   )
 }

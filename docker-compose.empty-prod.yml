@@ -23,6 +23,7 @@ services:
       volumes:
         - ./nginx/conf.d:/etc/nginx/conf.d
         - /etc/letsencrypt:/etc/letsencrypt
+        - ./frontend/dist:/app/frontend/dist
         - static_data:/app/static
         - media_data:/app/media
       depends_on:

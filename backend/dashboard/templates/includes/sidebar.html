@@ -27,31 +27,26 @@
                         <span class="pcoded-micon"><i class="feather icon-shop"></i></span>
                             <span class="pcoded-mtext">{{ _("Profile") }}</span></a>
                 </li>
-                <li data-username="Profile Dashboard Page" 
-                    class="nav-item {% if 'dashboard:storage' in segment %} active {% endif %}">
-                    <a href="#" class="nav-link">
-                        <span class="pcoded-micon"><i class="feather icon-shop"></i></span>
-                            <span class="pcoded-mtext">{{ _("Storage") }}</span></a>
-                </li>
+
+                {% for table in important_table_segments %}
+                    <li data-username="Profile Dashboard Page" 
+                        class="nav-item {% if table.active %} active {% endif %}">
+                        <a href="{% url table.link %}" class="nav-link">
+                            <span class="pcoded-micon"><i class="feather icon-shop"></i></span>
+                                <span class="pcoded-mtext">{{ table.label }}</span></a>
+                    </li>                    
+                {% endfor %}
 
                 <li class="nav-item pcoded-menu-caption">
                     <label>{{ _("Tables") }}</label>
                 </li>
-                {% for table in tables %}
-                    {% with show_link=False %}
-                        {% for group in user.groups.all %}
-                            {% if group.name in table.groups and not show_link %}
-                                {% with show_link=True %}
-                                    <li data-username="Dashboard Page" 
-                                        class="nav-item {% if table.active %} active {% endif %}">
-                                        <a href="{% url table.link %}" class="nav-link">
-                                            <span class="pcoded-micon"><i class="feather icon-shop"></i></span>
-                                                <span class="pcoded-mtext">{{ table.label }}</span></a>
-                                    </li>
-                                {% endwith %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endwith %}                        
+                {% for table in table_segments %}
+                    <li data-username="Dashboard Page" 
+                        class="nav-item {% if table.active %} active {% endif %}">
+                        <a href="{% url table.link %}" class="nav-link">
+                            <span class="pcoded-micon"><i class="feather icon-shop"></i></span>
+                                <span class="pcoded-mtext">{{ table.label }}</span></a>
+                    </li>                 
                 {% endfor %}
                 
 
@@ -60,7 +55,7 @@
                 </li>
                 <li class="nav-item pcoded-menu-caption">
                     <label>{{ _("Action") }}</label>
-                </li>
+                </li> 
 
 
                 <li data-username="Disabled Menu" class="nav-item">

@@ -9,11 +9,19 @@ class QuizForm(forms.ModelForm):
         model = Quiz
         fields = ['exam', 'title', 'time',  'start_date_time', 'end_date_time']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        used_instances = Quiz.objects.exclude(exam=None)
+        self.fields['exam'].queryset = self.fields['exam'].queryset.exclude(
+            id__in=used_instances.values_list(
+                'exam__id', flat=True)
+        )
+
 
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
-        fields = ['prompt']
+        fields = ['prompt', 'type']
 
 
 class AnswerForm(forms.ModelForm):
@@ -58,4 +66,4 @@ class BaseChildrenFormset(BaseInlineFormSet):
 
 
 QuestionFormSet = inlineformset_factory(
-    Quiz, Question, fields=['prompt',], formset=BaseChildrenFormset, extra=1)
+    Quiz, Question, fields=['prompt', 'type'], formset=BaseChildrenFormset, extra=1)

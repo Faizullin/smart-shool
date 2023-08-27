@@ -64,8 +64,10 @@ class Question(models.Model):
     )
     quiz = models.ForeignKey(
         Quiz,
+        null=True,
+        blank=True,
         related_name='questions',
-        on_delete=models.DO_NOTHING
+        on_delete=models.CASCADE
     )
     type = models.CharField(
         max_length=1,

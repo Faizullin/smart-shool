@@ -50,8 +50,8 @@
                                                 <div class="col-sm-6 mb-4">
                                                     <div class="form-group">
                                                         <label class="mr-3">Role</label>
-                                                        {% if user_groups %}
-                                                            {% for group in user_groups %}
+                                                        {% if user.groups %}
+                                                            {% for group in user.groups.all %}
                                                                 <span class="badge badge-primary">{{ group.name }}</span>
                                                             {% endfor %}
                                                         {% else %}
@@ -76,7 +76,7 @@
                                                         {{ request.user.username }}
                                                     </h4>
                                                     <p class="font-italic text-muted">
-                                                        {% if request.user.email %} {{ request.user.email }} {% endif %}
+                                                        {{ request.user.email }}
                                                     </p>
                                                 </div>
                                             </div>

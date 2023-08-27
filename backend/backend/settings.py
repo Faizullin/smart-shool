@@ -14,8 +14,12 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
+USE_DOTENV = True
+if USE_DOTENV:
+    from dotenv import load_dotenv
+    load_dotenv()
 
-USE_SPA = True
+USE_SPA = os.getenv('USE_SPA', 'True') == 'True'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -159,7 +163,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-FACE_DETECT_MODEL_ROOT = Path.joinpath(BASE_DIR, 'static_models')
 STATIC_ROOT = Path.joinpath(BASE_DIR, 'static')
 MEDIA_ROOT = Path.joinpath(BASE_DIR, 'media')
 
@@ -222,3 +225,6 @@ else:
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_SEND_FROM_NAME = "notifier-bot@smedufacelearn.kz"
+
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True

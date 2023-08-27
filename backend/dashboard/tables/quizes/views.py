@@ -14,8 +14,11 @@ from exams.models import Answer, Question, Quiz
 from .forms import *
 from .tables import QuizTable, QuizFilter
 
+from dashboard.decorators import user_admin_or_teacher_required
+from dashboard.mixins import UserAdminOrTeacherRequiredMixin
 
-class QuizListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+
+class QuizListView(LoginRequiredMixin, UserAdminOrTeacherRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Quiz
     table_class = QuizTable
     template_name = 'dashboard/tables/quizes/index.html'
@@ -24,7 +27,8 @@ class QuizListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context = get_context(context=context, segment='dashboard:quiz_list')
+        context = get_context(self.request, context=context,
+                              segment='dashboard:quiz_list')
         context.update({
             'filterset': QuizFilter(self.request.GET)
         })
@@ -34,7 +38,8 @@ class QuizListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         return Quiz.objects.all()
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def quiz_create(request):
     if request.method == 'POST':
         quiz_form = QuizForm(request.POST)
@@ -56,11 +61,13 @@ def quiz_create(request):
         'question_formset': question_formset,
         'edit_url': reverse('dashboard:quiz_create'),
     }
-    context.update(get_context(context=context, segment='dashboard:quiz_list'))
+    context.update(get_context(request, context=context,
+                   segment='dashboard:quiz_list'))
     return render(request, 'dashboard/tables/quizes/form.html', context)
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def quiz_edit(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
     if request.method == 'POST':
@@ -83,11 +90,13 @@ def quiz_edit(request, pk):
         'question_formset': question_formset,
         'edit_url': reverse('dashboard:quiz_edit', kwargs={'pk': quiz.pk}),
     }
-    context.update(get_context(context=context, segment='dashboard:quiz_list'))
+    context.update(get_context(request, context=context,
+                   segment='dashboard:quiz_list'))
     return render(request, 'dashboard/tables/quizes/form.html', context)
 
 
 @login_required
+@user_admin_or_teacher_required
 def quiz_delete(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
     if request.method == 'POST':

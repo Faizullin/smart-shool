@@ -12,10 +12,13 @@ from accounts_face_recognition.models import StudentTrainFaceImage
 from .forms import StudentTrainFaceImageForm
 from .tables import StudentTrainFaceImageTable, StudentTrainFaceImageFilter
 
+
+from dashboard.decorators import user_admin_required
+from dashboard.mixins import UserAdminRequiredMixin
 from accounts_face_recognition.operations import retrain_faces
 
 
-class StudentTrainFaceImageListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+class StudentTrainFaceImageListView(LoginRequiredMixin, UserAdminRequiredMixin, tables.SingleTableMixin, FilterView):
     model = StudentTrainFaceImage
     table_class = StudentTrainFaceImageTable
     template_name = 'dashboard/tables/student_train_face_images/index.html'
@@ -25,7 +28,7 @@ class StudentTrainFaceImageListView(LoginRequiredMixin, tables.SingleTableMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context = get_context(
-            context=context, segment='dashboard:studenttrainfaceimage_list')
+            self.request, context=context, segment='dashboard:studenttrainfaceimage_list')
         context.update({
             "filterset": StudentTrainFaceImageFilter(self.request.GET),
         })
@@ -35,7 +38,8 @@ class StudentTrainFaceImageListView(LoginRequiredMixin, tables.SingleTableMixin,
         return StudentTrainFaceImage.objects.all()
 
 
-@login_required()
+@login_required
+@user_admin_required
 def studenttrainfaceimage_create(request):
     if request.method == 'POST':
         form = StudentTrainFaceImageForm(request.POST)
@@ -48,7 +52,8 @@ def studenttrainfaceimage_create(request):
     return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:studenttrainfaceimage_create')})
 
 
-@login_required()
+@login_required
+@user_admin_required
 def studenttrainfaceimage_edit(request, pk):
     studenttrainfaceimage = get_object_or_404(StudentTrainFaceImage, pk=pk)
     if request.method == 'POST':
@@ -64,6 +69,7 @@ def studenttrainfaceimage_edit(request, pk):
 
 
 @login_required
+@user_admin_required
 def studenttrainfaceimage_delete(request, pk):
     studenttrainfaceimage = get_object_or_404(StudentTrainFaceImage, pk=pk)
     if request.method == 'POST':
@@ -73,8 +79,7 @@ def studenttrainfaceimage_delete(request, pk):
 
 
 @login_required
+@user_admin_required
 def tudenttrainfaceimage_retrain(request):
-    res, message = retrain_faces()
-    if not res:
-        print("Error",message)
+    retrain_faces()
     return redirect(reverse('dashboard:studenttrainfaceimage_list'))

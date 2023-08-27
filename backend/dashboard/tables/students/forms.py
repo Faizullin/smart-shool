@@ -27,14 +27,14 @@ class StudentForm(forms.ModelForm):
         fields = ['first_name', 'last_name',
                   'address', 'user', 'current_group']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        delete_relationships = cleaned_data.get('hasFaceId')
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     delete_relationships = cleaned_data.get('hasFaceId')
 
-        if not delete_relationships:
-            instance = self.instance
-            if instance:
-                # Delete all relationships
-                instance.train_face_images.all().delete()
+    #     if not delete_relationships:
+    #         instance = self.instance
+    #         if instance:
+    #             # Delete all relationships
+    #             instance.train_face_images.all().delete()
 
-        return cleaned_data
+    #     return cleaned_data

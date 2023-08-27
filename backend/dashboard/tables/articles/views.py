@@ -12,9 +12,11 @@ from articles.models import Article
 from .forms import ArticleForm
 from .tables import ArticleTable, ArticleFilter
 from academics.models import Subject
+from dashboard.decorators import user_admin_or_teacher_required
+from dashboard.mixins import UserAdminOrTeacherRequiredMixin
 
 
-class ArticleListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+class ArticleListView(LoginRequiredMixin, UserAdminOrTeacherRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Article
     table_class = ArticleTable
     template_name = 'dashboard/tables/articles/index.html'
@@ -24,7 +26,7 @@ class ArticleListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context = get_context(
-            context=context, segment='dashboard:article_list')
+            self.request, context=context, segment='dashboard:article_list')
         context.update({
             'filterset': ArticleFilter(self.request.GET)
         })
@@ -34,7 +36,8 @@ class ArticleListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         return Article.objects.all()
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def article_create(request):
     if request.method == 'POST':
         form = ArticleForm(request.POST, request.FILES,)
@@ -45,12 +48,13 @@ def article_create(request):
         form = ArticleForm()
     context = {'form': form, 'edit_url': reverse(
         'dashboard:article_create'), 'subjects': Subject.objects.all()}
-    context.update(get_context(context=context,
+    context.update(get_context(request, context=context,
                    segment='dashboard:article_list'))
     return render(request, 'dashboard/tables/articles/form.html', context,)
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def article_edit(request, pk):
     article = get_object_or_404(Article.objects, id=pk)
     if request.method == 'POST':
@@ -60,15 +64,15 @@ def article_edit(request, pk):
             return redirect(reverse('dashboard:article_list'))
     else:
         form = ArticleForm(instance=article)
-    print(article.featured_image)
     context = {'form': form, 'edit_url': reverse('dashboard:article_edit', kwargs={
                                                  'pk': article.pk}), 'subjects': Subject.objects.all(), 'article': article}
-    context.update(get_context(context=context,
+    context.update(get_context(request, context=context,
                    segment='dashboard:article_list'))
     return render(request, 'dashboard/tables/articles/form.html', context)
 
 
 @login_required
+@user_admin_or_teacher_required
 def article_delete(request, pk):
     article = get_object_or_404(Article, pk=pk)
     if request.method == 'POST':

@@ -72,11 +72,10 @@ class DownloadFileView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsStudent]
 
     def get(self, request, model, format_type):
-        print('model',model)
+        print('model', model)
         if model == 'results':
             items = Result.objects.filter(
-                student=Student.objects.get(user=request.user))
-            # format_type = request.GET.get('format', 'xlsx')
+                student=request.student)
             if format_type == 'xlsx':
                 return get_xlsx(items, model)
             elif format_type == 'csv':

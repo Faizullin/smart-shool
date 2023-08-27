@@ -1,10 +1,13 @@
 from django.db import models
 
 # Create your models here.
-
 from students.models import Student
 from academics.models import AcademicSession
 from exams.models import Exam
+
+
+def result_exam_record_directory_path(instance, filename):
+    return 'uploads/results/record_{0}/{1}-{2}'.format(instance.pk, instance.student.pk, filename)
 
 
 class Result(models.Model):
@@ -35,6 +38,9 @@ class Result(models.Model):
         blank=True,
         null=True
     )
+    checked = models.BooleanField(
+        default=False, null=False
+    )
 
     class Meta:
         unique_together = ('student', 'exam',)
@@ -59,12 +65,13 @@ class Feedback(models.Model):
     result = models.OneToOneField(
         Result,
         blank=True, null=True,  on_delete=models.SET_NULL,
+        related_name='feedback',
     )
     watched = models.BooleanField(default=False)
     content = models.CharField(max_length=1000)
 
     def __str__(self):
-        return f'{self.pk} | {self.student} | {self.exam}'
+        return f'{self.pk} | {self.result.student} | {self.result.exam}'
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

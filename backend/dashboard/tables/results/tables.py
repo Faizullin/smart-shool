@@ -39,7 +39,7 @@ class ResultTable(tables.Table):
     class Meta:
         model = Result
         fields = ['id', 'exam', 'student__first_name', 'student__last_name',
-                  'semester', 'total_marks', "created_at", "updated_at"]
+                  'semester', 'total_marks', 'checked', "created_at", "updated_at"]
         attrs = {
             'class': 'table table-hover',
         }
@@ -49,7 +49,8 @@ class ResultTable(tables.Table):
 
 
 class ResultFilter(django_filters.FilterSet):
+    feedback__isnull = django_filters.BooleanFilter(field_name='feedback', lookup_expr='isnull', label='Feedback is None')
     class Meta:
         model = Result
         fields = ['id', 'exam', 'student', 'student__first_name', 'student__current_group',
-                  'student__last_name',  'total_marks']
+                  'student__last_name',  'total_marks', 'checked', "feedback"]

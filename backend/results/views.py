@@ -24,11 +24,10 @@ class ResultListView(ListAPIView):
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['request'] = self.request
-        context['student'] = Student.objects.get(user=self.request.user)
         return context
 
     def get_queryset(self):
-        student = Student.objects.get(user_id=self.request.user.pk)
+        student = self.request.student
         return Result.objects.filter(student=student).order_by('-id')
 
 
@@ -46,7 +45,7 @@ class ExamFeedbackRetrieve(RetrieveAPIView):
     def get_object(self):
         try:
             feedback = Feedback.objects.get(
-                result__exam_id=self.kwargs['exam_id'], result__student=Student.objects.get(user=self.request.user))
+                result__exam_id=self.kwargs['exam_id'], result__student=self.request.student)
             if not feedback.watched:
                 feedback.watched = True
                 feedback.save()
@@ -111,7 +110,7 @@ class ResultStatsListView(APIView):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
-        student = Student.objects.get(user_id=self.request.user.pk)
+        student = request.student
         queryset = Result.objects.filter(student=student)
         queryset = get_results_data(request, validated_data, queryset)
 

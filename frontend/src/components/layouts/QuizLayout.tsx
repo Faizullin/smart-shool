@@ -5,6 +5,7 @@ import Header from '../Header'
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import ErrorDetailModal from '../modal/ErrorDetailModal';
 
 type IQuizLayoutProps = {
   children: ReactNode
@@ -38,6 +39,7 @@ export default function QuizLayout({ children }: IQuizLayoutProps) {
       <div className='flex-grow'>
         {children}
       </div>
+      <ErrorDetailModal />
     </>
   )
 }

@@ -20,8 +20,10 @@ from .forms import ResultForm
 from .tables import ResultTable, ResultFilter
 from dashboard.models import get_teacher_students_results_queryset, get_teacher_students_queryset, Student
 
+from dashboard.decorators import user_admin_or_teacher_required
+from dashboard.mixins import UserAdminOrTeacherRequiredMixin
 
-class ResultListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+class ResultListView(LoginRequiredMixin, UserAdminOrTeacherRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Result
     table_class = ResultTable
     template_name = 'dashboard/tables/results/index.html'
@@ -30,7 +32,7 @@ class ResultListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context = get_context(context=context, segment='dashboard:result_list')
+        context = get_context(self.request, context=context, segment='dashboard:result_list')
         context.update({
             "filterset": ResultFilter(self.request.GET),
         })
@@ -38,16 +40,20 @@ class ResultListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
 
     def get_queryset(self, *args, **kwargs):
         if isUserTeacher(self.request.user):
-            return get_teacher_students_results_queryset(self.request.user)
-        return Result.objects.all()
+            return get_teacher_students_results_queryset(self.request.user).order_by('-id')
+        return Result.objects.order_by('-id')
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def result_create(request):
     if request.method == 'POST':
         form = ResultForm(request.POST)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            checked = form.data.get('checked_n', None)
+            instance.checked = bool(checked)
+            instance.save()
             return JsonResponse({'success': True})
         return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:result_create')}))
     else:
@@ -55,13 +61,17 @@ def result_create(request):
     return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:result_create')})
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def result_edit(request, pk):
     result = get_object_or_404(Result, pk=pk)
     if request.method == 'POST':
         form = ResultForm(request.POST, instance=result)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            checked = form.data.get('checked_n', None)
+            instance.checked = bool(checked)
+            instance.save()
             return JsonResponse({'success': True})
         return HttpResponseBadRequest(render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:result_edit', kwargs={'pk': result.pk})}))
     else:
@@ -70,6 +80,7 @@ def result_edit(request, pk):
 
 
 @login_required
+@user_admin_or_teacher_required
 def result_delete(request, pk):
     result = get_object_or_404(Result, pk=pk)
     if request.method == 'POST':
@@ -79,6 +90,7 @@ def result_delete(request, pk):
 
 
 @login_required
+@user_admin_or_teacher_required
 def result_stats(request, pk):
     result = get_object_or_404(Result, pk=pk)
     student = result.student
@@ -107,5 +119,5 @@ def result_stats(request, pk):
         'current_student': student,
         'filterset': result_filter,
     }
-    context = get_context(context=context, segment='dashboard:result_list')
+    context = get_context(request, context=context, segment='dashboard:result_list')
     return render(request, 'dashboard/tables/results/stats.html', context)

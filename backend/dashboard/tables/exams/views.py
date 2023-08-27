@@ -18,8 +18,11 @@ from .forms import ExamForm
 from .tables import ExamTable, ExamFilter, ExamStudentDataTable
 from dashboard.models import get_teacher_exams_queryset, get_teacher_students_queryset
 
+from dashboard.decorators import user_admin_or_teacher_required
+from dashboard.mixins import UserAdminOrTeacherRequiredMixin
 
-class ExamListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+
+class ExamListView(LoginRequiredMixin, UserAdminOrTeacherRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Exam
     table_class = ExamTable
     template_name = 'dashboard/tables/exams/index.html'
@@ -28,7 +31,7 @@ class ExamListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context = get_context(context=context, segment='dashboard:exam_list')
+        context = get_context(self.request, context=context, segment='dashboard:exam_list')
         context.update({
             'filterset': ExamFilter(self.request.GET)
         })
@@ -40,7 +43,8 @@ class ExamListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         return Exam.objects.all()
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def exam_create(request):
     if request.method == 'POST':
         form = ExamForm(request.POST)
@@ -53,7 +57,8 @@ def exam_create(request):
     return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:exam_create')})
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def exam_edit(request, pk):
     exam = get_object_or_404(Exam, pk=pk)
     if request.method == 'POST':
@@ -68,6 +73,7 @@ def exam_edit(request, pk):
 
 
 @login_required
+@user_admin_or_teacher_required
 def exam_delete(request, pk):
     exam = get_object_or_404(Exam, pk=pk)
     if request.method == 'POST':
@@ -77,6 +83,7 @@ def exam_delete(request, pk):
 
 
 @login_required
+@user_admin_or_teacher_required
 def exam_stats(request, pk):
     exam = get_object_or_404(Exam, pk=pk)
     current_academic_config = get_current_academic_config()
@@ -92,12 +99,11 @@ def exam_stats(request, pk):
     exam_students_with_results_queryset = exam_students_queryset.filter(
         results__in=exam_results_queryset,
     )
-    # print("Data",'* +',exam_students_with_results_queryset, '=',exam_students_queryset)
     for student_item in exam_students_queryset:
         student_result_queryset = student_item.results.filter(exam=exam)
         if student_result_queryset.exists():
             marks = student_result_queryset.last().total_marks
-            student_item.pass_status = 'Passed' if marks > current_academic_config.high_group_total_min else 'Failed'
+            student_item.pass_status = 'Passed' if marks > current_academic_config.assign_groups_theory_min else 'Failed'
             student_item.total_marks = marks
         else:
             student_item.pass_status = 'Absent'
@@ -106,7 +112,7 @@ def exam_stats(request, pk):
     exam_students_tried_count = exam_students_with_results_queryset.count()
     absent_count = exam_students_total_count - exam_students_tried_count
     passed_count = exam_students_with_results_queryset.filter(
-        results__total_marks__gt=current_academic_config.high_group_total_min).count()
+        results__total_marks__gt=current_academic_config.assign_groups_theory_min).count()
     failed_count = exam_students_tried_count - passed_count
 
     context = {
@@ -119,5 +125,5 @@ def exam_stats(request, pk):
         ),
         'table': ExamStudentDataTable(exam_students_queryset)
     }
-    context = get_context(context=context, segment='dashboard:exam_list')
+    context = get_context(request, context=context, segment='dashboard:exam_list')
     return render(request, 'dashboard/tables/exams/stats.html', context)

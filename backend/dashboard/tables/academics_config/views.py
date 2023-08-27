@@ -11,9 +11,11 @@ from academics.models import AcademicConfig
 
 from .forms import AcademicConfigForm
 from .tables import AcademicConfigTable, AcademicConfigFilter
+from dashboard.decorators import user_admin_required
+from dashboard.mixins import UserAdminRequiredMixin
 
 
-class AcademicConfigListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+class AcademicConfigListView(LoginRequiredMixin, UserAdminRequiredMixin, tables.SingleTableMixin, FilterView):
     model = AcademicConfig
     table_class = AcademicConfigTable
     template_name = 'dashboard/tables/academics_config/index.html'
@@ -23,8 +25,8 @@ class AcademicConfigListView(LoginRequiredMixin, tables.SingleTableMixin, Filter
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         last_academic_config = AcademicConfig.objects.last()
-        context = get_context(
-            context=context, segment='dashboard:academicconfig_list')
+        context = get_context(self.request, context=context,
+                              segment='dashboard:academicconfig_list')
         context.update({
             "filterset": AcademicConfigFilter(self.request.GET),
             'last_config_form': AcademicConfigForm(instance=last_academic_config)
@@ -35,7 +37,8 @@ class AcademicConfigListView(LoginRequiredMixin, tables.SingleTableMixin, Filter
         return AcademicConfig.objects.all()
 
 
-@login_required()
+@login_required
+@user_admin_required
 def academicconfig_create(request):
     if request.method == 'POST':
         form = AcademicConfigForm(request.POST)
@@ -48,7 +51,8 @@ def academicconfig_create(request):
     return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:academicconfig_create')})
 
 
-@login_required()
+@login_required
+@user_admin_required
 def academicconfig_edit(request, pk):
     academicconfig = get_object_or_404(AcademicConfig, pk=pk)
     if request.method == 'POST':
@@ -63,6 +67,7 @@ def academicconfig_edit(request, pk):
 
 
 @login_required
+@user_admin_required
 def academicconfig_delete(request, pk):
     academicconfig = get_object_or_404(AcademicConfig, pk=pk)
     if request.method == 'POST':

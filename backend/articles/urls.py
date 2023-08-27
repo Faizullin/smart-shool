@@ -8,6 +8,10 @@ urlpatterns = [
          ArticleListView.as_view(),
          name='list'
          ),
+    path('api/articles/filters/',
+         ArticleFiltersView.as_view(),
+         name='list'
+         ),
     path('api/articles/<int:pk>/',
          ArticleRetrieveView.as_view(),
          name='retrieve'

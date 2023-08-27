@@ -8,12 +8,17 @@ from django_filters.views import FilterView
 
 from dashboard.get_context_processors import get_context
 from exams.models import Practical
+from accounts.permissions import isUserTeacher
 
 from .forms import PracticalForm
 from .tables import PracticalTable, PracticalFilter
 
+from dashboard.decorators import user_admin_or_teacher_required
+from dashboard.mixins import UserAdminOrTeacherRequiredMixin
+from dashboard.models import get_teacher_students_practicals_queryset
 
-class PracticalListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+
+class PracticalListView(LoginRequiredMixin, UserAdminOrTeacherRequiredMixin, tables.SingleTableMixin, FilterView):
     model = Practical
     table_class = PracticalTable
     template_name = 'dashboard/tables/practical/index.html'
@@ -23,17 +28,20 @@ class PracticalListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView)
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context = get_context(
-            context=context, segment='dashboard:practical_list')
+            self.request, context=context, segment='dashboard:practical_list')
         context.update({
             "filterset": PracticalFilter(self.request.GET),
         })
         return context
 
     def get_queryset(self, *args, **kwargs):
+        if isUserTeacher(self.request.user):
+            return get_teacher_students_practicals_queryset(self.request.user)
         return Practical.objects.all()
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def practical_create(request):
     if request.method == 'POST':
         form = PracticalForm(request.POST)
@@ -46,7 +54,8 @@ def practical_create(request):
     return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:practical_create')})
 
 
-@login_required()
+@login_required
+@user_admin_or_teacher_required
 def practical_edit(request, pk):
     practical = get_object_or_404(Practical, pk=pk)
     if request.method == 'POST':
@@ -61,6 +70,7 @@ def practical_edit(request, pk):
 
 
 @login_required
+@user_admin_or_teacher_required
 def practical_delete(request, pk):
     practical = get_object_or_404(Practical, pk=pk)
     if request.method == 'POST':

@@ -6,6 +6,8 @@ import Loader from '../loader/Loader';
 import { fetchUserData } from '../../redux/store/reducers/authSlice';
 import { fetchStudentData } from '../../redux/store/reducers/studentSlice';
 import { FormattedMessage } from 'react-intl';
+import Icon from '@mdi/react';
+import { mdiHome } from '@mdi/js';
 
 type Props = {
     children: ReactNode
@@ -39,7 +41,7 @@ const DashboardLayout = ({ children }: Props) => {
                                 <div className="w-full md:w-3/12 md:mx-2">
                                     <div className="bg-white p-3 border-t-4 border-green-400">
                                         <div className={`image overflow-hidden w-20 ${userData ? '' : 'hidden'}`}>
-                                            
+
                                             <img className="h-auto w-full mx-auto"
                                                 src={userData.profile_picture}
                                                 alt="Profile" />
@@ -92,6 +94,16 @@ const DashboardLayout = ({ children }: Props) => {
                                         <div className="mb-3"></div>
                                         <div className="flex items-center space-x-3 font-semibold text-gray-900 text-xl leading-8">
                                             <span className="text-green-500">
+                                                <Icon path={mdiHome} size={1} />
+                                            </span>
+                                            <span>
+                                                <Link to="/dashboard/profile">
+                                                    <FormattedMessage id="app.main.label" />
+                                                </Link>
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center space-x-3 font-semibold text-gray-900 text-xl leading-8">
+                                            <span className="text-green-500">
                                                 <svg className="h-5 fill-current" xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
@@ -101,7 +113,6 @@ const DashboardLayout = ({ children }: Props) => {
                                             <span>
                                                 <Link to="/dashboard/results">
                                                     <FormattedMessage id="app.url.my_results.label" />
-
                                                 </Link>
                                             </span>
                                         </div>
@@ -116,7 +127,6 @@ const DashboardLayout = ({ children }: Props) => {
                                             <span>
                                                 <Link to="/dashboard/exams">
                                                     <FormattedMessage id="app.url.my_exams.label" />
-
                                                 </Link>
                                             </span>
                                         </div>
@@ -131,7 +141,6 @@ const DashboardLayout = ({ children }: Props) => {
                                             <span>
                                                 <Link to="/dashboard/profile/edit">
                                                     <FormattedMessage id="app.url.update_profile.label" />
-
                                                 </Link>
                                             </span>
                                         </div>
@@ -146,13 +155,12 @@ const DashboardLayout = ({ children }: Props) => {
                                             <span>
                                                 <Link to="/dashboard/certificates">
                                                     <FormattedMessage id="app.url.my_certificates.label" />
-
                                                 </Link>
                                             </span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="w-full md:w-9/12 md:mx-2 mt-6 md:mt-0">
+                                <div className="w-full md:w-9/12 md:mx-2 mt-6 md:mt-0 overflow-hidden">
                                     <div className="bg-white p-3 shadow-sm rounded-sm min-h-64">
                                         <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
                                             <span className="text-green-500">
@@ -164,7 +172,6 @@ const DashboardLayout = ({ children }: Props) => {
                                             </span>
                                             <span className="tracking-wide">
                                                 <FormattedMessage id="app.dashboard.about.label" />
-
                                             </span>
                                         </div>
                                         <div className="text-gray-700">
@@ -172,14 +179,12 @@ const DashboardLayout = ({ children }: Props) => {
                                                 <div className="grid grid-cols-2">
                                                     <div className="px-4 py-2 font-semibold">
                                                         <FormattedMessage id="app.auth.username.label" />
-
                                                     </div>
                                                     <div className="px-4 py-2">{userData.username}</div>
                                                 </div>
                                                 <div className="grid grid-cols-2">
                                                     <div className="px-4 py-2 font-semibold">
                                                         <FormattedMessage id="app.auth.email.label" />
-
                                                     </div>
                                                     <div className="px-4 py-2">
                                                         <a className="text-blue-800" href={`mailto:${userData.email}`}>{userData.email}</a>
@@ -199,7 +204,6 @@ const DashboardLayout = ({ children }: Props) => {
                                             </span>
                                             <span className="tracking-wide">
                                                 <FormattedMessage id="app.dashboard.student_data.label" />
-
                                             </span>
                                         </div>
                                         <div className="text-gray-700">
@@ -207,21 +211,18 @@ const DashboardLayout = ({ children }: Props) => {
                                                 <div className="grid grid-cols-2">
                                                     <div className="px-4 py-2 font-semibold">
                                                         <FormattedMessage id="app.dashboard.student_data.first_name.label" />
-
                                                     </div>
                                                     <div className="px-4 py-2">{student_payload?.first_name}</div>
                                                 </div>
                                                 <div className="grid grid-cols-2">
                                                     <div className="px-4 py-2 font-semibold">
                                                         <FormattedMessage id="app.dashboard.student_data.gender.label" />
-
                                                     </div>
                                                     <div className="px-4 py-2">{student_payload?.gender}</div>
                                                 </div>
                                                 <div className="grid grid-cols-2">
                                                     <div className="px-4 py-2 font-semibold">
                                                         <FormattedMessage id="app.dashboard.student_data.contact_no.label" />
-
                                                     </div>
                                                     <div className="px-4 py-2">{student_payload?.parent_mobile_number}</div>
                                                 </div>

@@ -39,7 +39,7 @@ export default function CertificateIndex(_: ICertificateIndexProps) {
       id: 'app.subject.label'
     }) },
     {
-      key: 'actions', title: intl.formatMessage({
+      key: 'image', title: intl.formatMessage({
         id: 'app.image.label'
       }), render: (cert: any, key: string | number) => (
         <td key={key} className="px-6 py-4 text-right">

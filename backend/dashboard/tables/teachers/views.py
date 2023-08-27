@@ -12,8 +12,11 @@ from accounts.models import User, Group
 from .forms import TeacherForm
 from .tables import TeacherTable, TeacherFilter
 
+from dashboard.decorators import user_admin_required
+from dashboard.mixins import UserAdminRequiredMixin
 
-class TeacherListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
+
+class TeacherListView(LoginRequiredMixin, UserAdminRequiredMixin, tables.SingleTableMixin, FilterView):
     model = User
     table_class = TeacherTable
     template_name = 'dashboard/tables/teachers/index.html'
@@ -23,7 +26,7 @@ class TeacherListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context = get_context(
-            context=context, segment='dashboard:teacher_list')
+            self.request, context=context, segment='dashboard:teacher_list')
         context.update({
             "filterset": TeacherFilter(self.request.GET),
         })
@@ -34,7 +37,8 @@ class TeacherListView(LoginRequiredMixin, tables.SingleTableMixin, FilterView):
         return users.filter(groups__name='teacher')
 
 
-@login_required()
+@login_required
+@user_admin_required
 def teacher_create(request):
     if request.method == 'POST':
         form = TeacherForm(request.POST)
@@ -47,7 +51,8 @@ def teacher_create(request):
     return render(request, 'dashboard/tables/form_base.html', {'form': form, 'edit_url': reverse('dashboard:teacher_create')})
 
 
-@login_required()
+@login_required
+@user_admin_required
 def teacher_edit(request, pk):
     teacher = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
@@ -62,6 +67,7 @@ def teacher_edit(request, pk):
 
 
 @login_required
+@user_admin_required
 def teacher_delete(request, pk):
     teacher = get_object_or_404(User, pk=pk)
     if request.method == 'POST':

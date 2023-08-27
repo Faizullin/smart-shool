@@ -5,12 +5,15 @@ import Table from '../../../components/table/Table';
 import { useNavigate } from 'react-router-dom';
 import PracticalSubmitModal from '../../../components/modal/PracticalSubmitModal';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useAppDispatch } from '../../../hooks/redux';
+import { openErrorModal } from '../../../redux/store/reducers/errorModalSlice';
 
 export interface IExamIndexProps {
 }
 
 
 export default function ExamIndex(_: IExamIndexProps) {
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const intl = useIntl()
   const [exams, setExams] = React.useState<any[]>([])
@@ -33,7 +36,9 @@ export default function ExamIndex(_: IExamIndexProps) {
       exam_id.current = exam.id as string
       setShowPracticalSubmitForm(true)
     } else {
-      alert("Please pass theory test at first!")
+      dispatch(openErrorModal({
+        message: "Please pass theory test at first!"
+      }))
     }
   }
   const columns = React.useMemo(() => ([
