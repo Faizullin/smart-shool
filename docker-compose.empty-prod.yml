@@ -9,6 +9,7 @@ services:
       volumes:
           - static_data:/app/static
           - media_data:/app/media
+          - model_data:/app/accounts_face_recognition/model_data
       env_file:
           - ./.env
       expose:
@@ -42,3 +43,4 @@ volumes:
     postgres_data:
     static_data:
     media_data:
+    model_data:

@@ -5,10 +5,11 @@ from face_recognition.face_recognition_cli import image_files_in_folder
 from sklearn import neighbors
 from pathlib import Path
 from django.core.files import File
-from students.models import Student  
+from students.models import Student
+import numpy as np
 
 PATH = 'accounts_face_recognition/'
-MODEL_OUTPUT = PATH + "data/models/" + 'model1.clf'
+MODEL_OUTPUT = PATH + "model_data/models/" + 'model1.clf'
 DATASET_PATH = 'media/uploads/face_train/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -79,6 +80,11 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
         else:
             knn_clf = neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
 
+        print("Train data",len(X),len(y))
+        if len(X) == 0 or len(y) == 0:
+            if os.path.exists(model_save_path):
+                os.remove(model_save_path)
+            return False, "Clean successfull"
         knn_clf.fit(X, y)
 
         # Save the trained KNN classifier
@@ -89,6 +95,7 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
         print("end")
         return True, knn_clf
     except Exception as err:
+        print("Error", str(err))
         return False, str(err)
 
 def predict(rgb_frame, knn_clf=None, model_path=None, distance_threshold=0.5):
@@ -97,6 +104,8 @@ def predict(rgb_frame, knn_clf=None, model_path=None, distance_threshold=0.5):
 
     # Load a trained KNN model (if one was passed in)
     if knn_clf is None:
+        if not os.path.exists(model_path):
+            return []
         with open(model_path, 'rb') as f:
             knn_clf = pickle.load(f)
 
