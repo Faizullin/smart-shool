@@ -84,6 +84,7 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
         if len(X) == 0 or len(y) == 0:
             if os.path.exists(model_save_path):
                 os.remove(model_save_path)
+            print("end")
             return False, "Clean successfull"
         knn_clf.fit(X, y)
 
@@ -103,7 +104,7 @@ def predict(rgb_frame, knn_clf=None, model_path=None, distance_threshold=0.5):
         raise Exception("Must supply knn classifier either thourgh knn_clf or model_path")
 
     # Load a trained KNN model (if one was passed in)
-    if knn_clf is None:
+    if knn_clf is None and model_path:
         if not os.path.exists(model_path):
             return []
         with open(model_path, 'rb') as f:
