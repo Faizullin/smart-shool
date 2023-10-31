@@ -1,7 +1,7 @@
 from rest_framework import viewsets, filters, permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
-from dashboard.models import Result
+from results.models import Result
 from .serializers import ResultSerializer
 from .filters import ResultPagination, ORDERING_FIELDS, FILTERSET_FIELDS, SEARCH_FILTERSET_FIELDS
 from accounts.permissions import IsAdmin
@@ -16,4 +16,4 @@ class ResultViewSet(viewsets.ModelViewSet):
     pagination_class = ResultPagination
     search_fields = SEARCH_FILTERSET_FIELDS
     authentication_classes = (JWTAuthentication,)
-    # permission_classes = [permissions.IsAuthenticated, IsAdmin]
+    permission_classes = [permissions.IsAuthenticated, IsAdmin]

@@ -4,10 +4,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { map } from 'rxjs';
 
-interface IBaseModel {
-  id: number;
-}
-
 @Component({
   template: '',
 })
@@ -16,7 +12,7 @@ export class BaseEditComponent implements OnInit {
     detail: (id: number) => ``,
   };
   public form!: FormGroup;
-  public editInstance: IBaseModel | null = null;
+  public editInstance: any | null = null;
   public validationErrors: {
     [key: string]: any;
   } = {};
@@ -24,7 +20,7 @@ export class BaseEditComponent implements OnInit {
   constructor(
     protected fb: FormBuilder,
     protected modalService: BsModalService,
-    private http: HttpClient,
+    protected http: HttpClient,
   ) {}
 
   ngOnInit(): void {

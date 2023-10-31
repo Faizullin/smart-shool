@@ -11,7 +11,7 @@ export class QuizService {
 
   getQuizes(filters?: any) {
     return this.http
-      .get<any>(`/api/s/quizes/`, {
+      .get<any>(`/api/s/quizzes/`, {
         params: {
           ...filters,
         },
@@ -33,7 +33,7 @@ export class QuizService {
   }
   getQuestions(id: number, filters?: any) {
     return this.http
-      .get<any>(`/api/s/quizes/${id}/questions/`, {
+      .get<any>(`/api/s/quizzes/${id}/questions/`, {
         params: {
           ...filters,
         },
@@ -56,7 +56,7 @@ export class QuizService {
       );
   }
   getQuiz(id: number) {
-    return this.http.get<any>(`/api/s/quizes/${id}`).pipe(
+    return this.http.get<any>(`/api/s/quizzes/${id}`).pipe(
       map((data: any) => {
         return {
           ...data,
@@ -66,7 +66,7 @@ export class QuizService {
   }
 
   createQuiz(data: any) {
-    return this.http.post<any>(`/api/s/quizes/`, data).pipe(
+    return this.http.post<any>(`/api/s/quizzes/`, data).pipe(
       map((data: any) => {
         return {
           ...data,
@@ -75,7 +75,7 @@ export class QuizService {
     );
   }
   updateQuiz(id: number, data: any) {
-    return this.http.patch<any>(`/api/s/quizes/${id}/`, data).pipe(
+    return this.http.patch<any>(`/api/s/quizzes/${id}/`, data).pipe(
       map((data: any) => {
         return {
           ...data,
@@ -84,7 +84,7 @@ export class QuizService {
     );
   }
   addQuestion(id: number, data: any) {
-    return this.http.post<any>(`/api/s/quizes/${id}/questions/`, data).pipe(
+    return this.http.post<any>(`/api/s/quizzes/${id}/questions/`, data).pipe(
       map((data: any) => {
         return {
           ...data,
@@ -93,10 +93,10 @@ export class QuizService {
     );
   }
   deleteQuestion(quiz_id: number, id: number) {
-    return this.http.delete<any>(`/api/s/quizes/${quiz_id}/questions/${id}/`);
+    return this.http.delete<any>(`/api/s/quizzes/${quiz_id}/questions/${id}/`);
   }
   getQuestion(quiz_id: number, id: number) {
-    return this.http.get<any>(`/api/s/quizes/${quiz_id}/questions/${id}/`).pipe(
+    return this.http.get<any>(`/api/s/quizzes/${quiz_id}/questions/${id}/`).pipe(
       map((data: any) => {
         return {
           ...data,
@@ -106,7 +106,7 @@ export class QuizService {
   }
   updateQuestion(quiz_id: number, id: number, data: any) {
     return this.http
-      .patch<any>(`/api/s/quizes/${quiz_id}/questions/${id}/`, data)
+      .patch<any>(`/api/s/quizzes/${quiz_id}/questions/${id}/`, data)
       .pipe(
         map((data: any) => {
           return {

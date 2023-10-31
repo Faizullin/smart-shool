@@ -1,29 +1,24 @@
-import { Document } from './document';
+import { TimestampedModel } from './timestamped-model';
 
-export interface Answer {
-  id?: number;
+export interface Exam extends TimestampedModel {
+  exam_type: 'i' | 'm' | 'f';
+}
+
+export interface Answer extends TimestampedModel {
   content: string;
   correct: boolean;
 }
 
-export interface Question {
-  id?: number;
+export interface Question extends TimestampedModel {
   prompt: string;
   answers: Answer[];
   answers_count?: number;
-  created_at: string;
-  updated_at: string;
 }
 
-export interface Quiz {
-  id: number;
+export interface Quiz extends TimestampedModel {
   title: string;
-  quiz_type: 'i' | 'm' | 'f';
-  document_id: number;
-  document: Document;
   duration_time: number;
   questions_count: number;
+  exam?: Exam;
   questions?: Array<Question>;
-  created_at: string;
-  updated_at: string;
 }

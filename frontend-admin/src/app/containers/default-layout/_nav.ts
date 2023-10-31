@@ -50,7 +50,7 @@ let navItemsData: INavData[] = [
   },
   {
     name: 'Quizzes',
-    url: '/dashboard/quizes',
+    url: '/dashboard/quizzes',
     iconComponent: { name: 'cil-quiz' },
   },
   {

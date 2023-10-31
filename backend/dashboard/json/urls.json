@@ -1,1 +1,13 @@
-[{"url": "api/s/certificates/", "file": "dashboard.tables.certificates.urls"}, {"url": "api/s/articles/", "file": "dashboard.tables.articles.urls"}, {"url": "api/s/files/", "file": "dashboard.tables.files.urls"}, {"url": "api/s/students/", "file": "dashboard.tables.students.urls"}, {"url": "api/s/quizzes/", "file": "dashboard.tables.quizzes.urls"}, {"url": "api/s/users/", "file": "dashboard.tables.users.urls"}, {"url": "api/s/exams/", "file": "dashboard.tables.exams.urls"}]
+[
+  {
+    "url": "api/s/certificates/",
+    "file": "dashboard.tables.certificates.urls"
+  },
+  { "url": "api/s/articles/", "file": "dashboard.tables.articles.urls" },
+  { "url": "api/s/files/", "file": "dashboard.tables.files.urls" },
+  { "url": "api/s/students/", "file": "dashboard.tables.students.urls" },
+  { "url": "api/s/quizzes/", "file": "dashboard.tables.quizzes.urls" },
+  { "url": "api/s/users/", "file": "dashboard.tables.users.urls" },
+  { "url": "api/s/exams/", "file": "dashboard.tables.exams.urls" },
+  { "url": "api/s/results/", "file": "dashboard.tables.results.urls" }
+]

@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
-import { QuizComponent } from './features/quiz/quiz/quiz.component';
 import { ArticleListComponent } from './features/article/article-list/article-list.component';
 import { UserListComponent } from './features/user/user-list/user-list.component';
 import { ResultListComponent } from './features/result/result-list/result-list.component';
-import { CertificateListComponent } from './features/certificates/certificate-list/certificate-list.component';
+import { CertificateListComponent } from './features/certificate/certificate-list/certificate-list.component';
 import { StudentListComponent } from './features/students/student-list/student-list.component';
 import { ExamListComponent } from './features/exam/exam-list/exam-list.component';
+import { QuizListComponent } from './features/quiz/quiz-list/quiz-list.component';
 
 const routes: Routes = [
   {
@@ -40,7 +40,7 @@ const routes: Routes = [
   },
   {
     path: 'quizzes',
-    component: QuizComponent,
+    component: QuizListComponent,
     data: {
       title: $localize`Quizzes`,
     },

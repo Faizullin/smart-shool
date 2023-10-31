@@ -32,7 +32,7 @@ import { FilterableMultiselectModule } from './shared/components/filterable-mult
 import { SmartTableComponent } from 'src/app/views/dashboard/shared/components/tables/smart-table/smart-table.component';
 import { SmartPaginationComponent } from 'src/app/views/dashboard/shared/components/tables/smart-pagination/smart-pagination.component';
 import { UserListComponent } from './features/user/user-list/user-list.component';
-import { QuizComponent } from './features/quiz/quiz/quiz.component';
+import { QuizListComponent } from './features/quiz/quiz-list/quiz-list.component';
 import { QuizEditComponent } from './features/quiz/quiz-edit/quiz-edit.component';
 import { UserEditComponent } from './features/user/user-edit/user-edit.component';
 import { ArticleEditComponent } from './features/article/article-edit/article-edit.component';
@@ -48,8 +48,8 @@ import { SeriesListComponent } from './features/series/series-list/series-list.c
 import { SeriesEditComponent } from './features/series/series-edit/series-edit.component';
 import { BaseListComponent } from './shared/base-component/base-list/base-list.component';
 import { BaseEditComponent } from './shared/base-component/base-edit/base-edit.component';
-import { CertificateListComponent } from './features/certificates/certificate-list/certificate-list.component';
-import { CertificateEditComponent } from './features/certificates/certificate-edit/certificate-edit.component';
+import { CertificateListComponent } from './features/certificate/certificate-list/certificate-list.component';
+import { CertificateEditComponent } from './features/certificate/certificate-edit/certificate-edit.component';
 import { StudentListComponent } from './features/students/student-list/student-list.component';
 import { StudentEditComponent } from './features/students/student-edit/student-edit.component';
 import { DebouncedSearchInputComponent } from './shared/components/debounced-search-input/debounced-search-input.component';
@@ -90,7 +90,7 @@ import { ExamEditComponent } from './features/exam/exam-edit/exam-edit.component
     UserListComponent,
     UserEditComponent,
     UserEditComponent,
-    QuizComponent,
+    QuizListComponent,
     QuizEditComponent,
     ArticleListComponent,
     ArticleEditComponent,

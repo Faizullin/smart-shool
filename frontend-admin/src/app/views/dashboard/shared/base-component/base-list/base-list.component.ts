@@ -96,7 +96,7 @@ export class BaseListComponent<T> implements OnInit {
       });
     }
   }
-  private fetchDataRequest(filters?: any) {
+  protected fetchDataRequest(filters?: any) {
     return this.http
       .get(this.action_urls['list'](), {
         params: {

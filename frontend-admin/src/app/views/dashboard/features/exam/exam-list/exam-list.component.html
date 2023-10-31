@@ -18,6 +18,12 @@
                     <ng-template columnDef="subject" columnLabel="Subject." sortable="true" #headerCellDef let-item>
                         <td>{{ item.subject?.title }}</td>
                     </ng-template>
+                    <ng-template columnDef="quiz" columnLabel="Quiz." sortable="false" #headerCellDef let-item>
+                        <td>
+                            <button *ngIf="item.quiz" cButton type="button" color="primary" (click)="onEditQuiz(item)">Edit Quiz #{{ item.quiz.id }}</button>
+                            <button *ngIf="!item.quiz" cButton type="button" color="primary" (click)="onEditQuiz(item)">Create Quiz</button>
+                        </td>
+                    </ng-template>
                     <ng-template columnDef="created_at" columnLabel="Created At." sortable="true" #headerCellDef
                         let-item>
                         <td>{{ item.created_at }}</td>

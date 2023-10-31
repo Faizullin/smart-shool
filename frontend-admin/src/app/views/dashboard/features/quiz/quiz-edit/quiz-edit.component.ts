@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -6,7 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Question, Quiz } from 'src/app/core/models/quiz';
+import { Exam, Question, Quiz } from 'src/app/core/models/quiz';
 import { QuizService } from 'src/app/core/services/quiz.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
@@ -15,23 +15,22 @@ import {
 } from 'src/app/views/dashboard/shared/components/tables/smart-table/smart-table.component';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { FiltersService } from 'src/app/core/services/filters.service';
-
-interface IFilters {
-  documents: Document[];
-}
+import { BaseEditComponent } from '../../../shared/base-component/base-edit/base-edit.component';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-quiz-edit',
   templateUrl: './quiz-edit.component.html',
   styleUrls: ['./quiz-edit.component.scss'],
 })
-export class QuizEditComponent implements OnInit {
-  public form!: FormGroup;
+export class QuizEditComponent extends BaseEditComponent {
+  public override action_urls = {
+    detail: (id: number) => `/api/s/quizzes/${id}/`,
+    post: () => `/api/s/quizzes/`,
+  };
+  public override editInstance: Quiz | null = null;
   public questionForm!: FormGroup;
-  public validationErrors: {
-    [key: string]: any;
-  } = {};
-  public editQuizInstance: Quiz | null = null;
   public editQuestionInstance: Question | null = null;
   public multiselectDocumentDropdownSettings: IDropdownSettings = {
     idField: 'id',
@@ -43,9 +42,6 @@ export class QuizEditComponent implements OnInit {
     allowSearchFilter: true,
     closeDropDownOnSelection: false,
     allowRemoteDataSearch: true,
-  };
-  public current_filters: IFilters = {
-    documents: [],
   };
 
   public columns: TableColumn<Question>[] = [
@@ -77,17 +73,20 @@ export class QuizEditComponent implements OnInit {
 
   constructor(
     private quizService: QuizService,
-    private fb: FormBuilder,
-    private modalService: BsModalService,
+    fb: FormBuilder,
+    modalService: BsModalService,
     private filtersService: FiltersService,
-  ) { }
+    http: HttpClient,
+  ) {
+    super(fb, modalService, http);
+  }
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
     const initialState = this.modalService.config.initialState as any;
     this.form = this.fb.group({
       title: ['', Validators.required],
-      quiz_type: ['', Validators.required],
-      document: [[], Validators.required],
+      exam: [[], Validators.required],
+      duration_time: [[], Validators.required],
       questions: this.fb.array([new FormControl('')]),
     });
     this.questionForm = this.fb.group({
@@ -95,58 +94,51 @@ export class QuizEditComponent implements OnInit {
       answers: this.fb.array([]),
     });
     if (initialState.id) {
-      this.quizService.getQuiz(initialState.id).subscribe({
-        next: (quiz) => {
-          this.editQuizInstance = { ...quiz } as Quiz;
-          this.form.patchValue({
-            title: this.editQuizInstance.title,
-            quiz_type: this.editQuizInstance.quiz_type,
-            document: this.editQuizInstance.document
-              ? [this.editQuizInstance.document]
-              : [],
-            questions: [],
+      this.fetchInstance(initialState.id);
+    }
+  }
+  override patchFormValue(data: any) {
+    if (this.editInstance !== null) {
+      this.form.patchValue({
+        title: this.editInstance.title,
+        exam: this.editInstance.exam ? [this.editInstance.exam] : [],
+        duration_time: this.editInstance.duration_time || 0,
+        questions: [],
+      });
+      this.fetchQuizQuestions();
+    }
+  }
+  onEditQuestionOpen(item: Question) {
+    if (this.editInstance !== null && item.id !== undefined) {
+      this.quizService.getQuestion(this.editInstance.id, item.id).subscribe({
+        next: (question_item) => {
+          this.editQuestionInstance = question_item;
+          this.questionAnswers.clear();
+          this.questionForm.patchValue({
+            prompt: item.prompt,
           });
-          this.fetchQuizQuestions();
+          item.answers.map((item) => {
+            const form = this.fb.group({
+              content: item.content,
+              correct: item.correct,
+            });
+            this.questionAnswers.push(form);
+          });
         },
       });
     }
   }
-
-  onEditQuestionOpen(item: Question) {
-    if (this.editQuizInstance !== null && item.id !== undefined) {
-      this.quizService
-        .getQuestion(this.editQuizInstance.id, item.id)
-        .subscribe({
-          next: (question_item) => {
-            this.editQuestionInstance = question_item;
-            this.questionAnswers.clear();
-            this.questionForm.patchValue({
-              prompt: item.prompt,
-            });
-            item.answers.map((item) => {
-              const form = this.fb.group({
-                content: item.content,
-                correct: item.correct,
-              });
-              this.questionAnswers.push(form);
-            });
-          },
-        });
-    }
-  }
   onDeleteQuestion(item: Question) {
-    if (this.editQuizInstance !== null && item.id !== undefined) {
-      this.quizService
-        .deleteQuestion(this.editQuizInstance.id, item.id)
-        .subscribe({
-          next: () => {
-            if (this.editQuestionInstance?.id === item.id) {
-              this.editQuestionInstance = null;
-              this.questionForm.reset();
-            }
-            this.fetchQuizQuestions();
-          },
-        });
+    if (this.editInstance !== null && item.id !== undefined) {
+      this.quizService.deleteQuestion(this.editInstance.id, item.id).subscribe({
+        next: () => {
+          if (this.editQuestionInstance?.id === item.id) {
+            this.editQuestionInstance = null;
+            this.questionForm.reset();
+          }
+          this.fetchQuizQuestions();
+        },
+      });
     }
   }
   onRemoveQuestionAnswer(answerIndex: number) {
@@ -175,9 +167,6 @@ export class QuizEditComponent implements OnInit {
     return this.questionForm.controls['answers'] as FormArray;
   }
 
-  get formControl() {
-    return this.form.controls;
-  }
   get questionFormControl() {
     return this.questionForm.controls;
   }
@@ -196,57 +185,27 @@ export class QuizEditComponent implements OnInit {
     );
   }
   private fetchQuizQuestions() {
-    if (this.editQuizInstance !== null) {
+    if (this.editInstance !== null) {
       this.quizService
-        .getQuestions(this.editQuizInstance.id, {
+        .getQuestions(this.editInstance.id, {
           ...this.filterParams,
           search: this.filterParams.filterText,
         })
         .subscribe((data) => {
-          this.editQuizInstance!.questions = data.results;
-          this.editQuizInstance!.questions_count = data.count;
+          this.editInstance!.questions = data.results;
+          this.editInstance!.questions_count = data.count;
         });
     }
   }
-  public onQuizSave() {
+  public override onSave() {
     if (this.form.valid) {
       const data = this.form.value;
-      const quiz_document_ids = data.document.map((item: any) => item.id);
-      if (quiz_document_ids.length > 0) {
-        data.document_id = quiz_document_ids[0];
-      }
-      if (this.editQuizInstance === null) {
-        this.quizService.createQuiz(data).subscribe({
-          next: (quiz_data) => {
-            this.editQuizInstance = quiz_data;
-            this.validationErrors = {};
-          },
-          error: (error) => {
-            if (error.status == 400 || error.status == 422) {
-              const errors = { ...error.error };
-              this.validationErrors = errors;
-            }
-          },
-        });
-      } else {
-        this.quizService.updateQuiz(this.editQuizInstance.id, data).subscribe({
-          next: (quiz_data) => {
-            this.editQuizInstance = quiz_data;
-            this.fetchQuizQuestions();
-            this.validationErrors = {};
-          },
-          error: (error) => {
-            if (error.status == 400 || error.status == 422) {
-              const errors = { ...error.error };
-              this.validationErrors = errors;
-            }
-          },
-        });
-      }
+      data.exam_id = data.exam.length > 0 ? data.exam[0].id : null;
+      this.fetchSave(data);
     }
   }
   public onQuestionSave() {
-    if (this.editQuizInstance !== null && (this.questionForm.valid || true)) {
+    if (this.editInstance !== null && (this.questionForm.valid || true)) {
       const data = this.questionForm.value;
       for (let index = 0; index < data.answers.length; index++) {
         data.answers[index].correct = Boolean(data.answers[index].correct);
@@ -254,7 +213,7 @@ export class QuizEditComponent implements OnInit {
       if (this.editQuestionInstance !== null && this.editQuestionInstance.id) {
         this.quizService
           .updateQuestion(
-            this.editQuizInstance.id,
+            this.editInstance.id,
             this.editQuestionInstance.id,
             data,
           )
@@ -264,7 +223,7 @@ export class QuizEditComponent implements OnInit {
           });
       } else {
         this.quizService
-          .addQuestion(this.editQuizInstance.id, data)
+          .addQuestion(this.editInstance.id, data)
           .subscribe((question_data) => {
             this.fetchQuizQuestions();
             this.questionForm.reset();
@@ -278,15 +237,26 @@ export class QuizEditComponent implements OnInit {
     this.editQuestionInstance = null;
   }
 
-  public onFilterChange(filter: any) {
-    this.filtersService
-      .getDocumentFilters({
-        search: filter,
-      })
-      .subscribe({
-        next: (filters) => {
-          this.current_filters.documents = filters.results;
+  public fetchFilterExam(query: string) {
+    return this.http
+      .get(`/api/s/exams`, {
+        params: {
+          search: query,
         },
-      });
+      })
+      .pipe(
+        map((data: any) => {
+          const data_results = data.results || [];
+          const data_total_items = data.count || 0;
+          return data_results.map(function (data_results: any): Exam {
+            return {
+              ...data_results,
+            };
+          });
+        }),
+      );
+  }
+  public getExamFilterTextField(item: Exam) {
+    return `${item.id} - ${item.exam_type}`;
   }
 }

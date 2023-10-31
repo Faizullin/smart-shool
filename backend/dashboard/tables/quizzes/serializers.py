@@ -1,7 +1,6 @@
 from rest_framework import serializers
-from exams.models import Quiz, Question, Answer
+from exams.models import Exam, Quiz, Question, Answer
 from utils.serializers import TimestampedSerializer
-# from dashboard.tables.documents.serializers import DocumentSerializer
 
 
 class QuestionAnswerSerializer(TimestampedSerializer):
@@ -26,26 +25,32 @@ class QuestionSerializer(TimestampedSerializer):
                   'created_at', 'updated_at')
 
 
+class QuizExamSerializer(TimestampedSerializer):
+    class Meta:
+        model = Exam
+        fields = ('id', 'exam_type', 'created_at', 'updated_at')
+
+
 class QuizSerializer(TimestampedSerializer):
-    # document_id = serializers.PrimaryKeyRelatedField(
-    #     write_only=True, required=True, queryset=Document.objects.all())
-    # document = DocumentSerializer(read_only=True)
+    exam_id = serializers.PrimaryKeyRelatedField(
+        write_only=True, required=True, queryset=Exam.objects.all())
+    exam = QuizExamSerializer(read_only=True)
 
     class Meta:
         model = Quiz
-        fields = ('id', 'title', 'duration_time', 'questions_count',
-                  'quiz_type', 'document', 'document_id', 'created_at', 'updated_at')
+        fields = ('id', 'title', 'duration_time', 'exam', 'exam_id',
+                  'questions_count', 'created_at', 'updated_at')
 
     def create(self, validated_data):
-        document = validated_data.pop('document_id')
+        exam = validated_data.pop('exam_id')
         quiz = Quiz.objects.create(**validated_data,
-                                   document_id=document.pk)
+                                   exam_id=exam.pk)
         return quiz
 
     def update(self, instance: Quiz, validated_data):
-        document = validated_data.pop('document_id')
+        exam = validated_data.pop('exam_id')
         for key, value in validated_data.items():
             setattr(instance, key, value)
-        instance.document_id = document.pk
+        instance.exam_id = exam.pk
         instance.save()
         return instance

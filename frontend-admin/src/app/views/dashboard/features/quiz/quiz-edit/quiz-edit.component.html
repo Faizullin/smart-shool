@@ -2,10 +2,10 @@
   <h5 cModalTitle>Edit</h5>
 </c-modal-header>
 <c-modal-body>
-  <form [formGroup]="form" novalidate (submit)="onQuizSave()">
+  <form [formGroup]="form" novalidate (submit)="onSave()">
     <div class="form-group">
       <label cLabel>Title</label>
-      <input cFormControl name="name" formControlName="title" />
+      <input cFormControl name="title" formControlName="title" />
       <div *ngIf="formControl['title'].errors">
         <c-form-feedback class="d-block" *ngIf="formControl['title'].errors['required'] && formControl['title'].touched"
           [valid]="false">
@@ -16,49 +16,41 @@
         {{ validationErrors['title'] }}
       </c-form-feedback>
     </div>
-    <div class="form-group mt-3">
-      <label cLabel>Quiz Type</label>
-      <select cSelect formControlName="quiz_type">
-        <option value="f">Final</option>
-        <option value="m">Mid-term</option>
-        <option value="i">Initital</option>
-      </select>
-      <div *ngIf="formControl['quiz_type'].errors">
+    <div class="form-group">
+      <label cLabel>Duration Time</label>
+      <input cFormControl name="duration_time" formControlName="duration_time" type="number" />
+      <div *ngIf="formControl['duration_time'].errors">
         <c-form-feedback class="d-block"
-          *ngIf="formControl['quiz_type'].errors['required'] && formControl['quiz_type'].touched" [valid]="false">
-          Quiz type is required.
+          *ngIf="formControl['duration_time'].errors['required'] && formControl['duration_time'].touched"
+          [valid]="false">
+          Duration Time is required.
         </c-form-feedback>
       </div>
-      <c-form-feedback class="d-block" *ngIf="validationErrors['title']" [valid]="false">
-        {{ validationErrors['title'] }}
+      <c-form-feedback class="d-block" *ngIf="validationErrors['duration_time']" [valid]="false">
+        {{ validationErrors['duration_time'] }}
       </c-form-feedback>
     </div>
-    <div class="form-group mt-3">
-      <label cLabel for="document">Document</label>
-      <ng-multiselect-dropdown formControlName="document" id="document" [placeholder]="'Select'"
-        [settings]="multiselectDocumentDropdownSettings" [data]="current_filters.documents"
-        (onFilterChange)="onFilterChange($event)">
-      </ng-multiselect-dropdown>
-
-      <!--   [(ngModel)]="current_selected_filters.tags"-->
-      <div *ngIf="formControl['document'].errors">
-        <c-form-feedback class="d-block"
-          *ngIf="formControl['document'].errors['required'] && formControl['document'].touched" [valid]="false">
-          Document is required.
+    <div class="form-group">
+      <label cLabel for="exam">Exam</label>
+      <app-filterable-multiselect formControlName="exam" [idField]="'id'" [textField]="'id'"
+        [textFieldDef]="getExamFilterTextField" [allowSearchFilter]="true" [allowRemoteDataSearch]="true"
+        [multiple]="false" [filterMethod]="fetchFilterExam"></app-filterable-multiselect>
+      <div *ngIf="formControl['exam'].errors">
+        <c-form-feedback class="d-block" *ngIf="formControl['exam'].errors['required'] && formControl['exam'].touched"
+          [valid]="false">
+          Exam is required.
         </c-form-feedback>
       </div>
-      <c-form-feedback class="d-block" *ngIf="validationErrors['title']" [valid]="false">
-        {{ validationErrors['title'] }}
+      <c-form-feedback class="d-block" *ngIf="validationErrors['exam']" [valid]="false">
+        {{ validationErrors['exam'] }}
       </c-form-feedback>
     </div>
-    <div class="form-group mt-3">
-      <button type="submit" cButton color="primary" [disabled]="form.invalid">
-        Save
-      </button>
-    </div>
+    <button type="submit" cButton color="primary" [disabled]="form.invalid" class="mt-5">
+      Save
+    </button>
   </form>
   <hr class="my-6" />
-  <form [formGroup]="questionForm" novalidate *ngIf="editQuizInstance !== null">
+  <form [formGroup]="questionForm" novalidate *ngIf="editInstance !== null">
     <div class="form-group">
       <label cLabel="">Prompt</label>
       <c-row>
@@ -66,7 +58,7 @@
           <input cFormControl class="form-control" name="prompt" formControlName="prompt" />
         </c-col>
         <c-col>
-          <button type="button" cButton color="primary" (click)="onNewQuestionClick()">New</button>
+          <button type="button" cButton color="primary" (click)="onNewQuestionClick()">New Question</button>
         </c-col>
       </c-row>
       <div *ngIf="questionFormControl['prompt'].errors">
@@ -99,16 +91,17 @@
     </div>
     <div class="form-group mt-3">
       <button cButton color="default" type="button" class="mr-4" (click)="addAnswer()">
-        Add
+        Add Answer
       </button>
       <button cButton color="primary" type="button" (click)="onQuestionSave()" [disabled]="questionForm.invalid">
-        Submit
+        Save Question
       </button>
     </div>
     <hr class="my-6" />
     <div>
-      <app-smart-table [data]="editQuizInstance.questions || []" [columns]="columns"
-        [totalPages]="editQuizInstance.questions_count" (deleteOpened)="onDeleteQuestion($event)"
+      <app-smart-table [data]="editInstance.questions || []" [columns]="columns"
+        [totalPages]="editInstance.questions_count" (pageSizeChanged)="onPageSizeChange($event)"
+        (pageChanged)="onPageChange($event)" (deleteOpened)="onDeleteQuestion($event)"
         (editOpened)="onEditQuestionOpen($event)"></app-smart-table>
     </div>
   </form>

@@ -1,8 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit, forwardRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  forwardRef,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 export interface IFilters {
   id: number;
@@ -26,6 +33,7 @@ export class FilterableMultiselectComponent<TFilters>
 {
   @Input() idField!: string;
   @Input() textField!: string;
+  @Input() textFieldDef?: (item: any) => string;
   @Input() remoteResponseField!: string;
   @Input() multiple: boolean = true;
   @Input() allowSearchFilter: boolean = true;
@@ -34,6 +42,7 @@ export class FilterableMultiselectComponent<TFilters>
   @Input() searchFiltersKey!: string;
   @Input() useInitialLoad: boolean = true;
   @Input() current_filters: TFilters[] = [];
+  @Input() filterMethod?: (query: string) => Observable<any>;
 
   value?: TFilters[];
 
@@ -58,7 +67,14 @@ export class FilterableMultiselectComponent<TFilters>
   }
   writeValue(obj: any): void {
     this.value = obj;
-    this.current_selected_filters = obj;
+    if (this.textFieldDef !== undefined) {
+      this.current_selected_filters = obj.map((item: any) => ({
+        ...item,
+        label: this.textFieldDef!(item) || '',
+      }));
+    } else {
+      this.current_selected_filters = obj;
+    }
   }
   registerOnChange(fn: any): void {
     this.propagateChange = fn;
@@ -67,7 +83,8 @@ export class FilterableMultiselectComponent<TFilters>
 
   ngOnInit(): void {
     this.multiselectTagDropdownSettings.idField = this.idField;
-    this.multiselectTagDropdownSettings.textField = this.textField;
+    this.multiselectTagDropdownSettings.textField =
+      this.textFieldDef !== undefined ? 'label' : this.textField;
     this.multiselectTagDropdownSettings.singleSelection = !this.multiple;
     this.multiselectTagDropdownSettings.allowSearchFilter =
       this.allowSearchFilter;
@@ -103,33 +120,43 @@ export class FilterableMultiselectComponent<TFilters>
       ) as any) || [];
     this.onChange(filtered_items);
   }
-  private fetchFilters(filter?: string) {
-    return this.http
-      .get<any>(`/api/filters/${this.searchFiltersKey}/`, {
-        params: {
-          search: filter || '',
-        },
-      })
-      .pipe(
-        map((data: any) => {
-          const data_results = data || [];
-          return {
-            [this.remoteResponseField]: data_results.map(function (
-              items: any,
-            ): TFilters {
+  private fetchFilters(query?: string) {
+    if (this.filterMethod !== undefined) {
+      return this.filterMethod(query || '');
+    } else {
+      return this.http
+        .get<any>(`/api/filters/${this.searchFiltersKey}/`, {
+          params: {
+            search: query || '',
+          },
+        })
+        .pipe(
+          map((data: any) => {
+            const data_results = data || [];
+            return data_results.map((items: any): TFilters => {
               return {
                 ...items,
-              } as TFilters;
-            }),
-          };
-        }),
-      );
+              };
+            });
+          }),
+        );
+    }
   }
   public onFilterChange(filter: any) {
     if (this.allowRemoteDataSearch) {
       this.fetchFilters(filter).subscribe({
-        next: (_data) => {
-          this.current_filters = _data[this.remoteResponseField];
+        next: (_data: TFilters[]) => {
+          this.current_filters = _data.map((item) => {
+            if (this.textFieldDef !== undefined) {
+              return {
+                ...item,
+                label: this.textFieldDef(item),
+              };
+            }
+            return {
+              ...item,
+            };
+          });
         },
       });
     }
