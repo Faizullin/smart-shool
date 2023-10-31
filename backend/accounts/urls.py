@@ -6,7 +6,7 @@ app_name = 'accounts'
 
 urlpatterns = [
       path('api/register/', RegisterView.as_view(), name='register'),
-      path('api/token/', 
+      path('api/login/', 
             jwt_views.TokenObtainPairView.as_view(), 
             name ='token_obtain_pair'),
       path('api/token/refresh/', 

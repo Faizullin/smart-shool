@@ -1,0 +1,8 @@
+<ng-multiselect-dropdown [placeholder]="'Select'"
+    [settings]="multiselectTagDropdownSettings" [data]="current_filters"
+    [(ngModel)]="current_selected_filters" 
+    (onSelect)="onSelect($event)" (onSelectAll)="onSelectAll($event)"
+    (onDeSelect)="onDeSelect($event)" (onDeSelectAll)="onDeSelectAll($event)"
+    (onFilterChange)="onFilterChange($event)"
+    >
+</ng-multiselect-dropdown>

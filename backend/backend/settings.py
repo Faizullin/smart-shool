@@ -14,10 +14,6 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
-USE_DOTENV = True
-if USE_DOTENV:
-    from dotenv import load_dotenv
-    load_dotenv()
 
 USE_SPA = os.getenv('USE_SPA', 'True') == 'True'
 
@@ -60,6 +56,7 @@ INSTALLED_APPS = [
     'dashboard',
     'accounts',
     'academics',
+    'files',
     'accounts_face_recognition',
     'articles',
     'exams',
@@ -67,7 +64,6 @@ INSTALLED_APPS = [
     'students',
     'certificates',
     'stats_export',
-    'spa_app',
 ]
 
 MIDDLEWARE = [

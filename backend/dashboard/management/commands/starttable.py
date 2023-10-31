@@ -18,95 +18,58 @@ def replace_file_with_stubs(slodo_file_path: str, template_path: str, data: dict
 
 
 class Command(BaseCommand):
-    help = 'Create files: views.py, urls.py, tables.py, forms.py, and an HTML template'
+    help = 'Create files: views.py, urls.py, serializers.py, filters.py'
+
+    def get_seprated_models(name):
+        return name.split('.')
 
     def add_arguments(self, parser):
         parser.add_argument('folder_name', type=str, help='Name of the folder')
         parser.add_argument('model_name', type=str, help='Name of the model')
         parser.add_argument('app_name', type=str,
                             help='Name of the app', default='dashboard'),
-        parser.add_argument(
-            'slodo_name', type=str, help='Name of the slodo HTML file', default='index.html')
 
     def handle(self, *args, **options):
         app_name = options['app_name']
         folder_name = options['folder_name']
-        slodo_name = options['slodo_name']
         model_name: str = options['model_name']
+        model_appname = None
+        if '.' in model_name:
+            model_appname, model_name = self.get_seprated_models(model_name)
 
         data_to_replace = {
             '{verbal_url_name}': model_name.lower(),
             '{ModelName}': model_name,
             '{app_name}': folder_name,
-            '{slodo_name}': slodo_name,
         }
 
-        # Create the folder if it doesn't exist
-
-        os.makedirs(os.path.join(app_name, 'templates', app_name,
-                    'tables', folder_name), exist_ok=True)
         os.makedirs(os.path.join(app_name, 'tables',
                     folder_name), exist_ok=True)
 
-        # Create the slodo HTML file
-        slodo_file_path = os.path.join(os.path.join(
-            app_name, 'templates', app_name, 'tables', folder_name), slodo_name)
-        template_path = os.path.join(
-            'dashboard', 'management', 'commands', 'stubs', 'templates', 'index.html')
-        replace_file_with_stubs(
-            slodo_file_path, template_path, data_to_replace)
-
-        # Create the views.py file
-        views_file_path = os.path.join(
-            app_name, 'tables', folder_name, 'views.py')
-        template_path = os.path.join(
-            'dashboard', 'management', 'commands', 'stubs', 'views.py')
-        replace_file_with_stubs(
-            views_file_path, template_path, data_to_replace)
-
-        # Create the urls.py file
-        views_file_path = os.path.join(
-            app_name, 'tables', folder_name, 'urls.py')
-        template_path = os.path.join(
-            'dashboard', 'management', 'commands', 'stubs', 'urls.py')
-        replace_file_with_stubs(
-            views_file_path, template_path, data_to_replace)
-
-        # Create the tables.py file
-        views_file_path = os.path.join(
-            app_name, 'tables', folder_name, 'tables.py')
-        template_path = os.path.join(
-            'dashboard', 'management', 'commands', 'stubs', 'tables.py')
-        replace_file_with_stubs(
-            views_file_path, template_path, data_to_replace)
-
-        # Create the forms.py file
-        views_file_path = os.path.join(
-            app_name, 'tables', folder_name, 'forms.py')
-        template_path = os.path.join(
-            'dashboard', 'management', 'commands', 'stubs', 'forms.py')
-        replace_file_with_stubs(
-            views_file_path, template_path, data_to_replace)
+        file_names = ['filters.py', 'urls.py', 'serializers.py', 'views.py']
+        for i in file_names:
+            views_file_path = os.path.join(
+                app_name, 'tables', folder_name, i)
+            template_path = os.path.join(
+                'dashboard', 'management', 'commands', 'stubs', i)
+            replace_file_with_stubs(
+                views_file_path, template_path, data_to_replace)
 
         data = []
         with open('dashboard/json/urls.json', 'r') as f:
             data = json.loads(f.read())
-            data.append({
-                "url": f"dashboard/{folder_name}/",
-                "file": f'{app_name}.tables.{folder_name}.urls',
-            })
+
+            found = False
+            for index, i in enumerate(data):
+                if i["url"] == f"api/s/{folder_name}/":
+                    data[index] = i
+                    data[index]["file"] = f'{app_name}.tables.{folder_name}.urls'
+                    found = True
+                    break
+            if not found:
+                data.append({
+                    "url": f"api/s/{folder_name}/",
+                    "file": f'{app_name}.tables.{folder_name}.urls',
+                })
         with open('dashboard/json/urls.json', 'w') as f:
-            f.write(json.dumps(data))
-        data = []
-        with open('dashboard/json/segments.json', 'r') as f:
-            data = json.loads(f.read())
-            data.append(
-                {
-                    'label': model_name,
-                    'active': False,
-                    'link': f'dashboard:{model_name.lower()}_list',
-                    'groups': [],
-                },
-            )
-        with open('dashboard/json/segments.json', 'w') as f:
             f.write(json.dumps(data))

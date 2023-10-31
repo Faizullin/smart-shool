@@ -10,12 +10,11 @@ from django.core.files.storage import default_storage
 
 from academics.models import AcademicConfig
 from results.models import Result
-from students.models import Student
+from accounts.models import User
 from accounts.permissions import isUserTeacher
 from .models import get_teacher_students_queryset, get_teacher_students_results_queryset
 from .decorators import user_admin_or_teacher_required, user_admin_required
-from dashboard.tables.academics_config.forms import AcademicConfigForm
-from .forms import LoginForm, UploadFileForm
+# from dashboard.tables.academics_config.forms import AcademicConfigForm
 from .get_context_processors import *
 # Create your views here.
 

@@ -24,15 +24,16 @@ from django.views.static import serve
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
-    path('', include('accounts_face_recognition.urls')),
+    path('', include('files.urls')),
+    # path('', include('accounts_face_recognition.urls')),
     path('', include('articles.urls')),
-    path('', include('exams.urls')),
-    path('', include('results.urls')),
-    path('', include('students.urls')),
+    # path('', include('exams.urls')),
+    # path('', include('results.urls')),
+    # path('', include('students.urls')),
     path('', include('certificates.urls')),
-    path('s/', include('dashboard.urls')),
-    path('', include('stats_export.urls')),
-    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    path('', include('dashboard.urls')),
+    # path('', include('stats_export.urls')),
+    # re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 
 ]
 
@@ -42,7 +43,3 @@ if settings.DEBUG:
                           document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
-if settings.USE_SPA:
-    urlpatterns += [
-        re_path(r'^(?!static|media).*',  include('spa_app.urls')),
-    ]

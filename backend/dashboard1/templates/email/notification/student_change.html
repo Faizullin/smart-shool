@@ -1,0 +1,58 @@
+{% extends 'email/base.html' %}
+
+{% block content %}
+<div class="container" lang="ru">
+    <div class="header">
+        Уведомление об обновлении данных клиента
+    </div>
+    <div class="content">
+        <p>Уважаемый {{ student.first_name }} ({{ user.username }}),</p>
+        <p>Мы пишем вам, чтобы сообщить, что произошли некоторые обновления в ваших данных в нашей системе.</p>
+        <p>Пожалуйста, войдите в свой профиль, чтобы ознакомиться с изменениями и убедиться, что ваша информация актуальна.</p>
+        <p>
+            <a href="{{ profile_url }}" class="btn">Проверить профиль</a>
+        </p>
+        <p>Если у вас есть какие-либо вопросы или опасения относительно изменений, пожалуйста, не стесняйтесь связаться с нами.</p>
+        <p>Благодарим вас за то, что являетесь нашим ценным клиентом.</p>
+        <p>С наилучшими пожеланиями,</p>
+        <p>Команда {{ domain_name }}</p>
+    </div>
+</div>
+
+<!-- English Section -->
+<div class="container" lang="en">
+    <div class="header">
+        Client Data Update Notification
+    </div>
+    <div class="content">
+        <p>Dear {{ student.first_name }} ({{ user.username }}),</p>
+        <p>We are writing to inform you that there have been some updates to your data on our system.</p>
+        <p>Please log in to your profile to review the changes and ensure that your information is up to date.</p>
+        <p>
+            <a href="{{ profile_url }}" class="btn">Check Profile</a>
+        </p>
+        <p>If you have any questions or concerns regarding the changes, please feel free to contact us.</p>
+        <p>Thank you for being a valued client.</p>
+        <p>Best regards,</p>
+        <p>The {{ domain_name }} Team</p>
+    </div>
+</div>
+
+<!-- Kazakh Section -->
+<div class="container" lang="kk">
+    <div class="header">
+        Клиент деректерін жаңарту туралы хабарлау
+    </div>
+    <div class="content">
+        <p>Құрметті {{ student.first_name }} ({{ user.username }}),</p>
+        <p>Біз сізге, біздің жүйемізде сіздің деректеріңізде кейінгі жаңартулар болғаны туралы хабарлау үшін жазамыз.</p>
+        <p>Деректеріңіздегі өзгерістерді тексеру үшін жеке кабинетіңізге кіріңіз және деректеріңіздің қазіргі жағдайын тексеріңіз.</p>
+        <p>
+            <a href="{{ profile_url }}" class="btn">Кабинетті тексеру</a>
+        </p>
+        <p>Өзгерістерді алу жайлы кезде-келген сұрақтарыңыз немесе қамтамасыз етулеріңіз болса, бізге хабарласуыңызды қалаймыз.</p>
+        <p>Маңызды клиент болып табыладыңыз үшін рахмет.</p>
+        <p>{{ domain_name }} құрылымының құрметті құралдары</p>
+    </div>
+</div>
+{% endblock %}

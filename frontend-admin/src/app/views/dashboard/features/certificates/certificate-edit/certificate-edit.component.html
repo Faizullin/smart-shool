@@ -1,0 +1,47 @@
+<c-modal-header>
+    <h5 cModalTitle>Certificate #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+    <form>
+        <div class="mb-3">
+            <c-card>
+                <c-card-header>
+                    <p cCardTitle>Student</p>
+                </c-card-header>
+                <c-card-body>
+                    <c-input-group class="mb-3">
+                        <span cInputGroupText>Username</span>
+                        <input aria-label="Username" cFormControl [readOnly]="true"
+                            [defaultValue]="editInstance?.student?.user?.username" />
+                        <span cInputGroupText>Email</span>
+                        <input aria-label="Email" cFormControl [readOnly]="true"
+                            [defaultValue]="editInstance?.student?.user?.email" />
+                    </c-input-group>
+                </c-card-body>
+            </c-card>
+        </div>
+        <div class="mb-3">
+            <c-card>
+                <c-card-header>
+                    <p cCardTitle>Subject group</p>
+                </c-card-header>
+                <c-card-body>
+                    <c-input-group class="mb-3">
+                        <span cInputGroupText>Subject</span>
+                        <input aria-label="Subject" cFormControl [readOnly]="true"
+                            [defaultValue]="editInstance?.subject?.title" />
+                    </c-input-group>
+                </c-card-body>
+            </c-card>
+        </div>
+    </form>
+    <div class="mt-4">
+        <ng-container *ngIf="editInstance">
+            <c-row>
+                <c-col md="6" xl="4">
+                    <img [src]="editInstance.image?.url" alt="">
+                </c-col>
+            </c-row>
+        </ng-container>
+    </div>
+</c-modal-body>

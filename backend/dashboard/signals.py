@@ -4,9 +4,9 @@ from .models import *
 from utils.send_email_message import SiteUrls, send_email_message
 
 
-@receiver(post_save, sender=Student)
-def post_save_student(sender, instance, *args, **kwargs):
-    user = instance.user
+@receiver(post_save, sender=User)
+def post_save_user(sender, instance, *args, **kwargs):
+    user = instance
     send_email_message({
         'student': instance,
         'username': user.username,

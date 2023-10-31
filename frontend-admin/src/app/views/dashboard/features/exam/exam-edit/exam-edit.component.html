@@ -1,0 +1,32 @@
+<c-modal-header>
+  <h5 cModalTitle>Exam #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+  <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
+    <div class="mb-3">
+      <label cLabel for="exam_type">Exam Type</label>
+      <app-filterable-multiselect formControlName="exam_type" id="exam_type" [idField]="'value'" [textField]="'label'"
+        [current_filters]="exam_types"
+        [allowRemoteDataSearch]="false" [multiple]="false"></app-filterable-multiselect>
+      <c-form-feedback class="d-block" *ngIf="validationErrors['exam_type']" [valid]="false">{{
+        validationErrors['exam_type']
+        }}</c-form-feedback>
+    </div>
+    <div class="mb-3">
+      <label cLabel for="subjects">Subject</label>
+      <app-filterable-multiselect formControlName="subjects" id="subjects" [idField]="'id'" [textField]="'title'"
+        [searchFiltersKey]="'subjects'" [allowRemoteDataSearch]="true" [remoteResponseField]="'subjects'"
+        [useInitialLoad]="true" [multiple]="false"></app-filterable-multiselect>
+      <c-form-feedback class="d-block" *ngIf="validationErrors['subject_id']" [valid]="false">{{
+        validationErrors['subject_id']
+        }}</c-form-feedback>
+    </div>
+    <button cButton color="primary" type="submit">Save</button>
+  </form>
+  <div class="mt-4">
+    <ng-container *ngIf="editInstance">
+      <button cButton color="primary" type="submit" class="mr-3">Quiz edit</button>
+      <button cButton color="primary" type="submit">Stats</button>
+      </ng-container>
+  </div>
+</c-modal-body>

@@ -16,8 +16,9 @@ class SiteUrls:
 
 
 def send_email_message(context: dict, user_emails: list):
-    print("Email: context =", context)
-    if not get_current_academic_config().email_enabled:
+    email_enabled = get_current_academic_config().email_enabled
+    print("Email: context =", context, email_enabled)
+    if not email_enabled:
         return
     try:
         context.update({

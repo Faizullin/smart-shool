@@ -1,16 +1,13 @@
 from django.db import models
-from django.db.models.signals import pre_save
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import Group
-from django.conf import settings
-from django.urls import reverse
-
+from utils.models import TimestampedModel
 
 
 def user_directory_path(instance, filename):
-    return 'uploads/profile-pictures/user_{0}/{1}'.format(instance.pk, filename)
+    return 'uploads/profile-pictures/{0}/{1}'.format(instance.pk, filename)
 
-class User(AbstractUser):
+class User(AbstractUser, TimestampedModel):
     REQUESTED_ACCOUNT_TYPE_CHOICES = (
         ('student', 'Student'),
         ('teacher', 'Teacher'),

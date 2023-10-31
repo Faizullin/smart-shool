@@ -20,3 +20,32 @@ def save_student_answer_result_score(student_answer: StudentAnswer):
     result.theory_marks = (total_score_count / total_questions_count) * 100
     print("New", result.theory_marks)
     result.save()
+
+
+def validate_apa_style(content):
+    pass
+
+
+def validate_doc_title(content, key):
+    pass
+
+
+def validate_docx_file(content):
+    found_error = False
+    errors = {
+        'abstract': [],
+        'introduction': [],
+        'discussion': [],
+        'conclusion': [],
+        'refrence_list': [],
+    }
+    for key in errors.keys():
+        is_title, errors_list = validate_doc_title(content, key)
+        if not is_title:
+            errors[key] = errors_list
+            found_error = True
+    is_apa_style_correct = validate_apa_style(content)
+    if not is_apa_style_correct:
+        found_error = True
+        errors['refrence_list'].append("Reference list is not correct")
+    return found_error, errors

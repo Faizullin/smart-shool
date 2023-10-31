@@ -1,0 +1,116 @@
+<c-modal-header>
+  <h5 cModalTitle>Edit</h5>
+</c-modal-header>
+<c-modal-body>
+  <form [formGroup]="form" novalidate (submit)="onQuizSave()">
+    <div class="form-group">
+      <label cLabel>Title</label>
+      <input cFormControl name="name" formControlName="title" />
+      <div *ngIf="formControl['title'].errors">
+        <c-form-feedback class="d-block" *ngIf="formControl['title'].errors['required'] && formControl['title'].touched"
+          [valid]="false">
+          Title is required.
+        </c-form-feedback>
+      </div>
+      <c-form-feedback class="d-block" *ngIf="validationErrors['title']" [valid]="false">
+        {{ validationErrors['title'] }}
+      </c-form-feedback>
+    </div>
+    <div class="form-group mt-3">
+      <label cLabel>Quiz Type</label>
+      <select cSelect formControlName="quiz_type">
+        <option value="f">Final</option>
+        <option value="m">Mid-term</option>
+        <option value="i">Initital</option>
+      </select>
+      <div *ngIf="formControl['quiz_type'].errors">
+        <c-form-feedback class="d-block"
+          *ngIf="formControl['quiz_type'].errors['required'] && formControl['quiz_type'].touched" [valid]="false">
+          Quiz type is required.
+        </c-form-feedback>
+      </div>
+      <c-form-feedback class="d-block" *ngIf="validationErrors['title']" [valid]="false">
+        {{ validationErrors['title'] }}
+      </c-form-feedback>
+    </div>
+    <div class="form-group mt-3">
+      <label cLabel for="document">Document</label>
+      <ng-multiselect-dropdown formControlName="document" id="document" [placeholder]="'Select'"
+        [settings]="multiselectDocumentDropdownSettings" [data]="current_filters.documents"
+        (onFilterChange)="onFilterChange($event)">
+      </ng-multiselect-dropdown>
+
+      <!--   [(ngModel)]="current_selected_filters.tags"-->
+      <div *ngIf="formControl['document'].errors">
+        <c-form-feedback class="d-block"
+          *ngIf="formControl['document'].errors['required'] && formControl['document'].touched" [valid]="false">
+          Document is required.
+        </c-form-feedback>
+      </div>
+      <c-form-feedback class="d-block" *ngIf="validationErrors['title']" [valid]="false">
+        {{ validationErrors['title'] }}
+      </c-form-feedback>
+    </div>
+    <div class="form-group mt-3">
+      <button type="submit" cButton color="primary" [disabled]="form.invalid">
+        Save
+      </button>
+    </div>
+  </form>
+  <hr class="my-6" />
+  <form [formGroup]="questionForm" novalidate *ngIf="editQuizInstance !== null">
+    <div class="form-group">
+      <label cLabel="">Prompt</label>
+      <c-row>
+        <c-col>
+          <input cFormControl class="form-control" name="prompt" formControlName="prompt" />
+        </c-col>
+        <c-col>
+          <button type="button" cButton color="primary" (click)="onNewQuestionClick()">New</button>
+        </c-col>
+      </c-row>
+      <div *ngIf="questionFormControl['prompt'].errors">
+        <c-form-feedback class="d-block"
+          *ngIf="questionFormControl['prompt'].errors['required'] && questionFormControl['prompt'].touched"
+          [valid]="false">
+          Prompt is required.
+        </c-form-feedback>
+      </div>
+    </div>
+    <div class="mt-3" formArrayName="answers">
+      <div class="form-group" *ngFor="let answer of getQuestionAnswerForms()['controls']; let i = index">
+        <label cLabel>Answer</label>
+        <div [formGroupName]="i">
+          <label for="answerContent{{ i }}" cLabel="col">Content</label>
+          <c-row>
+            <c-col>
+              <input type="text" cFormControl [id]="'answerContent' + i" formControlName="content">
+            </c-col>
+            <c-col c-form-check>
+              <input type="checkbox" cFormCheckInput [id]="'correctAnswer' + i" formControlName="correct">
+              <label for="correctAnswer{{ i }}" cFormCheckLabel>Correct</label>
+            </c-col>
+            <c-col>
+              <button type="button" cButton color="danger" (click)="onRemoveQuestionAnswer(i)">Remove</button>
+            </c-col>
+          </c-row>
+        </div>
+      </div>
+    </div>
+    <div class="form-group mt-3">
+      <button cButton color="default" type="button" class="mr-4" (click)="addAnswer()">
+        Add
+      </button>
+      <button cButton color="primary" type="button" (click)="onQuestionSave()" [disabled]="questionForm.invalid">
+        Submit
+      </button>
+    </div>
+    <hr class="my-6" />
+    <div>
+      <app-smart-table [data]="editQuizInstance.questions || []" [columns]="columns"
+        [totalPages]="editQuizInstance.questions_count" (deleteOpened)="onDeleteQuestion($event)"
+        (editOpened)="onEditQuestionOpen($event)"></app-smart-table>
+    </div>
+  </form>
+
+</c-modal-body>

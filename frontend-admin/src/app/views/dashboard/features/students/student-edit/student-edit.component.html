@@ -1,0 +1,41 @@
+<c-modal-header>
+    <h5 cModalTitle>Student #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+    <form>
+        <div class="mb-3">
+            <c-card>
+                <c-card-header>
+                    <p cCardTitle>User</p>
+                </c-card-header>
+                <c-card-body>
+                    <c-input-group class="mb-3">
+                        <span cInputGroupText>Username</span>
+                        <input aria-label="Username" cFormControl [readOnly]="true"
+                            [defaultValue]="editInstance?.user?.username" />
+                        <span cInputGroupText>Email</span>
+                        <input aria-label="Email" cFormControl [readOnly]="true"
+                            [defaultValue]="editInstance?.user?.email" />
+                    </c-input-group>
+                </c-card-body>
+            </c-card>
+        </div>
+        <div class="mb-3">
+            <c-card>
+                <c-card-header>
+                    <p cCardTitle>Subject group</p>
+                </c-card-header>
+                <c-card-body>
+                    <c-input-group class="mb-3">
+                        <span cInputGroupText>Subject group</span>
+                        <input aria-label="Subject group" cFormControl [readOnly]="true"
+                            [defaultValue]="editInstance?.subject_group?.title" />
+                        <span cInputGroupText>Subject</span>
+                        <input aria-label="Subject" cFormControl [readOnly]="true"
+                            [defaultValue]="editInstance?.subject_group?.subject?.title" />
+                    </c-input-group>
+                </c-card-body>
+            </c-card>
+        </div>
+    </form>
+</c-modal-body>

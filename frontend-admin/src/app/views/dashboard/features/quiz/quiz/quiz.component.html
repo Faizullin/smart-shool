@@ -1,0 +1,15 @@
+<c-row>
+    <c-col xs>
+        <c-card class="mb-4">
+            <c-card-header>Quizes</c-card-header>
+            <c-card-body>
+                <app-smart-table [data]="data" [pageSizeOptions]="pageSizeOptions" [pageSize]="filterParams.page_size"
+                    [columns]="columns" [totalPages]="totalPages" [page]="filterParams.page"
+                    (sortChanged)="onSortChange($event)" (filterChanged)="onFilterChange($event)"
+                    (pageChanged)="onPageChange($event)" (pageSizeChanged)="onPageSizeChange($event)"
+                    [createAction]="true" (editOpened)="onEdit($event)" (deleteOpened)="onDelete($event)">
+                </app-smart-table>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>

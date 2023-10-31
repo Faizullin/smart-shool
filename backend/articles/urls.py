@@ -16,4 +16,6 @@ urlpatterns = [
          ArticleRetrieveView.as_view(),
          name='retrieve'
          ),
+    path('api/filters/<str:filter_type>/',
+         FiltersView.as_view({'get': 'list'}), name='filters-list'),
 ]

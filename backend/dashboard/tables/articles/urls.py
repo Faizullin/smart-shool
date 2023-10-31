@@ -1,10 +1,10 @@
-
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import *
 
+router = DefaultRouter()
+router.register(r'', ArticleViewSet)
+
 urlpatterns = [
-    path('', ArticleListView.as_view(), name='article_list'),
-    path('create', article_create, name='article_create'),
-    path('update/<int:pk>', article_edit, name='article_edit'),
-    path('delete/<int:pk>', article_delete, name='article_delete'),
+    path('', include(router.urls)),
 ]

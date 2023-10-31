@@ -1,13 +1,12 @@
-from django.shortcuts import redirect, render
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views import View
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework import status, permissions, generics, filters
+from rest_framework import status, permissions, filters
 from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from django.db.models import Count
+
 
 from accounts.permissions import IsStudent
 import django_filters
@@ -61,3 +60,18 @@ class ArticleFiltersView(APIView):
         return Response({
             'subjects': SubjectFiltersSerializer(subjects_queryset, many=True).data
         }, status=status.HTTP_200_OK)
+
+
+class FiltersView(ReadOnlyModelViewSet):
+    def get_queryset(self):
+        filter_type = self.kwargs.get('filter_type')
+        if filter_type == 'subjects':
+            queryset = Subject.objects.all()
+        else:
+            raise Http404
+        return queryset
+
+    def get_serializer_class(self):
+        filter_type = self.kwargs.get('filter_type')
+        if filter_type == 'subjects':
+            return SubjectSerializer

@@ -12,6 +12,7 @@ def isUserTeacher(user):
 
 class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
+        return request.user.groups.filter(name='admin').exists()
         return isUserAdmin(request.user)
 
 

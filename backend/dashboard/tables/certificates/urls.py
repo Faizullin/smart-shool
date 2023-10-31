@@ -1,10 +1,10 @@
-
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import *
 
+router = DefaultRouter()
+router.register(r'', CertificateViewSet)
+
 urlpatterns = [
-    path('', CertificateListView.as_view(), name='certificate_list'),
-    path('create', certificate_create, name='certificate_create'),
-    path('update/<int:pk>', certificate_edit, name='certificate_edit'),
-    path('delete/<int:pk>', certificate_delete, name='certificate_delete'),
+    path('', include(router.urls)),
 ]

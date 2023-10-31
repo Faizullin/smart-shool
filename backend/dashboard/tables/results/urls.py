@@ -1,11 +1,10 @@
-
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import *
 
+router = DefaultRouter()
+router.register(r'', ResultViewSet)
+
 urlpatterns = [
-    path('', ResultListView.as_view(), name='result_list'),
-    path('create', result_create, name='result_create'),
-    path('update/<int:pk>', result_edit, name='result_edit'),
-    path('delete/<int:pk>', result_delete, name='result_delete'),
-    path('stats/<int:pk>', result_stats, name='result_stats'),
+    path('', include(router.urls)),
 ]

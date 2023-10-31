@@ -1,0 +1,63 @@
+<div class="mb-3">
+    <div class="row">
+        <c-col xs="12" md="6">
+            <label cLabel for="inputEmail-1">Search</label>
+            <app-debounced-search-input (textChange)="onFilterChange($event)"></app-debounced-search-input>
+            <div cFormText>
+                We can search by any field
+            </div>
+        </c-col>
+        <c-col class="d-flex align-items-center" xs="12" md="6">
+            <ng-container *ngIf="useActions.create">
+                <button cButton color="primary" (click)="onCreateOpenClick()">Create</button>
+            </ng-container>
+        </c-col>
+    </div>
+</div>
+
+<table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
+    <thead>
+        <tr>
+            <!-- Render table headers dynamically -->
+            <ng-container *ngFor="let column of columns">
+                <th (click)="onSortChange(column)">{{ column.header }}</th>
+            </ng-container>
+            <ng-container *ngIf="useActions.edit || useActions.delete">
+                <th>Actions</th>
+            </ng-container>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Render table rows dynamically -->
+        <tr *ngFor="let item of data">
+            <ng-container *ngFor="let column of columns">
+                <!-- <td
+                    [innerHtml]="column.cellTemplate ? column.cellTemplate(item) : column.field ? item[column.field] : 'any'">
+                </td> -->
+                <ng-container *ngTemplateOutlet="column.template; context: { $implicit: item }"></ng-container>
+            </ng-container>
+            <ng-container *ngIf="useActions.edit || useActions.delete">
+                <td class="">
+                    <button cButton *ngIf="useActions.edit" color="primary" (click)="onEditOpenClick(item)"
+                        class="mx-3 mx-3 my-2">Edit</button>
+                    <button cButton *ngIf="useActions.delete" color="danger"
+                        (click)="onDeleteClick(item)">Danger</button>
+                </td>
+            </ng-container>
+        </tr>
+    </tbody>
+</table>
+<div class="mt-3">
+    <app-smart-pagination [page]="page" (pageChanged)="onPageChange($event)" [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions" (pageSizeChanged)="onPageSizeChange($event)"
+        [totalPages]="totalPages"></app-smart-pagination>
+</div>
+<ng-template #column1 let-item>
+    <!-- Template for column 1 -->
+    {{ item }}
+</ng-template>
+
+<ng-template #column2 let-item>
+    <!-- Template for column 2 -->
+    {{ item }}
+</ng-template>
