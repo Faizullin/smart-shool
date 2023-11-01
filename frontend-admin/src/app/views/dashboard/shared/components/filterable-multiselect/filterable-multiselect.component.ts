@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import {
   Component,
-  EventEmitter,
   Input,
   OnInit,
-  Output,
   forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';

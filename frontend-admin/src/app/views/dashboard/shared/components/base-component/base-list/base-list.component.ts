@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { LoadingState } from './../../../../../core/models/loading-state';
+import { LoadingState } from './../../../../../../core/models/loading-state';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FilterParams } from 'src/app/views/dashboard/shared/components/tables/smart-table/smart-table.component';
 import { BaseEditComponent } from '../base-edit/base-edit.component';
@@ -83,7 +83,7 @@ export class BaseListComponent<T> implements OnInit {
     this.filterParams.page = page;
     this.fetchData();
   }
-  openEditModal(initialState: any): void {}
+  protected openEditModal(initialState: any): void {}
   private openDeleteModal(item: T) {
     if (confirm('Are you sure to delete object?')) {
       this.http.delete(this.action_urls['delete']((item as any).id)).subscribe({

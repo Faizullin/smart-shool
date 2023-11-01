@@ -4,6 +4,8 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { UserService } from 'src/app/core/services/user.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { User } from 'src/app/core/models/user';
+import { BaseEditComponent } from '../../../shared/components/base-component/base-edit/base-edit.component';
+import { HttpClient } from '@angular/common/http';
 
 // interface IFilters {
 //   tags: Role[]
@@ -14,99 +16,40 @@ import { User } from 'src/app/core/models/user';
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.scss'],
 })
-export class UserEditComponent {
-  public form!: FormGroup;
-  public fileForm!: FormGroup;
-  public validationErrors: {
-    [key: string]: any;
-  } = {};
-  public questionForm!: FormGroup;
-  public editInstance: User | null = null;
-  // public current_filters: IFilters = {
-  //   roles: []
-  // }
-  // public current_selected_filters: IFilters = {
-  //   roles: []
-  // }
-  // public multiselectRoleDropdownSettings: IDropdownSettings = {
-  //   singleSelection: false,
-  //   idField: 'id',
-  //   textField: 'username',
-  //   selectAllText: 'Select All',
-  //   unSelectAllText: 'UnSelect All',
-  //   itemsShowLimit: 3,
-  //   allowSearchFilter: true
-  // };
-  public previewFiles: {
-    [key: string]: any;
-  } = {};
+export class UserEditComponent extends BaseEditComponent {
+  public override editInstance: User | null = null;
+  override action_urls = {
+    post: () => `/api/s/users/`,
+    detail: (id: number) => `/api/s/users/${id}/`,
+  };
 
   constructor(
     private userService: UserService,
-    private fb: FormBuilder,
-    private modalService: BsModalService,
-    private authService: AuthService,
-  ) {}
+    fb: FormBuilder,
+    modalService: BsModalService,
+    http: HttpClient,
+  ) {
+    super(fb, modalService, http);
+  }
 
-  ngOnInit(): void {
-    const initialState = this.modalService.config.initialState as any;
+  override ngOnInit(): void {
     this.form = this.fb.group({
       username: ['', Validators.required],
       email: [''],
       roles: [],
     });
-    if (initialState.id) {
-      this.fetchInstance(initialState.id);
-    }
-  }
-  get formControl() {
-    return this.form.controls;
+    super.ngOnInit();
   }
 
-  private fetchInstance(id?: number) {
-    const item_id = this.editInstance !== null ? this.editInstance.id : id!;
-    return this.userService.getUser(item_id).subscribe({
-      next: (user) => {
-        this.editInstance = { ...user } as User;
-        this.form.patchValue({
-          username: this.editInstance.username,
-          email: this.editInstance.email,
-          // tags: this.editInstance.tags || [],
-        });
-      },
-    });
+  override fetchInstanceRequest(item_id: number) {
+    return this.userService.getUser(item_id);
   }
-  onRoleItemSelect(item: any) {}
-  onRoleSelectAll(items: any) {}
-  onSave() {
-    if (this.form.valid) {
-      const data = this.form.value;
-      if (this.editInstance) {
-        this.userService.updateUser(this.editInstance.id, data).subscribe({
-          next: (user) => {
-            this.validationErrors = {};
-            this.fetchInstance(user.id);
-          },
-          error: (error) => {
-            if (error.status == 400 || error.status == 422) {
-              const errors = { ...error.error };
-              this.validationErrors = errors;
-            }
-          },
-        });
-      } else {
-        this.userService.createUser(data).subscribe({
-          next: (user) => {
-            this.fetchInstance(user.id);
-          },
-          error: (error) => {
-            if (error.status == 400 || error.status == 422) {
-              const errors = { ...error.error };
-              this.validationErrors = errors;
-            }
-          },
-        });
-      }
+  override patchFormValue() {
+    if (this.editInstance !== null) {
+      this.form.patchValue({
+        username: this.editInstance.username,
+        email: this.editInstance.email,
+      });
     }
   }
   public onLoginAs() {

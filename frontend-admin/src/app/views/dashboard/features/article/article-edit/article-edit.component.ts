@@ -4,7 +4,7 @@ import { ArticleService } from 'src/app/core/services/article.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { FileContentService } from 'src/app/core/services/file-content.service';
-import { BaseEditComponent } from '../../../shared/base-component/base-edit/base-edit.component';
+import { BaseEditComponent } from '../../../shared/components/base-component/base-edit/base-edit.component';
 import { HttpClient } from '@angular/common/http';
 import { Article } from './../article';
 
@@ -31,7 +31,6 @@ export class ArticleEditComponent extends BaseEditComponent {
   }
 
   override ngOnInit(): void {
-    const initialState = this.modalService.config.initialState as any;
     this.form = this.fb.group({
       title: ['', Validators.required],
       content: [''],
@@ -40,9 +39,7 @@ export class ArticleEditComponent extends BaseEditComponent {
     this.fileForm = this.fb.group({
       file: [null],
     });
-    if (initialState.id) {
-      this.fetchInstance(initialState.id);
-    }
+    super.ngOnInit();
   }
   public fileForm!: FormGroup;
 
@@ -67,19 +64,15 @@ export class ArticleEditComponent extends BaseEditComponent {
   protected override fetchInstanceRequest(id: number) {
     return this.articleService.getArticle(id);
   }
-  override onSave() {
-    if (this.form.valid) {
-      const data = this.form.value;
-      data['subject_id'] =
-        data.subjects.length > 0 ? data.subjects[0].id : null;
-      this.fetchSave(data)
-    }
+  protected override getPreparedEditData(data: any) {
+    data['subject_id'] = data.subjects.length > 0 ? data.subjects[0].id : null;
+    return data;
   }
   onFileSave() {
     if (this.fileForm.valid) {
       const data = this.fileForm.value;
       if (this.editInstance) {
-        this.uploadFile(data.file).subscribe({
+        this.uploadFileRequest(data.file).subscribe({
           next: (file) => {
             if (this.editInstance) {
               this.articleService
@@ -87,17 +80,14 @@ export class ArticleEditComponent extends BaseEditComponent {
                   file_id: file.id,
                 })
                 .subscribe({
-                  next: () => {
-                    this.fetchInstance();
+                  next: (data_item) => {
+                    this.afterRequestSuccess(data_item);
                   },
                 });
             }
           },
           error: (error) => {
-            if (error.status == 400 || error.status == 422) {
-              const errors = { ...error.error };
-              this.validationErrors = errors;
-            }
+            this.afterRequestError(error);
           },
         });
       }
@@ -114,7 +104,7 @@ export class ArticleEditComponent extends BaseEditComponent {
   onFeaturedImageChange(event: any) {
     if (event.target.files.length > 0 && this.editInstance) {
       const file = event.target.files[0];
-      this.uploadFile(file).subscribe({
+      this.uploadFileRequest(file).subscribe({
         next: (file) => {
           if (this.editInstance) {
             this.articleService
@@ -122,8 +112,8 @@ export class ArticleEditComponent extends BaseEditComponent {
                 featured_image_id: file.id,
               })
               .subscribe({
-                next: () => {
-                  this.fetchInstance();
+                next: (data_item) => {
+                  this.afterRequestSuccess(data_item);
                 },
               });
           }
@@ -131,7 +121,7 @@ export class ArticleEditComponent extends BaseEditComponent {
       });
     }
   }
-  uploadFile(file: File) {
+  uploadFileRequest(file: File) {
     return this.fileService.uploadNewFile(file);
   }
 }

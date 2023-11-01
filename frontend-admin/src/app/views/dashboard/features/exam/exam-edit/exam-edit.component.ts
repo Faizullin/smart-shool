@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BaseEditComponent } from '../../../shared/base-component/base-edit/base-edit.component';
+import { BaseEditComponent } from '../../../shared/components/base-component/base-edit/base-edit.component';
 import { Exam } from '../exam';
 
 @Component({

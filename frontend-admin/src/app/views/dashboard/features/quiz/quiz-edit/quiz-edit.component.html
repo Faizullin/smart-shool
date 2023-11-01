@@ -1,5 +1,5 @@
 <c-modal-header>
-  <h5 cModalTitle>Edit</h5>
+  <h5 cModalTitle>Quiz #{{ editInstance?.id }}</h5>
 </c-modal-header>
 <c-modal-body>
   <form [formGroup]="form" novalidate (submit)="onSave()">

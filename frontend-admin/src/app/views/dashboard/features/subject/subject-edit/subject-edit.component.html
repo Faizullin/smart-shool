@@ -1,0 +1,37 @@
+<c-modal-header>
+  <h5 cModalTitle>Subject #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body> 
+  <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
+    <div class="mb-3">
+      <label cLabel for="title">Title</label>
+      <input
+        cFormControl
+        formControlName="title"
+        id="title"
+        placeholder="Enter title"
+        type="text"
+      />
+      <div *ngIf="formControl['title'].errors">
+        <c-form-feedback
+          class="d-block"
+          *ngIf="
+            formControl['title'].errors['required'] &&
+            formControl['title'].touched
+          "
+          [valid]="false"
+        >
+          Title is required.
+        </c-form-feedback>
+      </div>
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['title']"
+        [valid]="false"
+      >
+        {{ validationErrors["title"] }}
+      </c-form-feedback>
+    </div>
+    <button cButton color="primary" type="submit" [disabled]="loading.post">Save</button>
+  </form>
+</c-modal-body>

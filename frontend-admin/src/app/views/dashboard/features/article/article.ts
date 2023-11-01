@@ -1,6 +1,6 @@
 import { FileContent } from 'src/app/core/models/article';
 import { TimestampedModel } from './../../../../core/models/timestamped-model';
-import { Subject } from '../students/student';
+import { Subject } from '../student/student';
 
 export interface Article extends TimestampedModel {
   subject: Subject;

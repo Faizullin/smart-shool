@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BaseListComponent } from '../../../shared/base-component/base-list/base-list.component';
+import { BaseListComponent } from '../../../shared/components/base-component/base-list/base-list.component';
 import { CertificateEditComponent } from '../certificate-edit/certificate-edit.component';
 import { Certificate } from './../certificate';
 

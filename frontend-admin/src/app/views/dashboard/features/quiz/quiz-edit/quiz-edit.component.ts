@@ -15,7 +15,7 @@ import {
 } from 'src/app/views/dashboard/shared/components/tables/smart-table/smart-table.component';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { FiltersService } from 'src/app/core/services/filters.service';
-import { BaseEditComponent } from '../../../shared/base-component/base-edit/base-edit.component';
+import { BaseEditComponent } from '../../../shared/components/base-component/base-edit/base-edit.component';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs';
 
@@ -72,17 +72,16 @@ export class QuizEditComponent extends BaseEditComponent {
   ];
 
   constructor(
-    private quizService: QuizService,
     fb: FormBuilder,
     modalService: BsModalService,
-    private filtersService: FiltersService,
     http: HttpClient,
+    private quizService: QuizService,
+    private filtersService: FiltersService,
   ) {
     super(fb, modalService, http);
   }
 
   override ngOnInit(): void {
-    const initialState = this.modalService.config.initialState as any;
     this.form = this.fb.group({
       title: ['', Validators.required],
       exam: [[], Validators.required],
@@ -93,9 +92,7 @@ export class QuizEditComponent extends BaseEditComponent {
       prompt: new FormControl('', Validators.required),
       answers: this.fb.array([]),
     });
-    if (initialState.id) {
-      this.fetchInstance(initialState.id);
-    }
+    super.ngOnInit();
   }
   override patchFormValue(data: any) {
     if (this.editInstance !== null) {
@@ -197,12 +194,9 @@ export class QuizEditComponent extends BaseEditComponent {
         });
     }
   }
-  public override onSave() {
-    if (this.form.valid) {
-      const data = this.form.value;
-      data.exam_id = data.exam.length > 0 ? data.exam[0].id : null;
-      this.fetchSave(data);
-    }
+  override getPreparedEditData(data: any) {
+    data.exam_id = data.exam.length > 0 ? data.exam[0].id : null;
+    return data;
   }
   public onQuestionSave() {
     if (this.editInstance !== null && (this.questionForm.valid || true)) {

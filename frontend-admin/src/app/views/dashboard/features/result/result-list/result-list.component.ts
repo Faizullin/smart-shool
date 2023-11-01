@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Result } from 'src/app/core/models/result';
-import { BaseListComponent } from '../../../shared/base-component/base-list/base-list.component';
+import { BaseListComponent } from '../../../shared/components/base-component/base-list/base-list.component';
 import { ResultEditComponent } from '../result-edit/result-edit.component';
 
 @Component({

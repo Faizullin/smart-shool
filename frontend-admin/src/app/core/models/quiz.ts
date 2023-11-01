@@ -1,7 +1,9 @@
+import { ISubject } from 'src/app/views/dashboard/features/subject/subject';
 import { TimestampedModel } from './timestamped-model';
 
 export interface Exam extends TimestampedModel {
   exam_type: 'i' | 'm' | 'f';
+  subject: ISubject;
 }
 
 export interface Answer extends TimestampedModel {

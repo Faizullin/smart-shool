@@ -1,1 +1,84 @@
-<p>result-edit works!</p>
+<c-modal-header>
+  <h5 cModalTitle>Exam #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+  <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
+    <div class="mb-3">
+      <c-card>
+        <c-card-header>
+          <p cCardTitle>Student</p>
+        </c-card-header>
+        <c-card-body>
+          <c-input-group class="mb-3">
+            <span cInputGroupText>Username</span>
+            <input
+              aria-label="Username"
+              cFormControl
+              [readOnly]="true"
+              [defaultValue]="editInstance?.student?.user?.username"
+            />
+            <span cInputGroupText>Email</span>
+            <input
+              aria-label="Email"
+              cFormControl
+              [readOnly]="true"
+              [defaultValue]="editInstance?.student?.user?.email"
+            />
+          </c-input-group>
+        </c-card-body>
+      </c-card>
+    </div>
+    <div class="mb-3">
+      <c-card>
+        <c-card-header>
+          <p cCardTitle>Exam</p>
+        </c-card-header>
+        <c-card-body>
+          <c-input-group class="mb-3">
+            <span cInputGroupText>Exam type</span>
+            <input
+              aria-label="Exam type"
+              cFormControl
+              [readOnly]="true"
+              [defaultValue]="editInstance?.exam?.exam_type"
+            />
+            <span cInputGroupText>Subject</span>
+            <input
+              aria-label="Subject"
+              cFormControl
+              [readOnly]="true"
+              [defaultValue]="editInstance?.exam?.subject?.title"
+            />
+          </c-input-group>
+        </c-card-body>
+      </c-card>
+    </div>
+    <div class="mb-3">
+      <label cLabel for="subjects">Subject</label>
+      <app-filterable-multiselect
+        formControlName="subjects"
+        id="subjects"
+        [idField]="'id'"
+        [textField]="'title'"
+        [searchFiltersKey]="'subjects'"
+        [allowRemoteDataSearch]="true"
+        [remoteResponseField]="'subjects'"
+        [useInitialLoad]="true"
+        [multiple]="false"
+      ></app-filterable-multiselect>
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['subject_id']"
+        [valid]="false"
+        >{{ validationErrors["subject_id"] }}</c-form-feedback
+      >
+    </div>
+    <button cButton color="primary" type="submit">Save</button>
+  </form>
+  <div class="mt-4">
+    <ng-container *ngIf="editInstance">
+      <!-- <button cButton color="primary" type="submit" class="mr-3">Quiz edit</button> -->
+      <button cButton color="primary" type="submit">Stats</button>
+    </ng-container>
+  </div>
+</c-modal-body>

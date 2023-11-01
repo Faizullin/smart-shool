@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BaseListComponent } from '../../../shared/base-component/base-list/base-list.component';
+import { BaseListComponent } from '../../../shared/components/base-component/base-list/base-list.component';
 import { QuizEditComponent } from '../quiz-edit/quiz-edit.component';
 
 @Component({

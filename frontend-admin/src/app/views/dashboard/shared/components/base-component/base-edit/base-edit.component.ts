@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { map } from 'rxjs';
+import { LoadingState } from 'src/app/core/models/loading-state';
 
 @Component({
   template: '',
@@ -16,6 +17,10 @@ export class BaseEditComponent implements OnInit {
   public validationErrors: {
     [key: string]: any;
   } = {};
+  public loading: LoadingState = {
+    list: false,
+    post: false,
+  };
 
   constructor(
     protected fb: FormBuilder,
@@ -34,8 +39,10 @@ export class BaseEditComponent implements OnInit {
   }
   protected fetchInstance(id?: number) {
     const item_id = this.editInstance !== null ? this.editInstance.id : id!;
+    this.loading.list = true;
     return this.fetchInstanceRequest(item_id).subscribe({
       next: (data) => {
+        this.loading.list = false;
         this.editInstance = data;
         this.patchFormValue(data);
       },
@@ -49,35 +56,41 @@ export class BaseEditComponent implements OnInit {
       }),
     );
   }
+
   protected fetchSave(data: any) {
     const item_id =
       this.editInstance !== null ? this.editInstance.id : undefined;
+    this.loading.post = true;
     if (item_id !== undefined) {
       this.fetchUpdateRequest(item_id, data).subscribe({
-        next: (article) => {
-          this.validationErrors = {};
-          this.fetchInstance(article.id);
+        next: (item_data) => {
+          this.afterRequestSuccess(item_data);
         },
         error: (error) => {
-          if (error.status == 400 || error.status == 422) {
-            const errors = { ...error.error };
-            this.validationErrors = errors;
-          }
+          this.afterRequestError(error);
         },
       });
     } else {
       this.fetchCreateRequest(data).subscribe({
-        next: (article) => {
-          this.validationErrors = {};
-          this.fetchInstance(article.id);
+        next: (item_data) => {
+          this.afterRequestSuccess(item_data);
         },
         error: (error) => {
-          if (error.status == 400 || error.status == 422) {
-            const errors = { ...error.error };
-            this.validationErrors = errors;
-          }
+          this.afterRequestError(error);
         },
       });
+    }
+  }
+  protected afterRequestSuccess(item_data: any) {
+    this.loading.post = false;
+    this.validationErrors = {};
+    this.fetchInstance(item_data.id);
+  }
+  protected afterRequestError(error: any) {
+    this.loading.post = false;
+    if (error.status == 400 || error.status == 422) {
+      const errors = { ...error.error };
+      this.validationErrors = errors;
     }
   }
   protected fetchCreateRequest(data: any) {
@@ -94,9 +107,12 @@ export class BaseEditComponent implements OnInit {
       }),
     );
   }
-  public onSave(): void {
+  protected onSave(): void {
     if (this.form.valid) {
-      this.fetchSave(this.form.value);
+      this.fetchSave(this.getPreparedEditData(this.form.value));
     }
+  }
+  protected getPreparedEditData(data: any) {
+    return data;
   }
 }

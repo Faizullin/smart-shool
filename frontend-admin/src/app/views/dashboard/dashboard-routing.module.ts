@@ -5,9 +5,10 @@ import { ArticleListComponent } from './features/article/article-list/article-li
 import { UserListComponent } from './features/user/user-list/user-list.component';
 import { ResultListComponent } from './features/result/result-list/result-list.component';
 import { CertificateListComponent } from './features/certificate/certificate-list/certificate-list.component';
-import { StudentListComponent } from './features/students/student-list/student-list.component';
+import { StudentListComponent } from './features/student/student-list/student-list.component';
 import { ExamListComponent } from './features/exam/exam-list/exam-list.component';
 import { QuizListComponent } from './features/quiz/quiz-list/quiz-list.component';
+import { SubjectListComponent } from './features/subject/subject-list/subject-list.component';
 
 const routes: Routes = [
   {
@@ -36,7 +37,7 @@ const routes: Routes = [
     component: ExamListComponent,
     data: {
       title: $localize`Exams`,
-    }
+    },
   },
   {
     path: 'quizzes',
@@ -64,6 +65,23 @@ const routes: Routes = [
     component: StudentListComponent,
     data: {
       title: $localize`Students`,
+    },
+  },
+  {
+    path: 'subject-groups',
+    loadChildren: () =>
+      import('./features/subject-group/subject-group.module').then(
+        (m) => m.SubjectGroupModule,
+      ),
+    data: {
+      title: $localize`Subject Groups`,
+    },
+  },
+  {
+    path: 'subjects',
+    component: SubjectListComponent,
+    data: {
+      title: $localize`Subjects`,
     },
   },
 ];

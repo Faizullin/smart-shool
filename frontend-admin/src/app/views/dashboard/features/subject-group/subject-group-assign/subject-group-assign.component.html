@@ -1,0 +1,62 @@
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>{{ table_title }}</c-card-header>
+      <c-card-body>
+        <div class="mb-3">
+          <div class="row">
+            <!-- <c-col xs="12" md="6">
+              <label cLabel for="inputEmail-1">Search</label>
+              <app-debounced-search-input
+                (textChange)="onFilterChange($event)"
+              ></app-debounced-search-input>
+              <div cFormText>We can search by any field</div>
+            </c-col> -->
+            <c-col class="d-flex align-items-center" xs="12" md="6">
+              <!-- <ng-container *ngIf="useActions.create">
+                        <button cButton color="primary" (click)="onCreateOpenClick()">Create</button>
+                    </ng-container> -->
+            </c-col>
+          </div>
+        </div>
+
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          [align]="'middle'"
+          cTable
+          class="mb-0 border"
+        >
+          <thead>
+            <tr>
+              <th>Drag</th>
+              <th (click)="onSortChange('id')">Id.</th>
+              <th (click)="onSortChange('subject')">Subject</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Render table rows dynamically -->
+            <tr *ngFor="let item of data">
+              <td>
+                
+              </td>
+              <td>
+                {{ item.id }}
+              </td>
+              <td>
+                {{ item.quiz.exam?.subject?.title }}
+              </td>
+              <td>
+                <div class="d-flex">
+                    <button type="button">Total: {{ item.total_score }}</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

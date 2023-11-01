@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BaseListComponent } from '../../../shared/base-component/base-list/base-list.component';
+import { BaseListComponent } from '../../../shared/components/base-component/base-list/base-list.component';
 import { ArticleEditComponent } from '../article-edit/article-edit.component';
 
 @Component({
@@ -11,6 +11,7 @@ export class ArticleListComponent<Article> extends BaseListComponent<Article> {
   public override table_title = 'Articles';
   public override action_urls = {
     list: () => `/api/s/articles/`,
+    delete: (id: number) => `/api/s/articles/${id}/`,
   };
 
   override openEditModal(initialState: any) {

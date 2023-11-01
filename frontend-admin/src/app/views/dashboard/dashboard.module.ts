@@ -25,36 +25,35 @@ import { DashboardComponent } from './dashboard.component';
 
 import { WidgetsModule } from '../widgets/widgets.module';
 
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ModalModule as BsModalModule } from 'ngx-bootstrap/modal';
 import { FilterableMultiselectModule } from './shared/components/filterable-multiselect/filterable-multiselect.module';
+import { SmartTableModule } from './shared/components/tables/smart-table.module';
+import { DebouncedSearchInputModule } from './shared/components/debounced-search-input/debounced-search-input.module';
 
-import { SmartTableComponent } from 'src/app/views/dashboard/shared/components/tables/smart-table/smart-table.component';
-import { SmartPaginationComponent } from 'src/app/views/dashboard/shared/components/tables/smart-pagination/smart-pagination.component';
 import { UserListComponent } from './features/user/user-list/user-list.component';
 import { QuizListComponent } from './features/quiz/quiz-list/quiz-list.component';
 import { QuizEditComponent } from './features/quiz/quiz-edit/quiz-edit.component';
 import { UserEditComponent } from './features/user/user-edit/user-edit.component';
 import { ArticleEditComponent } from './features/article/article-edit/article-edit.component';
 import { ArticleListComponent } from './features/article/article-list/article-list.component';
-import { LabworkListComponent } from './features/labwork/labwork-list/labwork-list.component';
-import { LabworkEditComponent } from './features/labwork/labwork-edit/labwork-edit.component';
 import { ResultListComponent } from './features/result/result-list/result-list.component';
 import { ResultEditComponent } from './features/result/result-edit/result-edit.component';
-import { SmartTable1Component } from './shared/components/tables/smart-table1/smart-table1.component';
 import { UserAnswerListComponent } from './features/user_answer/user-answer-list/user-answer-list.component';
 import { UserAnswerEditComponent } from './features/user_answer/user-answer-edit/user-answer-edit.component';
 import { SeriesListComponent } from './features/series/series-list/series-list.component';
 import { SeriesEditComponent } from './features/series/series-edit/series-edit.component';
-import { BaseListComponent } from './shared/base-component/base-list/base-list.component';
-import { BaseEditComponent } from './shared/base-component/base-edit/base-edit.component';
+import { BaseListComponent } from './shared/components/base-component/base-list/base-list.component';
+import { BaseEditComponent } from './shared/components/base-component/base-edit/base-edit.component';
 import { CertificateListComponent } from './features/certificate/certificate-list/certificate-list.component';
 import { CertificateEditComponent } from './features/certificate/certificate-edit/certificate-edit.component';
-import { StudentListComponent } from './features/students/student-list/student-list.component';
-import { StudentEditComponent } from './features/students/student-edit/student-edit.component';
-import { DebouncedSearchInputComponent } from './shared/components/debounced-search-input/debounced-search-input.component';
 import { ExamListComponent } from './features/exam/exam-list/exam-list.component';
 import { ExamEditComponent } from './features/exam/exam-edit/exam-edit.component';
+import { SubjectListComponent } from './features/subject/subject-list/subject-list.component';
+import { SubjectEditComponent } from './features/subject/subject-edit/subject-edit.component';
+import { StudentListComponent } from './features/student/student-list/student-list.component';
+import { StudentEditComponent } from './features/student/student-edit/student-edit.component';
+import { StudentTrainFaceImageListComponent } from './features/student-train-face-image/student-train-face-image-list/student-train-face-image-list.component';
+import { StudentTrainFaceImageEditComponent } from './features/student-train-face-image/student-train-face-image-edit/student-train-face-image-edit.component';
 
 @NgModule({
   imports: [
@@ -79,26 +78,21 @@ import { ExamEditComponent } from './features/exam/exam-edit/exam-edit.component
     PaginationModule,
     ModalModule,
     BsModalModule.forRoot(),
-    NgMultiSelectDropDownModule.forRoot(),
     CKEditorModule,
+    SmartTableModule,
     FilterableMultiselectModule,
+    DebouncedSearchInputModule,
   ],
   declarations: [
-    SmartTableComponent,
-    SmartPaginationComponent,
     DashboardComponent,
     UserListComponent,
-    UserEditComponent,
     UserEditComponent,
     QuizListComponent,
     QuizEditComponent,
     ArticleListComponent,
     ArticleEditComponent,
-    LabworkListComponent,
-    LabworkEditComponent,
     ResultListComponent,
     ResultEditComponent,
-    SmartTable1Component,
     UserAnswerListComponent,
     UserAnswerEditComponent,
     SeriesListComponent,
@@ -107,11 +101,14 @@ import { ExamEditComponent } from './features/exam/exam-edit/exam-edit.component
     BaseEditComponent,
     CertificateListComponent,
     CertificateEditComponent,
-    StudentListComponent,
-    StudentEditComponent,
-    DebouncedSearchInputComponent,
     ExamListComponent,
     ExamEditComponent,
+    SubjectListComponent,
+    SubjectEditComponent,
+    StudentListComponent,
+    StudentEditComponent,
+    StudentTrainFaceImageListComponent,
+    StudentTrainFaceImageEditComponent,
   ],
 })
 export class DashboardModule {}
