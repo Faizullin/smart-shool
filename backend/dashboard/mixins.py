@@ -6,34 +6,32 @@ class UserAdminOrTeacherRequiredMixin:
     allowed_groups = ['teacher', 'admin']
 
     def dispatch(self, request, *args, **kwargs):
-        user_groups_queryset = request.user.groups.filter(
-            name__in=self.allowed_groups)
-        if user_groups_queryset.exists():
-            request.user.group_name = user_groups_queryset[0].name
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return HttpResponseForbidden("Access Denied")
+        user_groups_queryset = request.user.groups.all()
+        user_groups_name_list = [i.name for i in user_groups_queryset]
+        request.user.group_names = user_groups_name_list
+        for i in self.allowed_groups:
+            if i in user_groups_name_list:
+                return super().dispatch(request, *args, **kwargs)
+        return HttpResponseForbidden("Access Denied")
 
 
 class UserAdminRequiredMixin:
 
     def dispatch(self, request, *args, **kwargs):
-        user_groups_queryset = request.user.groups.filter(
-            name="admin")
-        if user_groups_queryset.exists():
-            request.user.group_name = "admin"
+        user_groups_queryset = request.user.groups.all()
+        user_groups_name_list = [i.name for i in user_groups_queryset]
+        request.user.group_names = user_groups_name_list
+        if 'admin' in user_groups_name_list:
             return super().dispatch(request, *args, **kwargs)
-        else:
-            return HttpResponseForbidden("Access Denied")
+        return HttpResponseForbidden("Access Denied")
 
 
 class UserTeacherRequiredMixin:
 
     def dispatch(self, request, *args, **kwargs):
-        user_groups_queryset = request.user.groups.filter(
-            name="teacher")
-        if user_groups_queryset.exists():
-            request.user.group_name = "teacher"
+        user_groups_queryset = request.user.groups.all()
+        user_groups_name_list = [i.name for i in user_groups_queryset]
+        request.user.group_names = user_groups_name_list
+        if 'teacher' in user_groups_name_list:
             return super().dispatch(request, *args, **kwargs)
-        else:
-            return HttpResponseForbidden("Access Denied")
+        return HttpResponseForbidden("Access Denied")

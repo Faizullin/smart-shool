@@ -8,6 +8,7 @@ from django.core.files import File
 from students.models import Student
 import numpy as np
 
+
 PATH = 'accounts_face_recognition/'
 MODEL_OUTPUT = PATH + "model_data/models/" + 'model1.clf'
 DATASET_PATH = 'media/uploads/face_train/'

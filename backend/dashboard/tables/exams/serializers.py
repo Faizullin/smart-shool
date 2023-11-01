@@ -1,8 +1,7 @@
 from rest_framework import serializers
-from exams.models import Exam
+from exams.models import Exam, Quiz
 from academics.models import Subject
 from utils.serializers import TimestampedSerializer
-from dashboard.tables.quizzes.serializers import QuizSerializer
 
 
 class SubjectSerializer(TimestampedSerializer):
@@ -11,8 +10,16 @@ class SubjectSerializer(TimestampedSerializer):
         fields = ('id', 'title', 'created_at', 'updated_at')
 
 
+class ExamQuizSerializer(TimestampedSerializer):
+
+    class Meta:
+        model = Quiz
+        fields = ('id', 'title', 'duration_time',
+                  'questions_count', 'created_at', 'updated_at')
+
+
 class ExamSerializer(TimestampedSerializer):
-    quiz = QuizSerializer(read_only=True)
+    quiz = ExamQuizSerializer(read_only=True)
     subject = SubjectSerializer(read_only=True)
     subject_id = serializers.PrimaryKeyRelatedField(
         queryset=Subject.objects.all(),

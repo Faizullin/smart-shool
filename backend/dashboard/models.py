@@ -1,13 +1,8 @@
 from django.db import models
 from django.db.models import Sum
-# from academics.models import get_current_academic_config
-# from exams.models import Quiz, Question, Answer
-from files.models import File
+from academics.models import get_current_academic_config
 from accounts.models import User
-from articles.models import Article #, Document, FileContent, Tag, Video, Labwork, Series
-# from results.models import Result, UserAnswer, MultipleChoiceUserAnswer, TextAreaUserAnswer
-from certificates.models import Certificate
-# from academics.models import AcademicConfig
+from exams.models import Exam
 # Create your models here.
 
 
@@ -52,7 +47,7 @@ def get_students_with_initial_test(exams_queryset=None):
     current_academic_config = get_current_academic_config()
     if not exams_queryset:
         exams_queryset = Exam.objects.filter(exam_type='i',)
-    results_queryset = Result.objects.filter(exam__in=exams_queryset)
+    results_queryset = exams_queryset.results
     students_queryset = User.objects.filter(
         results__in=results_queryset, current_group=None)
 
