@@ -7,7 +7,7 @@
                     [totalPages]="totalPages" [page]="filterParams.page" (sortChanged)="onSortChange($event)"
                     (filterChanged)="onFilterChange($event)" (pageChanged)="onPageChange($event)"
                     (pageSizeChanged)="onPageSizeChange($event)"
-                    [useActions]="{'create':false,'delete':true,'edit':true,}" (onEdit)="onEdit($event)"
+                    [useActions]="{'create':true,'delete':true,'edit':true,}" (onEdit)="onEdit($event)"
                     (onDelete)="onDelete($event)">
                     <ng-template columnDef="id" columnLabel="Id." sortable="true" #headerCellDef let-item>
                         <td>{{ item.id }}</td>

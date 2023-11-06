@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { BaseEditComponent } from '../../../shared/components/base-component/base-edit/base-edit.component';
 import { Certificate } from '../certificate';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'dashboard-certificate-edit',
@@ -9,18 +11,65 @@ import { Certificate } from '../certificate';
 })
 export class CertificateEditComponent extends BaseEditComponent {
   public override action_urls = {
-    detail: (id: number) => `/api/s/certificates/${id}`,
+    post: () => `/api/s/certificates/`,
+    detail: (id: number) => `/api/s/certificates/${id}/`,
   };
   public override editInstance: Certificate | null = null;
 
   override ngOnInit(): void {
-    const initialState = this.modalService.config.initialState as any;
-    if (initialState.id) {
-      this.fetchInstance(initialState.id);
-    }
+    this.form = this.fb.group({
+      student: [[], Validators.required],
+      subject: [[], Validators.required],
+      generate_file: [false],
+    });
+    super.ngOnInit();
   }
   override patchFormValue(data: any) {
-    // if(this.editInstance !== null) {
-    // }
+    if (this.editInstance !== null) {
+      this.form.patchValue({
+        student: this.editInstance.student ? [this.editInstance.student] : [],
+        subject: this.editInstance.subject ? [this.editInstance.subject] : [],
+      });
+    }
+  }
+  public fetchFilterRequest = {
+    subjects: (filters?: any) => {
+      return this.http
+        .get(`/api/s/subjects`, {
+          params: {
+            ...filters,
+          },
+        })
+        .pipe(
+          map((data: any) => {
+            const data_results = data.results || [];
+            return data_results;
+          }),
+        );
+    },
+    students: (filters?: any) => {
+      return this.http
+        .get(`/api/s/students`, {
+          params: {
+            ...filters,
+          },
+        })
+        .pipe(
+          map((data: any) => {
+            const data_results = data.results || [];
+            return data_results;
+          }),
+        );
+    },
+  };
+  protected override getPreparedEditData(data: any) {
+    data.student_id = data.student?.length > 0 ? data.student[0].id : null;
+    if (data.subject?.length) {
+      data.subject_id = data.subject[0].id;
+    }
+    delete data.student;
+    delete data.subject;
+    data = { ...data };
+    return data;
   }
 }

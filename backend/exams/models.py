@@ -21,7 +21,7 @@ class Exam(TimestampedModel):
         Subject, null=True, on_delete=models.SET_NULL, related_name='exams')
 
     def __str__(self):
-        return f'{self.pk} | {self.exam_date.year} | {self.exam_type} | {self.subject}'
+        return f'{self.pk} | {self.exam_type} | {self.subject}'
 
 
 class Quiz(TimestampedModel):
@@ -37,7 +37,7 @@ class Quiz(TimestampedModel):
 
     def save(self, *args, **kwargs) -> None:
         if not self.title:
-            self.title = f'Quiz for {self.document}'
+            self.title = f'Quiz for {self.exam}'
         super().save(*args, **kwargs)
 
     class Meta:
@@ -48,10 +48,11 @@ class Quiz(TimestampedModel):
         return f'{self.pk} | {self.title}'
 
 
-class Question(TimestampedModel):
+class Question(PolymorphicModel):
     TYPE_CHOICES = (
         ('o', 'Open-end'),
         ('c', 'Closed-end'),
+        ('d', 'Draggable'),
     )
     type = models.CharField(
         max_length=1,
@@ -75,7 +76,10 @@ class Question(TimestampedModel):
         ordering = ['id']
 
     def __str__(self):
-        return f'{self.pk}  | (quiz: {self.quiz}) | {self.prompt} '
+        return f'{self.pk}  | (quiz: {self.quiz}) | {self.type} | {self.prompt} '
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Answer(TimestampedModel):
@@ -93,11 +97,7 @@ class Answer(TimestampedModel):
         return f'{self.pk} | {self.content}'
 
 
-class MultipleChoiceAnswer(Answer):
-    def __str__(self):
-        return f'{self.pk} | {self.content}'
-
-
-class TextAreaAnswer(Answer):
-    def __str__(self):
-        return f'{self.pk} | {self.content}'
+class DraggableSubQuestion(Question):
+    source_question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name="draggable_subquestions")
+    correct_answers = models.ManyToManyField(Answer, related_name="draggable_subquestions",)

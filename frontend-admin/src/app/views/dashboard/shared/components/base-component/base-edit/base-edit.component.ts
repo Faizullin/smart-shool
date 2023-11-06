@@ -112,7 +112,7 @@ export class BaseEditComponent implements OnInit {
       this.fetchSave(this.getPreparedEditData(this.form.value));
     }
   }
-  protected getPreparedEditData(data: any) {
+  protected getPreparedEditData(data: any): Object {
     return data;
   }
 }

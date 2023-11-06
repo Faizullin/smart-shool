@@ -28,7 +28,7 @@ export class SettingsService {
   }
   public toggleEmailEnabled(state: boolean) {
     return this.http
-      .post<any>(`/api/s/academic_config/`, {
+      .post<any>(`/api/s/academic-config/`, {
         email_enabled: state,
       })
       .pipe(
@@ -41,7 +41,7 @@ export class SettingsService {
   }
   public getLastConfig() {
     return this.http
-      .get<any>(`/api/s/academic_config/`, {
+      .get<any>(`/api/s/academic-config/`, {
         params: {
           page_size: 1,
           ordering: '-updated_at',

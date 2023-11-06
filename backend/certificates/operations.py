@@ -4,10 +4,13 @@ from students.models import Student
 from academics.models import Subject
 from .models import Certificate
 from PIL import Image, ImageDraw, ImageFont
+from files.models import File as FileModel
 import os
 
 
-def generate_cert(student: Student, subject = None):
+def generate_cert_file(instance: Certificate, subject: Subject):
+    student = instance.student
+
     certificate_template = Image.open(
         'certificates/template_data/template1.png')
     draw = ImageDraw.Draw(certificate_template)
@@ -18,9 +21,6 @@ def generate_cert(student: Student, subject = None):
     start_x = 300
     start_y = 700
 
-    if not subject:
-        subject = student.current_group.subject
-
     draw.text((start_x, start_y),
               f"Вручается за успехи ученику", font=font, fill='black')
     draw.text((start_x, start_y + 230),
@@ -30,9 +30,18 @@ def generate_cert(student: Student, subject = None):
     certificate_image_path = f'certificates/certificate_{student.id}_{subject.pk}_{datetime.now().strftime("%Y-%m-%d")}.png'
     certificate_image_path_full = os.path.join(
         settings.BASE_DIR, f'media/{certificate_image_path}')
-    certificate_template.save(certificate_image_path_full)
+    smaller_certificate_image = certificate_template.resize((800, 600))
+    smaller_certificate_image.save(certificate_image_path_full, quality=45)
+    image = FileModel.objects.create(file=certificate_image_path)
+    instance.image = image
+    instance.save()
+    return instance
 
+
+def generate_cert(student: Student, subject=None):
+    if subject is None:
+        subject = student.current_group.subject
     student_certificate = Certificate(
-        student=student, subject=subject, image=certificate_image_path)
-    student_certificate.save()
+        student=student, subject=subject)
+    student_certificate = generate_cert_file(student_certificate, subject)
     return student_certificate

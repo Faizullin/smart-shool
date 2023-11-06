@@ -1,13 +1,13 @@
 import { Student } from 'src/app/views/dashboard/features/student/student';
 import { Exam, Quiz } from './quiz';
-import { User } from './user';
+import { TimestampedModel } from './timestamped-model';
 
-export interface Result {
+export interface Result extends TimestampedModel {
   id: number;
-  score: number;
-  exam: Exam;
-  student?: Student;
+  practical_score: number;
+  theory_score: number;
   total_score: number;
-  created_at: string;
-  updated_at: string;
+  exam?: Exam;
+  checked: boolean;
+  student?: Student;
 }

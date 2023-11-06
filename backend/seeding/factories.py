@@ -74,7 +74,6 @@ class ExamFactory(DjangoModelFactory):
         model = Exam
 
     exam_type = factory.Iterator(['i', 'm', 'f',])
-    exam_date = factory.Faker("date_time_this_year")
     # subject = factory.SubFactory(SubjectFactory)
 
 
@@ -83,9 +82,7 @@ class QuizFactory(DjangoModelFactory):
         model = Quiz
 
     # exam = factory.SubFactory(ExamFactory)
-    time = factory.Faker('random_int', min=60, max=600)
-    start_date_time = factory.LazyFunction(timezone.now)
-    end_date_time = factory.LazyFunction(timezone.now)
+    duration_time = factory.Faker('random_int', min=60, max=600)
 
 
 class QuestionFactory(DjangoModelFactory):
@@ -112,8 +109,8 @@ class ResultFactory(DjangoModelFactory):
     # student = factory.SubFactory(StudentFactory)
     # semester = factory.SubFactory(AcademicSessionFactory)
     # exam = factory.SubFactory(ExamFactory)
-    practical_marks = factory.Faker("random_int", min=0, max=100)
-    theory_marks = factory.Faker("random_int", min=0, max=100)
+    practical_score = factory.Faker("random_int", min=0, max=100)
+    theory_score = factory.Faker("random_int", min=0, max=100)
 
 
 class FeedbackFactory(DjangoModelFactory):

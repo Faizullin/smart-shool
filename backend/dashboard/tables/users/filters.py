@@ -11,6 +11,7 @@ FILTERSET_FIELDS = {
     'id': ['exact', 'icontains'],
     'username': ['exact', 'icontains'],
     'email': ['exact', 'icontains'],
+    'groups__name': ['exact',],
     'created_at': ['exact', 'year__gte', 'year__lte'],
     'updated_at': ['exact', 'year__gte', 'year__lte'],
 }

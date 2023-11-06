@@ -2,7 +2,7 @@
     <h5 cModalTitle>Student #{{ editInstance?.id }}</h5>
 </c-modal-header>
 <c-modal-body>
-    <form>
+    <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
         <div class="mb-3">
             <c-card>
                 <c-card-header>
@@ -21,21 +21,14 @@
             </c-card>
         </div>
         <div class="mb-3">
-            <c-card>
-                <c-card-header>
-                    <p cCardTitle>Subject group</p>
-                </c-card-header>
-                <c-card-body>
-                    <c-input-group class="mb-3">
-                        <span cInputGroupText>Subject group</span>
-                        <input aria-label="Subject group" cFormControl [readOnly]="true"
-                            [defaultValue]="editInstance?.subject_group?.title" />
-                        <span cInputGroupText>Subject</span>
-                        <input aria-label="Subject" cFormControl [readOnly]="true"
-                            [defaultValue]="editInstance?.subject_group?.subject?.title" />
-                    </c-input-group>
-                </c-card-body>
-            </c-card>
+            <label cLabel for="subject_group">Subject Group</label>
+            <app-filterable-multiselect formControlName="subject_group" id="subject_group" [idField]="'id'"
+                [textField]="'title'" [allowRemoteDataSearch]="true" [useInitialLoad]="true" [multiple]="false"
+                [filterMethod]="fetchFilterRequest.subject_groups"></app-filterable-multiselect>
+            <c-form-feedback class="d-block" *ngIf="validationErrors['subject_id']" [valid]="false">{{
+                validationErrors['subject_id']
+                }}</c-form-feedback>
         </div>
+        <button cButton color="primary" type="submit">Save</button>
     </form>
 </c-modal-body>

@@ -15,8 +15,11 @@
                     <ng-template columnDef="total_score" columnLabel="Total Score." sortable="true" #headerCellDef let-item>
                         <td>{{ item.total_score }}</td>
                     </ng-template>
-                    <ng-template columnDef="user" columnLabel="User." sortable="true" #headerCellDef let-item>
-                        <td>{{ item.user ? item.user.username : '' }}</td>
+                    <ng-template columnDef="checked" columnLabel="Checked." sortable="true" #headerCellDef let-item>
+                        <td>{{ item.checked }}</td>
+                    </ng-template>
+                    <ng-template columnDef="student" columnLabel="Student." sortable="true" #headerCellDef let-item>
+                        <td>{{ item.student ? item.student.user.email : '' }}</td>
                     </ng-template>
                     <ng-template columnDef="created_at" columnLabel="Created At." sortable="true" #headerCellDef
                         let-item>

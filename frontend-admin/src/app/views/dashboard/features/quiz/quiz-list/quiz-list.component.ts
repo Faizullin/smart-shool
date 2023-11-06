@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { BaseListComponent } from '../../../shared/components/base-component/base-list/base-list.component';
 import { QuizEditComponent } from '../quiz-edit/quiz-edit.component';
+import { Quiz } from '../quiz';
 
 @Component({
   selector: 'dashboard-quiz-list',
   templateUrl: './quiz-list.component.html',
   styleUrls: ['./quiz-list.component.scss'],
 })
-export class QuizListComponent<Quiz> extends BaseListComponent<Quiz> {
+export class QuizListComponent extends BaseListComponent<Quiz> {
   public override table_title = 'Quizzes';
   public override action_urls = {
     list: () => `/api/s/quizzes/`,

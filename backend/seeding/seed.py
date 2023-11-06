@@ -11,6 +11,9 @@ def seed():
     academic_config = AcademicConfig.objects.create(
         email_enabled=False,
     )
+    last_academic_session = AcademicSession.objects.create(
+        days=100,
+    )
     groupAdmin = GroupFactory(
         name="admin"
     )
@@ -45,7 +48,6 @@ def seed():
     teacher2.groups.set([groupTeacher])
     teacher2.save()
 
-
     SubjectFactory(
         title='math',
     )
@@ -56,46 +58,69 @@ def seed():
         title='IoT',
     )
 
-    # SubjectGroupFactory(
-    #     semester=last_academic_session,
-    #     subject=last_subject,
-    #     teacher=teacher2,
-    # )
+    subject_group = SubjectGroupFactory(
+        semester=last_academic_session,
+        subject=last_subject,
+        teacher=teacher1,
+    )
 
-    # student_users = []
-    # for _ in range(3):
-    #     user = UserFactory(
-    #         approval_status=random.choice(["n", "p", "d", "a"]),
-    #         email=fake.email(),
-    #         username=fake.user_name(),
-    #         password="password",
-    #     )
-    #     student_users.append(user)
+    student_users = []
+    for _ in range(3):
+        user = UserFactory(
+            approval_status=random.choice(["n", "p", "d", "a"]),
+            email=fake.email(),
+            username=fake.user_name(),
+            password="password",
+        )
+        student_users.append(user)
 
-    # def add_exam(exam_type, subject: Subject):
-    #     ExamFactory(
-    #         exam_type=exam_type,
-    #         exam_date=fake.future_datetime(end_date="+30d"),
-    #         subject=subject
-    #     )
-    # add_exam('i', last_subject)
-    # add_exam('m', last_subject)
-    # add_exam('f', last_subject)
+    def add_exam(exam_type, subject: Subject):
+        last_exam = ExamFactory.create(
+            exam_type=exam_type,
+            subject=subject
+        )
+        last_exam_quiz = QuizFactory.create(
+            exam=last_exam
+        )
+        question1 = Question.objects.create(
+            quiz=last_exam_quiz, type='c', prompt="2+2")
+        Answer.objects.create(question=question1, content="2+2", correct=True)
+        Answer.objects.create(question=question1, content="2+1", correct=False)
+        question2 = Question.objects.create(
+            quiz=last_exam_quiz, type='o', prompt="Capital of Kazakhstan")
+        Answer.objects.create(question=question2,
+                              content="astana", correct=True)
+        Answer.objects.create(question=question2,
+                              content="Astana", correct=True)
+        source_question1 = Question.objects.create(
+            quiz=last_exam_quiz, type='d', prompt="Connect questions")
+        question3 = DraggableSubQuestion.objects.create(
+            source_question=source_question1, prompt="=111*5")
+        question3.correct_answers.set(
+            [Answer.objects.create(question=source_question1, content="555")])
+        question4 = DraggableSubQuestion.objects.create(
+            source_question=source_question1, prompt="=111*4")
+        question4.correct_answers.set(
+            [Answer.objects.create(question=source_question1, content="444")])
+    add_exam('i', last_subject)
+    add_exam('m', last_subject)
+    add_exam('f', last_subject)
 
-    # for user in student_users:
-    #     StudentFactory(
-    #         current_status=random.choice(["active", "inactive"]),
-    #         first_name=fake.first_name(),
-    #         last_name=fake.last_name(),
-    #         gender=random.choice(["male", "female"]),
-    #         date_of_birth=fake.date_of_birth(minimum_age=18, maximum_age=30),
-    #         date_of_admission=timezone.now().date(),
-    #         parent_mobile_number=fake.phone_number(),
-    #         address=fake.address(),
-    #         others=fake.text(),
-    #         user=user,
-    #         current_group = random.choice(SubjectGroup.objects.all()),
-    #     )
+    for user in student_users:
+        StudentFactory(
+            current_status=random.choice(["active", "inactive"]),
+            first_name=fake.first_name(),
+            last_name=fake.last_name(),
+            gender=random.choice(["male", "female"]),
+            date_of_birth=fake.date_of_birth(minimum_age=18, maximum_age=30),
+            date_of_admission=timezone.now().date(),
+            parent_mobile_number=fake.phone_number(),
+            address=fake.address(),
+            others=fake.text(),
+            user=user,
+            current_group=SubjectGroup.objects.last(
+            ) if random.choice([0, 1]) == 0 else None,
+        )
 
     # exams = Exam.objects.all()
     # for exam in exams:
@@ -116,14 +141,21 @@ def seed():
     #                 correct=correct,
     #             )
 
-    # last_student = Student.objects.last()
-    # result = ResultFactory.create(
-    #     student=last_student,
-    #     semester=last_academic_session,
-    #     exam=exam,
-    #     theory_marks=80,
-    #     practical_marks=80,
-    # )
+    last_exam = Exam.objects.filter(exam_type='i').last()
+    ResultFactory.create(
+        student=Student.objects.filter(current_group__isnull=True).last(),
+        semester=last_academic_session,
+        exam=last_exam,
+        theory_score=80,
+        practical_score=80,
+    )
+    ResultFactory.create(
+        student=Student.objects.filter(current_group__isnull=False).last(),
+        semester=last_academic_session,
+        exam=last_exam,
+        theory_score=40,
+        practical_score=20,
+    )
 
     # FeedbackFactory.create(
     #     result=result,

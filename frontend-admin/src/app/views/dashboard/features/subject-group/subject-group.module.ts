@@ -11,37 +11,49 @@ import {
   FormModule,
   GridModule,
   ModalModule,
-  PaginationModule,
   ProgressModule,
-  TableModule,
   TabsModule,
 } from '@coreui/angular';
 import { FilterableMultiselectModule } from '../../shared/components/filterable-multiselect/filterable-multiselect.module';
 import { ModalModule as BsModalModule } from 'ngx-bootstrap/modal';
 import { WidgetsModule } from 'src/app/views/widgets/widgets.module';
-import { ChartjsModule } from '@coreui/angular-chartjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { SmartTable1Component } from '../../shared/components/tables/smart-table1/smart-table1.component';
-import { SmartPaginationComponent } from '../../shared/components/tables/smart-pagination/smart-pagination.component';
-import { DebouncedSearchInputComponent } from '../../shared/components/debounced-search-input/debounced-search-input.component';
 import { SmartTableModule } from '../../shared/components/tables/smart-table.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDropList,
+  CdkDropListGroup,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import { NgFor } from '@angular/common';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'list',
     component: SubjectGroupListComponent,
+    data: {
+      title: $localize`Subject Groups`,
+    },
   },
   {
     path: 'assign',
     component: SubjectGroupAssignComponent,
+    data: {
+      title: $localize`Subject Groups Assign`,
+    },
   },
 ];
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    SubjectGroupListComponent,
+    SubjectGroupEditComponent,
+    SubjectGroupAssignComponent,
+  ],
   imports: [
-    RouterModule.forChild(routes),
     CardModule,
     IconModule,
     TabsModule,
@@ -53,15 +65,18 @@ const routes: Routes = [
     FormModule,
     FormsModule,
     ButtonModule,
-    ChartjsModule,
     AvatarModule,
-    TableModule,
     WidgetsModule,
-    PaginationModule,
     ModalModule,
     BsModalModule.forRoot(),
     SmartTableModule,
     FilterableMultiselectModule,
+    RouterModule.forChild(routes),
+    DragDropModule,
+    CdkDropListGroup,
+    CdkDropList,
+    NgFor,
+    CdkDrag,
   ],
 })
 export class SubjectGroupModule {}

@@ -47,3 +47,7 @@ class AcademicConfig(TimestampedModel):
 
 def get_current_academic_config() -> AcademicConfig:
     return AcademicConfig.objects.last()
+
+
+def get_current_academic_session() -> AcademicSession:
+    return AcademicSession.objects.last()

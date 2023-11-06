@@ -16,7 +16,7 @@ class StudentSerializer(TimestampedSerializer):
 
     class Meta:
         model = Student
-        fields = ('id', 'user', 'email', 'created_at', 'updated_at')
+        fields = ('id', 'user','created_at', 'updated_at')
 
 
 class FileSerializer(TimestampedSerializer):

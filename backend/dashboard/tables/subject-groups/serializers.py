@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from academics.models import SubjectGroup, get_current_academic_config
+from academics.models import SubjectGroup, get_current_academic_config, get_current_academic_session
+from students.models import Student
 from dashboard.serializers import UserSerializer, User
 from dashboard.tables.subjects.serializers import SubjectSerializer, Subject
 from dashboard.models import get_students_with_initial_test
@@ -11,6 +12,7 @@ class SubjectGroupSerializer(TimestampedSerializer):
     teacher_id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
         write_only=True,
+        required=False,
     )
     subject = SubjectSerializer(read_only=True)
     subject_id = serializers.PrimaryKeyRelatedField(
@@ -20,16 +22,19 @@ class SubjectGroupSerializer(TimestampedSerializer):
 
     class Meta:
         model = SubjectGroup
-        fields = ('id', 'semester', 'subject', 'subject_id',
+        fields = ('id', 'title', 'semester', 'subject', 'subject_id',
                   'teacher', 'teacher_id', 'created_at', 'updated_at')
 
     def create(self, validated_data):
         subject = validated_data.pop('subject_id', None)
         teacher = validated_data.pop('teacher_id', None)
-        semester = get_current_academic_config()
-        quiz = SubjectGroup.objects.create(
-            **validated_data, semester=semester, teacher=teacher, subject=subject)
-        return quiz
+        semester = get_current_academic_session()
+        instance = SubjectGroup.objects.create(
+            **validated_data, semester=semester, subject=subject)
+        if teacher:
+            instance.teacher_id = teacher.pk
+        instance.save()
+        return instance
 
     def update(self, instance: User, validated_data):
         subject = validated_data.pop('subject_id', None)
@@ -38,43 +43,23 @@ class SubjectGroupSerializer(TimestampedSerializer):
         for key, value in validated_data.items():
             setattr(instance, key, value)
         instance.subject_id = subject.pk
-        instance.teacher_id = teacher.pk
+        if teacher:
+            instance.teacher_id = teacher.pk
         instance.save()
         return instance
 
 
-class SubjectGroupAssignSerializer(TimestampedSerializer):
-    teacher = UserSerializer(read_only=True)
-    teacher_id = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(),
+class SubjectGroupAssignRequestSerializer(serializers.Serializer):
+    subject_group_id = serializers.PrimaryKeyRelatedField(
+        queryset=SubjectGroup.objects.all(),
         write_only=True,
     )
-    subject = SubjectSerializer(read_only=True)
-    subject_id = serializers.PrimaryKeyRelatedField(
-        queryset=Subject.objects.all(),
+    student_id = serializers.PrimaryKeyRelatedField(
+        queryset=Student.objects.all(),
         write_only=True,
     )
 
-    class Meta:
-        model = SubjectGroup
-        fields = ('id', 'semester', 'subject', 'subject_id',
-                  'teacher', 'teacher_id', 'created_at', 'updated_at')
-    
-    def create(self, validated_data):
-        subject = validated_data.pop('subject_id', None)
-        teacher = validated_data.pop('teacher_id', None)
-        semester = get_current_academic_config()
-        quiz = SubjectGroup.objects.create(
-            **validated_data, semester=semester, teacher=teacher, subject=subject)
-        return quiz
 
-    # def update(self, instance: User, validated_data):
-    #     subject = validated_data.pop('subject_id', None)
-    #     teacher = validated_data.pop('teacher_id', None)
-    #     semester = validated_data.pop('semester', None)
-    #     for key, value in validated_data.items():
-    #         setattr(instance, key, value)
-    #     instance.subject_id = subject.pk
-    #     instance.teacher_id = teacher.pk
-    #     instance.save()
-    #     return instance
+class SubjectIdsRequestSerializer(serializers.Serializer):
+    subject_ids = serializers.ListField(
+        child=serializers.IntegerField(), required=False)

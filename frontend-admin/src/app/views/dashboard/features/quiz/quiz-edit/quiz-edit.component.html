@@ -50,60 +50,44 @@
     </button>
   </form>
   <hr class="my-6" />
-  <form [formGroup]="questionForm" novalidate *ngIf="editInstance !== null">
-    <div class="form-group">
-      <label cLabel="">Prompt</label>
-      <c-row>
-        <c-col>
-          <input cFormControl class="form-control" name="prompt" formControlName="prompt" />
-        </c-col>
-        <c-col>
-          <button type="button" cButton color="primary" (click)="onNewQuestionClick()">New Question</button>
-        </c-col>
-      </c-row>
-      <div *ngIf="questionFormControl['prompt'].errors">
-        <c-form-feedback class="d-block"
-          *ngIf="questionFormControl['prompt'].errors['required'] && questionFormControl['prompt'].touched"
-          [valid]="false">
-          Prompt is required.
-        </c-form-feedback>
+  <div *ngIf="editInstance; else saveToEditQuestions">
+    <c-row>
+      <c-col>
+        <select cSelect [(ngModel)]="selectedFormType" (ngModelChange)="selectedFormTypeChanged($event)">
+          <option value="c">Closed-ended</option>
+          <option value="o">Open-ended</option>
+          <option value="d">Draggable</option>
+        </select>
+      </c-col>
+      <c-col>
+        <button type="button" cButton color="primary" (click)="onNewQuestionClick()">New Question</button>
+      </c-col>
+    </c-row>
+    <!-- Render selected form based on the dropdown value -->
+    <div *ngIf="editInstance !== null" class="mt-3">
+      <div *ngIf="selectedFormType === 'c'">
+        <dashboard-question-closed-ended-form [editQuizInstanceId]="editInstance.id"
+          [editInstance]="editQuestionInstance"
+          (onRequestSuccess)="onSuccessfullQuestionSubmit($event)"></dashboard-question-closed-ended-form>
+      </div>
+      <div *ngIf="selectedFormType === 'd'">
+        <dashboard-question-draggable-form [editQuizInstanceId]="editInstance.id" [editInstance]="editQuestionInstance"
+          (onRequestSuccess)="onSuccessfullQuestionSubmit($event)"></dashboard-question-draggable-form>
+      </div>
+      <div *ngIf="selectedFormType === 'o'">
+        <dashboard-question-open-ended-form [editQuizInstanceId]="editInstance.id" [editInstance]="editQuestionInstance"
+          (onRequestSuccess)="onSuccessfullQuestionSubmit($event)"></dashboard-question-open-ended-form>
       </div>
     </div>
-    <div class="mt-3" formArrayName="answers">
-      <div class="form-group" *ngFor="let answer of getQuestionAnswerForms()['controls']; let i = index">
-        <label cLabel>Answer</label>
-        <div [formGroupName]="i">
-          <label for="answerContent{{ i }}" cLabel="col">Content</label>
-          <c-row>
-            <c-col>
-              <input type="text" cFormControl [id]="'answerContent' + i" formControlName="content">
-            </c-col>
-            <c-col c-form-check>
-              <input type="checkbox" cFormCheckInput [id]="'correctAnswer' + i" formControlName="correct">
-              <label for="correctAnswer{{ i }}" cFormCheckLabel>Correct</label>
-            </c-col>
-            <c-col>
-              <button type="button" cButton color="danger" (click)="onRemoveQuestionAnswer(i)">Remove</button>
-            </c-col>
-          </c-row>
-        </div>
-      </div>
-    </div>
-    <div class="form-group mt-3">
-      <button cButton color="default" type="button" class="mr-4" (click)="addAnswer()">
-        Add Answer
-      </button>
-      <button cButton color="primary" type="button" (click)="onQuestionSave()" [disabled]="questionForm.invalid">
-        Save Question
-      </button>
-    </div>
-    <hr class="my-6" />
-    <div>
-      <app-smart-table [data]="editInstance.questions || []" [columns]="columns"
-        [totalPages]="editInstance.questions_count" (pageSizeChanged)="onPageSizeChange($event)"
-        (pageChanged)="onPageChange($event)" (deleteOpened)="onDeleteQuestion($event)"
-        (editOpened)="onEditQuestionOpen($event)"></app-smart-table>
-    </div>
-  </form>
-
+  </div>
+  <ng-template #saveToEditQuestions>
+    Save to add question
+  </ng-template>
+  <hr class="my-6" />
+  <div *ngIf="editInstance">
+    <app-smart-table [data]="editInstance.questions || []" [columns]="columns"
+      [totalPages]="editInstance.questions_count" (pageSizeChanged)="onPageSizeChange($event)"
+      (pageChanged)="onPageChange($event)" (deleteOpened)="onDeleteQuestion($event)"
+      (editOpened)="onEditQuestionOpen($event)"></app-smart-table>
+  </div>
 </c-modal-body>

@@ -1,7 +1,7 @@
 from rest_framework import viewsets, filters, permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
-from dashboard.models import Certificate
+from certificates.models import Certificate
 from .serializers import CertificateSerializer
 from .filters import CertificatePagination, ORDERING_FIELDS, FILTERSET_FIELDS, SEARCH_FILTERSET_FIELDS
 from accounts.permissions import IsAdmin
@@ -10,7 +10,8 @@ from accounts.permissions import IsAdmin
 class CertificateViewSet(viewsets.ModelViewSet):
     queryset = Certificate.objects.all()
     serializer_class = CertificateSerializer
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter]
     filterset_fields = FILTERSET_FIELDS
     ordering_fields = ORDERING_FIELDS
     pagination_class = CertificatePagination

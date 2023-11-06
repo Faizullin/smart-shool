@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import *
 from PIL import Image
 from results.models import Result
+from .models import *
 
 
 class ExamSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class ExamSerializer(serializers.ModelSerializer):
                   'practical_files_provided', 'theory_passed', 'subject', 'quiz_id']
 
     def get_practical_files_provided(self, obj):
-        practical_queryset = Practical.objects.filter(
+        practical_queryset = .objects.filter(
             exam=obj, student_id=self.context['student'].pk)
         if practical_queryset.exists():
             request = self.context.get('request')

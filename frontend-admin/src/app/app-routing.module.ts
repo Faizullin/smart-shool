@@ -14,11 +14,11 @@ const routes: Routes = [
     path: '',
     canActivate: [authGuard],
     children: [
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-      },
+      // {
+      //   path: '',
+      //   redirectTo: 'dashboard',
+      //   pathMatch: 'full',
+      // },
       {
         path: '',
         component: DefaultLayoutComponent,
@@ -127,7 +127,7 @@ const routes: Routes = [
       title: 'Register Page',
     },
   },
-  { path: '**', redirectTo: 'dashboard' },
+  // { path: '**', redirectTo: 'dashboard' },
 ];
 
 @NgModule({

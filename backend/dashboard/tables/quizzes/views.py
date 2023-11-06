@@ -4,8 +4,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from accounts.permissions import IsAdmin
-from exams.models import Quiz, Question, Answer
-from .serializers import QuizSerializer, QuestionSerializer, QuestionAnswerSerializer
+from exams.models import Quiz, Question, Answer, DraggableSubQuestion
+from .serializers import QuizSerializer, QuestionSerializer, QuestionAnswerSerializer, DraggableQuestionSubmitSerializer
 from .filters import QuizPagination, QuestionPagination, ORDERING_FIELDS, FILTERSET_FIELDS, SEARCH_FILTERSET_FIELDS
 
 
@@ -32,7 +32,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     pagination_class = QuestionPagination
     search_fields = []
     authentication_classes = (JWTAuthentication,)
-    permission_classes = [permissions.IsAuthenticated, IsAdmin]
+    # permission_classes = [permissions.IsAuthenticated, IsAdmin]
 
     def get_queryset(self):
         quiz_pk = self.kwargs.get('quizes_pk')
@@ -40,7 +40,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     def generate_answers(self, question: Question, validated_data):
         for item in validated_data:
-            Answer.objects.create(
+            answer = Answer.objects.create(
                 question=question,
                 content=item.get('content'),
                 correct=item.get('correct', False),
@@ -54,16 +54,47 @@ class QuestionViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
         validated_data.pop('answers', [])
-        question = Question.objects.create(
-            **validated_data,
-            quiz=quiz,
-        )
-        answers_data = data.get('answers', None)
-        answers_serializer = QuestionAnswerSerializer(
-            data=answers_data, many=True)
-        answers_serializer.is_valid(raise_exception=True)
-        validated_data = answers_serializer.validated_data
-        self.generate_answers(question, validated_data)
+        question_type = validated_data.pop('type', None)
+        if question_type == 'd':
+            question = Question.objects.create(
+                **validated_data,
+                quiz=quiz,
+                type=question_type,
+            )
+            draggable_serializer = DraggableQuestionSubmitSerializer(
+                data=data)
+            draggable_serializer.is_valid(raise_exception=True)
+            validated_data = draggable_serializer.validated_data
+            subquestions_data = validated_data.pop('subquestions', [])
+            answers_data = validated_data.pop('answers', [])
+            subquestion_answers_dict = {}
+            for i in answers_data:
+                if i.get('uid', None) is not None:
+                    subquestion_answers_dict[i.get('uid')] = Answer.objects.create(
+                        question=question,
+                        content=i.get('content'),
+                        correct=i.get('correct', False),
+                    )
+            for subquestion_item_data in subquestions_data:
+                q = DraggableSubQuestion.objects.create(
+                    prompt=subquestion_item_data.get('prompt', ''),
+                    source_question=question)
+                for answer_uid in subquestion_answers_dict.keys():
+                    if answer_uid in subquestion_item_data.get('answers', []):
+                        q.correct_answers.set(
+                            [subquestion_answers_dict[answer_uid]])
+
+        elif question_type in ['c', 'o']:
+            question = Question.objects.create(
+                **validated_data,
+                quiz=quiz,
+                type=question_type,
+            )
+            answers_data = data.get('answers', [])
+            answers_serializer = QuestionAnswerSerializer(
+                data=answers_data, many=True)
+            answers_serializer.is_valid(raise_exception=True)
+            self.generate_answers(question, answers_serializer.validated_data)
         return Response(QuestionSerializer(question).data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
@@ -72,18 +103,44 @@ class QuestionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
-        validated_data.pop('answers', [])
-        question.prompt = data.get('prompt')
+        question.prompt = data.get('prompt', '')
         question.type = data.get('type', 'c')
-        question.save()
 
-        answers_data = data.get('answers', None)
-        answers_serializer = QuestionAnswerSerializer(
-            data=answers_data, many=True)
-        answers_serializer.is_valid(raise_exception=True)
-        validated_data = answers_serializer.validated_data
+        validated_data = serializer.validated_data
+        question_type = validated_data.pop('type', None)
+        if question_type == 'd':
+            draggable_serializer = DraggableQuestionSubmitSerializer(
+                data=data)
+            draggable_serializer.is_valid(raise_exception=True)
+            question.save()
+            question.draggable_subquestions.all().delete()
+            question.answers.all().delete()
+            validated_data = draggable_serializer.validated_data
+            subquestions_data = validated_data.pop('subquestions', [])
+            answers_data = validated_data.pop('answers', [])
+            subquestion_answers_dict = {}
+            for i in answers_data:
+                if i.get('uid', None) is not None:
+                    subquestion_answers_dict[i.get('uid')] = Answer.objects.create(
+                        question=question,
+                        content=i.get('content'),
+                        correct=i.get('correct', False),
+                    )
+            for subquestion_item_data in subquestions_data:
+                q = DraggableSubQuestion.objects.create(
+                    prompt=subquestion_item_data.get('prompt', ''),
+                    source_question=question)
+                for answer_uid in subquestion_answers_dict.keys():
+                    if answer_uid in subquestion_item_data.get('answers', []):
+                        q.correct_answers.set(
+                            [subquestion_answers_dict[answer_uid]])
 
-        question.answers.all().delete()
-        self.generate_answers(question, validated_data)
-
+        elif question_type in ['c', 'o']:
+            answers_data = data.get('answers', None)
+            answers_serializer = QuestionAnswerSerializer(
+                data=answers_data, many=True)
+            answers_serializer.is_valid(raise_exception=True)
+            question.save()
+            question.answers.all().delete()
+            self.generate_answers(question, answers_serializer.validated_data)
         return Response(QuestionSerializer(question).data, status=status.HTTP_201_CREATED)

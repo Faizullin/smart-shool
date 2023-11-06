@@ -4,7 +4,7 @@
       <c-card-header>{{ table_title }}</c-card-header>
       <c-card-body>
         <div class="mb-4">
-          <a cButton [routerLink]="['assign']">Assign students</a>
+          <a cButton [routerLink]="['..','assign']">Assign students</a>
         </div>
         <app-smart-table1
           [data]="data"
@@ -16,7 +16,7 @@
           (filterChanged)="onFilterChange($event)"
           (pageChanged)="onPageChange($event)"
           (pageSizeChanged)="onPageSizeChange($event)"
-          [useActions]="{ create: false, delete: true, edit: true }"
+          [useActions]="{ create: true, delete: true, edit: true }"
           (onEdit)="onEdit($event)"
           (onDelete)="onDelete($event)"
         >

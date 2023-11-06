@@ -9,11 +9,11 @@ class ResultPagination(PageNumberPagination):
 
 FILTERSET_FIELDS = ['checked']
 ORDERING_FIELDS = [
-    'id', 'created_at', 'updated_at', 'score',
+    'id', 'checked', 'created_at', 'updated_at', 'score',
 ]
 SEARCH_FILTERSET_FIELDS = {
     'id': ['exact', 'icontains'],
-    'score': ['exact', 'icontains'],
+    'total_score': ['exact', 'icontains'],
     'created_at': ['exact', 'year__gte', 'year__lte'],
     'updated_at': ['exact', 'year__gte', 'year__lte'],
 }

@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from accounts.models import User
+from accounts.models import User, Group
 from utils.serializers import TimestampedSerializer
 
 
-class UserGroupSerializer(TimestampedSerializer):
+class UserGroupSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ('id', 'name', 'created_at', 'updated_at')
+        model = Group
+        fields = ('id', 'name', )
 
 
 class UserSerializer(TimestampedSerializer):

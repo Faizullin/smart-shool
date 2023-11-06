@@ -1,10 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import {
-  Component,
-  Input,
-  OnInit,
-  forwardRef,
-} from '@angular/core';
+import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { Observable, map } from 'rxjs';
@@ -32,7 +27,6 @@ export class FilterableMultiselectComponent<TFilters>
   @Input() idField!: string;
   @Input() textField!: string;
   @Input() textFieldDef?: (item: any) => string;
-  @Input() remoteResponseField!: string;
   @Input() multiple: boolean = true;
   @Input() allowSearchFilter: boolean = true;
   @Input() allowRemoteDataSearch: boolean = false;
@@ -86,10 +80,9 @@ export class FilterableMultiselectComponent<TFilters>
     this.multiselectTagDropdownSettings.singleSelection = !this.multiple;
     this.multiselectTagDropdownSettings.allowSearchFilter =
       this.allowSearchFilter;
-    this.multiselectTagDropdownSettings.allowRemoteDataSearch =
-      this.allowRemoteDataSearch;
+    this.multiselectTagDropdownSettings.allowRemoteDataSearch = true;
     if (this.useInitialLoad) {
-      this.onFilterChange('');
+      this.onFilterChange('', true);
     }
   }
   onSelect(item: any) {
@@ -140,8 +133,8 @@ export class FilterableMultiselectComponent<TFilters>
         );
     }
   }
-  public onFilterChange(filter: any) {
-    if (this.allowRemoteDataSearch) {
+  public onFilterChange(filter: any, forceLoad = false) {
+    if (this.allowRemoteDataSearch || forceLoad) {
       this.fetchFilters(filter).subscribe({
         next: (_data: TFilters[]) => {
           this.current_filters = _data.map((item) => {

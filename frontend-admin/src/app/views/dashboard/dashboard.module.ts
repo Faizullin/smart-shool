@@ -31,8 +31,6 @@ import { SmartTableModule } from './shared/components/tables/smart-table.module'
 import { DebouncedSearchInputModule } from './shared/components/debounced-search-input/debounced-search-input.module';
 
 import { UserListComponent } from './features/user/user-list/user-list.component';
-import { QuizListComponent } from './features/quiz/quiz-list/quiz-list.component';
-import { QuizEditComponent } from './features/quiz/quiz-edit/quiz-edit.component';
 import { UserEditComponent } from './features/user/user-edit/user-edit.component';
 import { ArticleEditComponent } from './features/article/article-edit/article-edit.component';
 import { ArticleListComponent } from './features/article/article-list/article-list.component';
@@ -40,8 +38,6 @@ import { ResultListComponent } from './features/result/result-list/result-list.c
 import { ResultEditComponent } from './features/result/result-edit/result-edit.component';
 import { UserAnswerListComponent } from './features/user_answer/user-answer-list/user-answer-list.component';
 import { UserAnswerEditComponent } from './features/user_answer/user-answer-edit/user-answer-edit.component';
-import { SeriesListComponent } from './features/series/series-list/series-list.component';
-import { SeriesEditComponent } from './features/series/series-edit/series-edit.component';
 import { BaseListComponent } from './shared/components/base-component/base-list/base-list.component';
 import { BaseEditComponent } from './shared/components/base-component/base-edit/base-edit.component';
 import { CertificateListComponent } from './features/certificate/certificate-list/certificate-list.component';
@@ -87,16 +83,12 @@ import { StudentTrainFaceImageEditComponent } from './features/student-train-fac
     DashboardComponent,
     UserListComponent,
     UserEditComponent,
-    QuizListComponent,
-    QuizEditComponent,
     ArticleListComponent,
     ArticleEditComponent,
     ResultListComponent,
     ResultEditComponent,
     UserAnswerListComponent,
     UserAnswerEditComponent,
-    SeriesListComponent,
-    SeriesEditComponent,
     BaseListComponent,
     BaseEditComponent,
     CertificateListComponent,

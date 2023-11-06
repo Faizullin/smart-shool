@@ -9,6 +9,7 @@ import { StudentListComponent } from './features/student/student-list/student-li
 import { ExamListComponent } from './features/exam/exam-list/exam-list.component';
 import { QuizListComponent } from './features/quiz/quiz-list/quiz-list.component';
 import { SubjectListComponent } from './features/subject/subject-list/subject-list.component';
+import { UserAnswerListComponent } from './features/user_answer/user-answer-list/user-answer-list.component';
 
 const routes: Routes = [
   {
@@ -40,13 +41,6 @@ const routes: Routes = [
     },
   },
   {
-    path: 'quizzes',
-    component: QuizListComponent,
-    data: {
-      title: $localize`Quizzes`,
-    },
-  },
-  {
     path: 'results',
     component: ResultListComponent,
     data: {
@@ -68,21 +62,37 @@ const routes: Routes = [
     },
   },
   {
-    path: 'subject-groups',
-    loadChildren: () =>
-      import('./features/subject-group/subject-group.module').then(
-        (m) => m.SubjectGroupModule,
-      ),
-    data: {
-      title: $localize`Subject Groups`,
-    },
-  },
-  {
     path: 'subjects',
     component: SubjectListComponent,
     data: {
       title: $localize`Subjects`,
     },
+  },
+  {
+    path: 'user-answers',
+    component: UserAnswerListComponent,
+    data: {
+      title: $localize`User Answers`,
+    },
+  },
+  {
+    path: 'subject-groups',
+    loadChildren: () =>
+      import('./features/subject-group/subject-group.module').then(
+        (m) => m.SubjectGroupModule,
+      ),
+  },
+  {
+    path: 'submitted-practical-works',
+    loadChildren: () =>
+      import(
+        './features/submitted-practical-work/submitted-practical-work.module'
+      ).then((m) => m.SubmittedPracticalWorkModule),
+  },
+  {
+    path: 'quizzes',
+    loadChildren: () =>
+      import('./features/quiz/quiz.module').then((m) => m.QuizModule),
   },
 ];
 

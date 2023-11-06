@@ -14,7 +14,7 @@
     <div class="mb-3">
       <label cLabel for="subjects">Subject</label>
       <app-filterable-multiselect formControlName="subjects" id="subjects" [idField]="'id'" [textField]="'title'"
-        [searchFiltersKey]="'subjects'" [allowRemoteDataSearch]="true" [remoteResponseField]="'subjects'"
+        [searchFiltersKey]="'subjects'" [allowRemoteDataSearch]="true"
         [useInitialLoad]="true" [multiple]="false"></app-filterable-multiselect>
       <c-form-feedback class="d-block" *ngIf="validationErrors['subject_id']" [valid]="false">{{
         validationErrors['subject_id']

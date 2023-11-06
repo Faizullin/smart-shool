@@ -18,16 +18,6 @@ export class ExamEditComponent extends BaseEditComponent {
     { value: 'm', label: 'Mid-term' },
     { value: 'f', label: 'Final' },
   ];
-  // constructor(
-  //   private articleService: ArticleService,
-  //   private fileService: FileContentService,
-  //   fb: FormBuilder,
-  //   modalService: BsModalService,
-  //   http: HttpClient,
-  // ) {
-  //   super(fb, modalService, http);
-  // }
-
   override ngOnInit(): void {
     const initialState = this.modalService.config.initialState as any;
     this.form = this.fb.group({

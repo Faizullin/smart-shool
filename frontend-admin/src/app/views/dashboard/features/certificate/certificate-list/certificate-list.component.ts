@@ -12,6 +12,7 @@ export class CertificateListComponent<Certificate> extends BaseListComponent<Cer
   public override table_title = 'Certificates';
   public override action_urls = {
     list: () => `/api/s/certificates/`,
+    delete: (id:number) => `/api/s/certificates/${id}/`,
   };
 
   override openEditModal(initialState: any) {

@@ -42,13 +42,13 @@ class Result(TimestampedModel):
         unique_together = ('student', 'exam',)
 
     def __str__(self):
-        return f'{self.pk} | {self.student} | {self.exam} | {self.total_marks}'
+        return f'{self.pk} | {self.student} | {self.exam} | {self.total_score}'
 
     def save(self, *args, **kwargs):
         if self.theory_score and self.practical_score:
-            self.total_marks = self.theory_score + self.practical_score
+            self.total_score = self.theory_score + self.practical_score
         elif self.practical_score and not self.theory_score:
-            self.total_marks = self.practical_score
+            self.total_score = self.practical_score
         else:
             self.total_score = self.theory_score
         super().save(*args, **kwargs)

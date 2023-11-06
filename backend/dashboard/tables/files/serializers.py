@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from utils.serializers import TimestampedSerializer
-from dashboard.models import File as FileModel
+from files.models import File as FileModel
 
 
 class FileSerializer(TimestampedSerializer):

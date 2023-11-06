@@ -1,0 +1,85 @@
+<div class="mb-3">
+    <form [formGroup]="form" novalidate>
+        <label cSelect>Prompt</label>
+        <input cFormControl type="text" formControlName="prompt">
+        <div *ngIf="formControl['prompt'].errors">
+            <c-form-feedback class="d-block"
+                *ngIf="formControl['prompt'].errors['required'] && formControl['prompt'].touched" [valid]="false">
+                Prompt is required.
+            </c-form-feedback>
+        </div>
+        <c-form-feedback class="d-block" *ngIf="validationErrors['prompt']" [valid]="false">
+            {{ validationErrors['prompt'] }}
+        </c-form-feedback>
+    </form>
+</div>
+<div class="mb-3">
+    <c-card>
+        <c-card-header>
+            <p cCardTitle>Answers</p>
+        </c-card-header>
+        <c-card-body>
+            <c-input-group class="mb-3">
+                <div class="form-group" *ngFor="let answer of answers; let i = index">
+                    <label for="answerContent{{ i }}" cLabel="col">Content</label>
+                    <c-row>
+                        <c-col>
+                            <input cFormControl [id]="'answerContent' + i" type="text" [(ngModel)]="answers[i].content"
+                                [name]="answers[i].content">
+                        </c-col>
+                        <c-col>
+                            <button cButton color="danger" (click)="removeAnswer(answer.uid)">Remove</button>
+                        </c-col>
+                    </c-row>
+                </div>
+            </c-input-group>
+            <div class="form-group mt-3">
+                <button cButton color="default" type="button" class="mr-4" (click)="addAnswer()">
+                    Add Answer
+                </button>
+            </div>
+        </c-card-body>
+    </c-card>
+</div>
+<div class="mb-3">
+    <c-card>
+        <c-card-header>
+            <p cCardTitle>Subquestions</p>
+        </c-card-header>
+        <c-card-body>
+            <c-input-group class="mb-3">
+                <div class="form-group mb-3" *ngFor="let subquestion of subquestions; let i = index">
+                    <c-row>
+                        <c-col class="d-flex">
+                            <label for="subquestionPrompt{{ i }}" cLabel class="me-3">Prompt</label>
+                            <input cFormControl [id]="'subquestionPrompt' + i" type="text"
+                                [(ngModel)]="subquestions[i].prompt">
+                        </c-col>
+                        <c-col>
+                            <select cSelect [ngModel]="subquestion.answers"
+                                (ngModelChange)="onAnswerSelect($event, subquestion)">
+                                <option value=""></option>
+                                <option *ngFor="let answer of answers" [value]="answer.uid">
+                                    {{ answer.content }}
+                                </option>
+                            </select>
+                        </c-col>
+                        <c-col>
+                            <button type="button" cButton color="danger" (click)="removeQuestion(i)">Remove
+                                Question</button></c-col>
+                    </c-row>
+                </div>
+            </c-input-group>
+            <div class="form-group mt-3">
+                <button cButton color="default" type="button" class="mr-4" (click)="addQuestion()">
+                    Add Subquestion
+                </button>
+            </div>
+        </c-card-body>
+    </c-card>
+</div>
+<div class="form-group mt-3">
+    <button cButton color="primary" type="button" [disabled]="form.invalid || loading.post" (click)="onSave()">
+        Save Question
+    </button>
+</div>

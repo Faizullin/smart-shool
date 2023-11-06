@@ -1,7 +1,7 @@
 from rest_framework import viewsets, filters, permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
-from dashboard.models import AcademicConfig
+from academics.models import AcademicConfig
 from .serializers import AcademicConfigSerializer
 from .filters import AcademicConfigPagination, ORDERING_FIELDS, FILTERSET_FIELDS, SEARCH_FILTERSET_FIELDS
 from accounts.permissions import IsAdmin

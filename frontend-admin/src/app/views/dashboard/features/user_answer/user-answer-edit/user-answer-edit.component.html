@@ -2,7 +2,7 @@
     <h5 cModalTitle>Edit</h5>
 </c-modal-header>
 <c-modal-body>
-    <form [formGroup]="form" novalidate (submit)="onSubmit()">
+    <form [formGroup]="form" novalidate (submit)="onSave()">
         <div class="form-group">
             <label cLabel>User</label>
             <input cFormControl readonly disabled [value]="editInstance?.user?.username" />

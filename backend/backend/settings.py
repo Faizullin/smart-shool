@@ -43,16 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
-    'django_tables2',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'django_rest_passwordreset',
     'django_seed',
-    'crispy_forms',
-    'crispy_bootstrap4',
-    'ckeditor',
-    'ckeditor_uploader',
     'dashboard',
     'accounts',
     'academics',
@@ -63,7 +58,7 @@ INSTALLED_APPS = [
     'results',
     'students',
     'certificates',
-    'stats_export',
+    # 'stats_export',
 ]
 
 MIDDLEWARE = [

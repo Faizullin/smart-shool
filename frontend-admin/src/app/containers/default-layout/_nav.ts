@@ -21,23 +21,28 @@ let navItemsData: INavData[] = [
     iconComponent: { name: 'cil-user' },
   },
   {
+    name: 'Academic',
+    title: true,
+  },
+  {
     name: 'Articles',
     url: '/dashboard/articles',
     iconComponent: { name: 'cil-book' },
   },
   {
-    name: 'Academic',
-    title: true,
-  },
-  {
-    name: 'Certificates',
-    url: '/dashboard/certificates',
-    iconComponent: { name: 'cil-certificate' },
-  },
-  {
     name: 'Students',
     url: '/dashboard/students',
     iconComponent: { name: 'cil-student' },
+  },
+  {
+    name: 'Subjects',
+    url: '/dashboard/subjects',
+    iconComponent: { name: 'cil-subject' },
+  },
+  {
+    name: 'Subject Groups',
+    url: '/dashboard/subject-groups/list',
+    iconComponent: { name: 'cil-subject' },
   },
   {
     name: 'Quiz system',
@@ -50,7 +55,7 @@ let navItemsData: INavData[] = [
   },
   {
     name: 'Quizzes',
-    url: '/dashboard/quizzes',
+    url: '/dashboard/quizzes/list',
     iconComponent: { name: 'cil-quiz' },
   },
   {
@@ -60,8 +65,13 @@ let navItemsData: INavData[] = [
   },
   {
     name: 'User Answers',
-    url: '/dashboard/user_answers',
+    url: '/dashboard/user-answers',
     iconComponent: { name: 'cil-result' },
+  },
+  {
+    name: 'Certificates',
+    url: '/dashboard/certificates',
+    iconComponent: { name: 'cil-certificate' },
   },
   {
     name: 'System',

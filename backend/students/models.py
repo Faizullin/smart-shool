@@ -8,9 +8,6 @@ from django.utils import timezone
 from academics.models import Subject, SubjectGroup
 from accounts.models import User
 
-import os
-import time
-
 
 class Student(models.Model):
     STATUS_CHOICES = [("active", "Active"), ("inactive", "Inactive")]

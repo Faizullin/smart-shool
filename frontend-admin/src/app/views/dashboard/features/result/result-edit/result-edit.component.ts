@@ -20,6 +20,7 @@ export class ResultEditComponent extends BaseEditComponent {
       total_score: [0, Validators.required],
       theory_score: [0, Validators.required],
       practical_score: [0, Validators.required],
+      checked: [false],
     });
     super.ngOnInit();
   }
@@ -27,8 +28,9 @@ export class ResultEditComponent extends BaseEditComponent {
     if (this.editInstance !== null) {
       this.form.patchValue({
         total_score: this.editInstance.total_score,
-        theory_score: this.editInstance.total_score,
-        practical_score: this.editInstance.total_score,
+        theory_score: this.editInstance.theory_score,
+        practical_score: this.editInstance.practical_score,
+        checked: this.editInstance.checked,
       });
     }
   }
