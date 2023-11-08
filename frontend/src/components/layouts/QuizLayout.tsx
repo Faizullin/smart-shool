@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { fetchUserData, logout } from '../../redux/store/reducers/authSlice'
-import Header from '../Header'
+import Header from '../header/Header'
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';

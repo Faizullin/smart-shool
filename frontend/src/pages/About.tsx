@@ -8,6 +8,7 @@ import { FormattedMessage } from 'react-intl';
 export interface IAboutProps {
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function About(_: IAboutProps) {
     return (
         <Layout>

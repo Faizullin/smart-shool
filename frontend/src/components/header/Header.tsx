@@ -1,5 +1,5 @@
 import { ReactNode, useState, useRef, useEffect } from "react";
-
+import styles from './header.module.scss'
 
 type IHeaderProps = {
     children: ReactNode
@@ -33,7 +33,7 @@ export default function Header({children}: IHeaderProps ){
       }, []);
     
     return (
-        <header id="header" ref={headerRef} className={`header flex items-center ${sticky.isSticky? "sticked" : ""}`}>
+        <header id="header" ref={headerRef} className={`header bg-peach flex items-center ${sticky.isSticky? "sticked" : ""} ${styles.header}`}>
             { children }
         </header>
     );

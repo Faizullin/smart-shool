@@ -1,0 +1,24 @@
+// $navy: #37455a;
+// $blue: #abbdd3;
+// $cyan: #a3d9cb;
+$green-normal: #00a991;
+$green-normal-active: #008774;
+$green-dark: #007f6d;
+
+$colors: (
+  green-normal: $green-normal,
+  green-normal-active: $green-normal-active,
+  green-dark: $green-dark,
+);
+
+@mixin gen-props($prefix, $property) {
+  @each $color-name, $color in $colors {
+    .#{$prefix}-#{$color-name} {
+      #{$property}: $color;
+    }
+  }
+}
+
+@include gen-props("text", "color");
+@include gen-props("bg", "background");
+@include gen-props("border", "border-color");
