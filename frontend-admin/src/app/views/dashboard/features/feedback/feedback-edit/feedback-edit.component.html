@@ -1,0 +1,31 @@
+<c-modal-header>
+    <h5 cModalTitle>Feedback #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+    <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
+        <div class="form-group mb-3">
+            <label cLabel for="content">Content</label>
+            <textarea cFormControl formControlName="content" id="content" 
+                type="text"></textarea>
+            <c-form-feedback class="d-block" *ngIf="validationErrors['content']" [valid]="false">
+                {{ validationErrors["content"] }}
+            </c-form-feedback>
+            <div class="mt-4"></div>
+        </div>
+        <div class="form-group mb-3">
+            <label cLabel for="result">Result</label>
+            <app-filterable-multiselect formControlName="result" id="result" [idField]="'id'" [textFieldDef]="getResultFilterTextField"
+                [allowRemoteDataSearch]="true" [useInitialLoad]="true" [multiple]="false"
+                [filterMethod]="fetchFilterRequest.results"></app-filterable-multiselect>
+            <c-form-feedback class="d-block" *ngIf="validationErrors['result_id']" [valid]="false">{{
+                validationErrors['result_id']
+                }}</c-form-feedback>
+        </div>
+        <div *ngIf="editInstance !== undefined" class="mb-3">
+            <span cCardText>{{editInstance?.created_at}}</span>
+            <span cCardText>{{editInstance?.updated_at}}</span>
+        </div>
+        <button cButton color="primary" type="submit" [disabled]="loading.post">Save</button>
+        <button cButton color="danger" type="button" [disabled]="loading.post" (click)="onFeedbackDelete()">Delete</button>
+    </form>
+</c-modal-body>

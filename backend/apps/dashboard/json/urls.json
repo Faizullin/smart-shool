@@ -1,0 +1,36 @@
+[
+  {
+    "url": "api/s/certificates/",
+    "file": "apps.dashboard.tables.certificates.urls"
+  },
+  { "url": "api/s/articles/", "file": "apps.dashboard.tables.articles.urls" },
+  {
+    "url": "api/s/academic-config/",
+    "file": "apps.dashboard.tables.academic_config.urls"
+  },
+  { "url": "api/s/files/", "file": "apps.dashboard.tables.files.urls" },
+  { "url": "api/s/students/", "file": "apps.dashboard.tables.students.urls" },
+  { "url": "api/s/quizzes/", "file": "apps.dashboard.tables.quizzes.urls" },
+  { "url": "api/s/users/", "file": "apps.dashboard.tables.users.urls" },
+  { "url": "api/s/exams/", "file": "apps.dashboard.tables.exams.urls" },
+  { "url": "api/s/results/", "file": "apps.dashboard.tables.results.urls" },
+  {
+    "url": "api/s/student-answers/",
+    "file": "apps.dashboard.tables.student-answers.urls"
+  },
+  { "url": "api/s/feedbacks/", "file": "apps.dashboard.tables.feedbacks.urls" },
+  { "url": "api/s/subjects/", "file": "apps.dashboard.tables.subjects.urls" },
+  {
+    "url": "api/s/subject-groups/",
+    "file": "apps.dashboard.tables.subject-groups.urls"
+  },
+  {
+    "url": "api/s/notifications/",
+    "file": "apps.dashboard.tables.notifications.urls"
+  },
+  {
+    "url": "api/s/project-works/",
+    "file": "apps.dashboard.tables.project-works.urls"
+  },
+  { "url": "api/s/conferences/", "file": "apps.dashboard.tables.conferences.urls" }
+]

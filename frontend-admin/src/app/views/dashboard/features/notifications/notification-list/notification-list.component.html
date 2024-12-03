@@ -1,0 +1,5 @@
+<dashboard-base-list [title]="table_title" [actions]="actions" [columns]="columns" [upper_filters]="upper_filters">
+  <ng-template columnDef="recipient" columnLabel="Recipient." sortable="sortable" #headerCellDef let-item>
+    <td>{{ item.recipient?.username }}({{ item.recipient?.email }})</td>
+  </ng-template>
+</dashboard-base-list>

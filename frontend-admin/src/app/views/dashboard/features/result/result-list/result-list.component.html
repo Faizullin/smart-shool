@@ -1,0 +1,20 @@
+<dashboard-base-list [title]="table_title" [actions]="actions" [columns]="columns">
+  <ng-template columnDef="feedback_actions" #headerCellDef let-item>
+    <td>
+      <button cButton type="button" color="secondary" (click)="onEditFeedback(item)">
+        {{
+        item.feedback && item.feedback?.id
+        ? "Edit feedback #" + item.feedback?.id
+        : "Create feedback"
+        }}
+      </button>
+    </td>
+  </ng-template>
+  <ng-template columnDef="stats"  #headerCellDef let-item>
+    <td>
+      <button cButton type="button" color="secondary" *ngIf="item.student" (click)="onStatsOpenClick(item.student.id)">
+        See student stats
+      </button>
+    </td>
+  </ng-template>
+</dashboard-base-list>

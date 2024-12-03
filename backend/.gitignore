@@ -1,0 +1,56 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Caches and logs
+*.log
+*.sqlite3
+
+# Virtual environment
+venv/
+.venv/
+.env/
+.env.dev
+
+# Local development settings
+local_settings.py
+
+
+media/
+static/
+staticfiles/
+model_data/
+
+
+# Database
+db.sqlite3
+
+
+# Ignore migrations, except for __init__.py
+**/migrations/*
+!**/migrations/__init__.py
+
+# Ignore secrets file
+secrets.json
+
+# Ignore .DS_Store on macOS
+.DS_Store
+
+# Ignore Python coverage files
+htmlcov/
+.coverage
+.coverage.*
+
+# Ignore pytest cache
+__pycache__/
+pytest_cache/
+
+# Ignore poetry lock file
+poetry.lock
+
+.vscode
+
+
+.python_history

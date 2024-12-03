@@ -1,0 +1,40 @@
+<c-modal-header>
+  <h5 cModalTitle>Project Work #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+  <div *ngIf="this.check_results.length > 0">
+    <div class="mt-3">
+      <div class="alert alert-warning">
+        <app-smart-table1 [data]="check_results" [usePagination]="false" [useSearchFilters]="false"
+          [useActions]="{ create: false, delete: false, edit: false }">
+          <ng-template columnDef="label" columnLabel="Label." sortable="false" #headerCellDef let-item>
+            <td>{{ item.label }}</td>
+          </ng-template>
+          <ng-template columnDef="messages" columnLabel="Messages." sortable="false" #headerCellDef let-item>
+            <td>[{{ item.messages.join(",") }}]</td>
+          </ng-template>
+        </app-smart-table1>
+      </div>
+    </div>
+  </div>
+  <hr class="my-6" />
+  <div *ngIf="this.files.length > 0">
+    <div class="mt-3">
+      <button *ngIf="files_to_check.length >0" cButton (click)="onCheckDocxFile(files_to_check[0])">
+        Check {{ files_to_check[0].name }}
+      </button>
+      <a class="link link-info" (click)="onProjectOpen()">Open project</a>
+      <app-smart-table1 [data]="files" [usePagination]="false" [useSearchFilters]="false"
+        [useActions]="{ create: false, delete: false, edit: false }">
+        <ng-template columnDef="id" columnLabel="Id." sortable="false" #headerCellDef let-item>
+          <td>{{ item.id }}</td>
+        </ng-template>
+        <ng-template columnDef="name" columnLabel="Name." sortable="false" #headerCellDef let-item>
+          <td>
+            <a [href]="item.url" download> {{ item.name }} </a>
+          </td>
+        </ng-template>
+      </app-smart-table1>
+    </div>
+  </div>
+</c-modal-body>

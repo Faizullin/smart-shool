@@ -1,0 +1,83 @@
+<c-modal-header>
+    <h5 cModalTitle>Conference #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+    <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
+        <div class="form-group mb-3">
+            <label cLabel for="title">Title</label>
+            <input cFormControl id="title" formControlName="title" type="text" />
+            <div *ngIf="formControl['title'].errors">
+                <c-form-feedback class="d-block" *ngIf="
+                  formControl['title'].errors['required'] &&
+                  formControl['title'].touched
+                " [valid]="false">
+                    Title is required.
+                </c-form-feedback>
+            </div>
+        </div>
+        <div class="form-group mb-3">
+            <label cLabel for="description">Description</label>
+            <textarea cFormControl id="description" formControlName="description"></textarea>
+            <div *ngIf="formControl['description'].errors">
+                <c-form-feedback class="d-block"
+                    *ngIf="formControl['description'].errors['required'] && formControl['description'].touched"
+                    [valid]="false">
+                    Description is required.
+                </c-form-feedback>
+            </div>
+        </div>
+        <div class="form-group mb-3">
+            <label cLabel for="users">Users</label>
+            <app-filterable-multiselect formControlName="users" id="users" [idField]="'id'" [textField]="'username'"
+                [allowRemoteDataSearch]="true" [filterMethod]="fetchFilterRequest.users" [useInitialLoad]="true"
+                [multiple]="true"></app-filterable-multiselect>
+            <c-form-feedback class="d-block" *ngIf="validationErrors['users_ids']" [valid]="false">{{
+                validationErrors['users_ids']
+                }}</c-form-feedback>
+        </div>
+        <div class="form-group mb-3">
+            <label cLabel for="invited_users">Invited Users</label>
+            <app-filterable-multiselect formControlName="invited_users" id="invited_users" [idField]="'id'"
+                [textField]="'username'" [allowRemoteDataSearch]="true" [filterMethod]="fetchFilterRequest.users"
+                [useInitialLoad]="true" [multiple]="true"></app-filterable-multiselect>
+            <c-form-feedback class="d-block" *ngIf="validationErrors['invited_users_ids']" [valid]="false">{{
+                validationErrors['invited_users_ids']
+                }}</c-form-feedback>
+        </div>
+        <div class="form-group mb-3">
+            <label cLabel for="project_work">Project Work</label>
+            <app-filterable-multiselect formControlName="project_work" id="project_work" [idField]="'id'"
+                [textField]="'title'" [allowRemoteDataSearch]="true" [filterMethod]="fetchFilterRequest.project_works"
+                [useInitialLoad]="true" [multiple]="true"></app-filterable-multiselect>
+            <c-form-feedback class="d-block" *ngIf="validationErrors['project_work_id']" [valid]="false">{{
+                validationErrors['project_work_id']
+                }}</c-form-feedback>
+        </div>
+        <div class="form-group mb-3">
+            <label cLabel for="admin">Admin User</label>
+            <app-filterable-multiselect formControlName="admin" id="admin" [idField]="'id'" [textField]="'username'"
+                [allowRemoteDataSearch]="true" [filterMethod]="fetchFilterRequest.users" [useInitialLoad]="true"
+                [multiple]="false"></app-filterable-multiselect>
+            <c-form-feedback class="d-block" *ngIf="validationErrors['admin_id']" [valid]="false">{{
+                validationErrors['admin_id']
+                }}</c-form-feedback>
+        </div>
+        <div class="form-group mb-3">
+            <label cLabel for="status">Status</label>
+            <select cSelect id="status" formControlName="status">
+                <option *ngFor="let item of status_types" [value]="item.value">{{ item.label }}</option>
+            </select>
+            <c-form-feedback class="d-block" *ngIf="validationErrors['status']" [valid]="false">{{
+                validationErrors['status']
+                }}</c-form-feedback>
+        </div>
+        <div class="form-group mb-3">
+            <label cLabel for="planned_time">Planned time</label>
+            <input cFormControl formControlName="planned_time" type="datetime-local">
+            <c-form-feedback class="d-block" *ngIf="validationErrors['planned_time']" [valid]="false">{{
+                validationErrors['planned_time']
+                }}</c-form-feedback>
+        </div>
+        <button cButton color="primary" type="submit" [disabled]="loading.post">Save</button>
+    </form>
+</c-modal-body>

@@ -1,0 +1,54 @@
+<ng-container *ngIf="loading.list; else formOut">
+  <div class="w-100 d-flex justify-content-center">
+    <c-spinner color="info"></c-spinner>
+  </div>
+</ng-container>
+<ng-template #formOut>
+  <ng-container *ngIf="!editInstance">
+    <button
+      cButton
+      color="success"
+      type="button"
+      [disabled]="loading.post"
+      (click)="createInstance()"
+    >
+      Create
+    </button>
+  </ng-container>
+  <form
+    *ngIf="editInstance"
+    [formGroup]="form"
+    novalidate
+    (ngSubmit)="onSave()"
+  >
+    <div class="form-group mb-3">
+      <label cLabel for="content">Content</label>
+      <editor apiKey="test" [init]="init" formControlName="content"></editor>
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['content']"
+        [valid]="false"
+      >
+        {{ validationErrors["content"] }}
+      </c-form-feedback>
+    </div>
+    <c-button-toolbar aria-label="Toolbar with button groups" role="group">
+      <c-button-group aria-label="Update" class="me-2" role="group">
+        <button cButton color="primary" type="submit" [disabled]="loading.post">
+          Save
+        </button>
+      </c-button-group>
+      <!-- <c-button-group aria-label="Danger" class="me-2" role="group">
+        <button
+          cButton
+          color="danger"
+          type="button"
+          [disabled]="loading.post"
+          (click)="deleteInstance()"
+        >
+          Delete
+        </button>
+      </c-button-group> -->
+    </c-button-toolbar>
+  </form>
+</ng-template>

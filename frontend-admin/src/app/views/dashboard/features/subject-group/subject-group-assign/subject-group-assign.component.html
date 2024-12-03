@@ -1,0 +1,59 @@
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>{{ table_title }}</c-card-header>
+      <c-card-body>
+        <div class="mb-3">
+          <button cButton color="primary" type="button" (click)="onSave()">Save</button>
+        </div>
+        <div class="mb-3">
+          <div class="row">
+            <c-col class="d-flex align-items-center" xs="12" md="6">
+            </c-col>
+          </div>
+        </div>
+        <form [formGroup]="form" class="row">
+          <div cdkDropListGroup formArrayName="subjects">
+            <div class="col-12" *ngFor="let subject_group_item of configured_subject_group_data;let i = index"
+              [formGroupName]="i">
+              <c-row>
+                <c-col>
+                  <h6>{{ subject_group_item.label }}</h6>
+                </c-col>
+                <c-col>
+                  <input cFormControl type="text" formControlName="title" class="subject-title-input" />
+                </c-col>
+              </c-row>
+              <table class="table table-striped">
+                <tbody cdkDropList [cdkDropListData]="configured_data[subject_group_item.id]"
+                  (cdkDropListDropped)="drop($event)">
+                  <tr *ngFor="let item of configured_data[subject_group_item.id]" cdkDrag>
+                    <td>
+
+                    </td>
+                    <td>
+                      {{ item.id }}
+                    </td>
+                    <td>
+                      {{ item.exam?.subject?.title }}
+                    </td>
+                    <td>
+                      {{ item.student?.id }}({{ item.student?.user?.email }})
+                    </td>
+                    <td>
+                      <div class="d-flex">
+                        <button cButton color="info" type="button" (click)="onResultEditOpen(item)">Total: {{
+                          item.total_score
+                          }}</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

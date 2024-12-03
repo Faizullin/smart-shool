@@ -1,0 +1,52 @@
+@import "@/assets/css/_variables";
+@import "@/assets/css/_custom";
+
+.chat-message-item-card {
+  //   width: 300px;
+  border: none;
+
+  &__author {
+    display: inline;
+    // width: 70%;
+    // height: 100%;
+    // max-width: 200px;
+
+    border: none;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 5px;
+    background-color: $black-99-color;
+
+    &.active {
+      background-color: $green-darker-color;
+      color: white;
+    }
+  }
+
+  &__content {
+    display: inline;
+    min-width: 100px;
+    height: 100%;
+    max-width: 100%;
+
+    border: none;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 0;
+    padding: 5px;
+    background-color: $black-99-color;
+
+    &.active {
+      background-color: $green-darker-color;
+      color: white;
+
+      border-top-right-radius: 0;
+      border-top-left-radius: 15px;
+    }
+  }
+
+  @media (max-width: get-max-width-breakpoints("md")) {
+    margin-top: 20px;
+  }
+}

@@ -1,0 +1,11 @@
+<dashboard-base-list
+  [title]="table_title"
+  [actions]="actions"
+  [columns]="columns"
+>
+<div upper_content>
+  <button cButton color="primary" (click)="retrain_student_faces()" [disabled]="train_loading">
+      Retrain all
+  </button>
+  <span *ngIf="train_loading">Loading...</span>
+</div></dashboard-base-list>

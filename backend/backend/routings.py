@@ -1,0 +1,8 @@
+from apps.chats.routing import websocket_urlpatterns as chat_websocket_urlpatterns
+from apps.conferences.routings import websocket_urlpatterns  as conference_websocket_urlpatterns
+from apps.project_work.routings import websocket_urlpatterns as project_work_websocket_urlpatterns
+websocket_urlpatterns = [
+]
+websocket_urlpatterns += chat_websocket_urlpatterns
+websocket_urlpatterns += conference_websocket_urlpatterns
+websocket_urlpatterns += project_work_websocket_urlpatterns

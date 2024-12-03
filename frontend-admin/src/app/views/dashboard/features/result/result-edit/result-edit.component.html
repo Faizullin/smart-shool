@@ -1,0 +1,141 @@
+<c-modal-header>
+  <h5 cModalTitle>Result #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+  <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
+    <div class="form-group mb-3">
+      <c-card>
+        <c-card-header>
+          <p cCardTitle>Student</p>
+        </c-card-header>
+        <c-card-body>
+          <c-input-group class="mb-3">
+            <span cInputGroupText>Username</span>
+            <input
+              aria-label="Username"
+              cFormControl
+              [readOnly]="true"
+              [defaultValue]="editInstance?.student?.user?.username"
+            />
+            <span cInputGroupText>Email</span>
+            <input
+              aria-label="Email"
+              cFormControl
+              [readOnly]="true"
+              [defaultValue]="editInstance?.student?.user?.email"
+            />
+          </c-input-group>
+        </c-card-body>
+      </c-card>
+    </div>
+    <div class="form-group mb-3">
+      <c-card>
+        <c-card-header>
+          <p cCardTitle>Exam</p>
+        </c-card-header>
+        <c-card-body>
+          <c-input-group class="mb-3">
+            <span cInputGroupText>Exam type</span>
+            <input
+              aria-label="Exam type"
+              cFormControl
+              [readOnly]="true"
+              [defaultValue]="editInstance?.exam?.exam_type"
+            />
+            <span cInputGroupText>Subject</span>
+            <input
+              aria-label="Subject"
+              cFormControl
+              [readOnly]="true"
+              [defaultValue]="editInstance?.exam?.subject?.title"
+            />
+          </c-input-group>
+        </c-card-body>
+      </c-card>
+    </div>
+    <div class="form-group mb-3">
+      <label cLabel>Practical Score</label>
+      <input
+        cFormControl
+        name="practical_score"
+        formControlName="practical_score"
+        type="number"
+      />
+      <div *ngIf="formControl['practical_score'].errors">
+        <c-form-feedback
+          class="d-block"
+          *ngIf="
+            formControl['practical_score'].errors['required'] &&
+            formControl['practical_score'].touched
+          "
+          [valid]="false"
+        >
+          Practical Score is required.
+        </c-form-feedback>
+      </div>
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['practical_score']"
+        [valid]="false"
+      >
+        {{ validationErrors["practical_score"] }}
+      </c-form-feedback>
+    </div>
+    <div class="form-group mb-3">
+      <label cLabel>Theory Score</label>
+      <input
+        cFormControl
+        name="theory_score"
+        formControlName="theory_score"
+        type="number"
+      />
+      <div *ngIf="formControl['theory_score'].errors">
+        <c-form-feedback
+          class="d-block"
+          *ngIf="
+            formControl['theory_score'].errors['required'] &&
+            formControl['theory_score'].touched
+          "
+          [valid]="false"
+        >
+          Theory Score is required.
+        </c-form-feedback>
+      </div>
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['theory_score']"
+        [valid]="false"
+      >
+        {{ validationErrors["theory_score"] }}
+      </c-form-feedback>
+    </div>
+    <div class="form-group mb-3">
+      <c-card>
+        <c-card-header>
+          <p cCardTitle>Total Score</p>
+        </c-card-header>
+        <c-card-body>
+          ( {{ formControl["practical_score"].value }} +
+          {{ formControl["theory_score"].value }} ) / 2 =
+          {{
+            (formControl["practical_score"].value +
+              formControl["theory_score"].value) /
+              2
+          }}
+        </c-card-body>
+      </c-card>
+    </div>
+    <div class="form-group mb-3">
+      <c-form-check>
+        <input
+          cFormCheckInput
+          id="checked"
+          formControlName="checked"
+          type="checkbox"
+        />
+        <label cFormCheckLabel for="checked">Checked</label>
+      </c-form-check>
+    </div>
+    <button cButton color="primary" type="submit">Save</button>
+  </form>
+</c-modal-body>

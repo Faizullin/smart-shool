@@ -1,0 +1,10 @@
+@import "@/assets/css/_variables";
+@import "@/assets/css/_custom";
+
+.conference-room-page {
+  background-color: $green-light-color;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  transition: 0.2s;
+}

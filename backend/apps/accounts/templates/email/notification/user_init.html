@@ -1,0 +1,88 @@
+{% extends 'email/base.html' %}
+
+{% block content %}
+<div class="container" lang="ru">
+    <div class="header">
+        Уведомление об обновлении данных клиента
+    </div>
+    <div class="content">
+        <p>Уважаемый клиент {{ user.username }},</p>
+        <p>Мы пишем вам, чтобы сообщить, что произошли некоторые обновления в ваших данных в нашей системе.</p>
+        <p>Пожалуйста, войдите в свой профиль, чтобы ознакомиться с изменениями и убедиться, что ваша информация актуальна.</p>
+        <p>Выберите свою роль:</p>
+        <p>
+            <a href="{{ profile_url }}" class="btn">Студент</a>
+            <a href="{{ dashboard_url }}" class="btn">Преподаватель</a>
+            <a href="{{ dashboard_url }}" class="btn">Сотрудник</a>
+        </p>
+        <p>Чтобы успешно завершить регистрацию для студента, выполните следующие шаги:</p>
+        <ol>
+            <li>Зарегистрируйтесь в качестве студента.</li>
+            <li>Зарегистрируйте свой Face ID.</li>
+            <li>Пройдите любой начальный тест.</li>
+            <li>Ожидайте новых уведомлений и инструкций.</li>
+        </ol>
+        <p>Если у вас есть какие-либо вопросы или опасения относительно изменений, пожалуйста, не стесняйтесь связаться с нами.</p>
+        <p>Благодарим вас за то, что являетесь нашим ценным клиентом.</p>
+        <p>С наилучшими пожеланиями,</p>
+        <p>Команда {{ domain_name }}</p>
+    </div>
+</div>
+
+<!-- English Section -->
+<div class="container" lang="en">
+    <div class="header">
+        Client Data Update Notification
+    </div>
+    <div class="content">
+        <p>Dear Client {{ user.username }},</p>
+        <p>We are writing to inform you that there have been some updates to your data on our system.</p>
+        <p>Please log in to your profile to review the changes and ensure that your information is up to date.</p>
+        <p>Select your role:</p>
+        <p>
+            <a href="{{ profile_url }}" class="btn">Student</a>
+            <a href="{{ dashboard_url }}" class="btn">Teacher</a>
+            <a href="{{ dashboard_url }}" class="btn">Staff</a>
+        </p>
+        <p>To successfully complete the registration for student, follow these steps:</p>
+            <ol>
+                <li>Register as a student.</li>
+                <li>Register your Face ID.</li>
+                <li>Pass any initial test.</li>
+                <li>Wait for new notifications and instructions.</li>
+            </ol>
+        <p>If you have any questions or concerns regarding the changes, please feel free to contact us.</p>
+        <p>Thank you for being a valued client.</p>
+        <p>Best regards,</p>
+        <p>The {{ domain_name }} Team</p>
+    </div>
+</div>
+
+<!-- Kazakh Section -->
+<div class="container" lang="kk">
+    <div class="header">
+        Клиент деректерін жаңарту туралы хабарлау
+    </div>
+    <div class="content">
+        <p>Құрметті клиент {{ user.username }},</p>
+        <p>Біз сізге, біздің жүйемізде сіздің деректеріңізде кейінгі жаңартулар болғаны туралы хабарлау үшін жазамыз.</p>
+        <p>Деректеріңіздегі өзгерістерді тексеру үшін жеке кабинетіңізге кіріңіз және деректеріңіздің қазіргі жағдайын тексеріңіз.</p>
+        <p>Рөліңізді таңдаңыз:</p>
+        <p>
+            <a href="{{ profile_url }}" class="btn">Студент</a>
+            <a href="{{ dashboard_url }}" class="btn">Мұғалім</a>
+            <a href="{{ dashboard_url }}" class="btn">Қызметкер</a>
+        </p>
+        <p>Студент ретінде тіркелу үшін жетілдіру үшін келесі қадамдарды орындаңыз:</p>
+            <ol>
+                <li>Студент ретінде тіркеліңіз.</li>
+                <li>Face ID-ңызды тіркеңіз.</li>
+                <li>Бастапқы тестті өту.</li>
+                <li>Жаңа хабарландырулар мен біріктірулерді күтіңіз.</li>
+            </ol>
+        <p>Өзгерістерді алу жайлы кезде-келген сұрақтарыңыз немесе қамтамасыз етулеріңіз болса, бізге хабарласуыңызды қалаймыз.</p>
+        <p>Маңызды клиент болып табыладыңыз үшін рахмет.</p>
+        <p>{{ domain_name }} құрылымының құрметті құралдары</p>
+    </div>
+</div>
+{% endblock %}

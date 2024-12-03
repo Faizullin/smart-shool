@@ -1,0 +1,23 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>Settings Form Control</strong>
+            </c-card-header>
+            <c-card-body>
+                <c-row>
+                    <c-col *ngIf="showToggle">
+                        <button cButton (click)="toggleShowComponents()" class="btn">Toggle Components</button>
+                    </c-col>
+                    <c-col>
+                        <div class="form-check form-switch">
+                            <input cFormSwicthInput type="checkbox" role="switch" id="emailEnabledSwitchCheck"
+                                [(ngModel)]="states.email_enabled" (change)="toggleEmailEnabled()" />
+                            <label cFormCheckLabel for="emailEnabledSwitchCheck">Email send enabled</label>
+                        </div>
+                    </c-col>
+                </c-row>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>

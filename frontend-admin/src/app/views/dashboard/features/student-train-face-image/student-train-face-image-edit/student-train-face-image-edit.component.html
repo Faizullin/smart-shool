@@ -1,0 +1,34 @@
+<c-modal-header>
+    <h5 cModalTitle>Student Face #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+    <div>
+        <div class="form-group mb-3">
+            <c-card>
+                <c-card-header>
+                    <p cCardTitle>Student (user)</p>
+                </c-card-header>
+                <c-card-body>
+                    <c-input-group class="mb-3">
+                        <span cInputGroupText>Username</span>
+                        <input aria-label="Username" cFormControl [readOnly]="true"
+                            [defaultValue]="editInstance?.student?.user?.username" />
+                        <span cInputGroupText>Email</span>
+                        <input aria-label="Email" cFormControl [readOnly]="true"
+                            [defaultValue]="editInstance?.student?.user?.email" />
+                    </c-input-group>
+                </c-card-body>
+            </c-card>
+        </div>
+
+        <ng-container *ngIf="editInstance">
+            <c-row>
+                <c-col md="6" xl="4">
+                    <a [href]="editInstance.image?.url">
+                        <img [src]="editInstance.image?.url" alt="" class="img-fluid" />
+                    </a>
+                </c-col>
+            </c-row>
+        </ng-container>
+    </div>
+</c-modal-body>

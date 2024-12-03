@@ -1,0 +1,12 @@
+@import "@/assets/css/_variables";
+@import "../base-button.scss";
+
+.primary-button {
+  @extend .base-button;
+  background-color: $green-normal-color;
+  
+  &:hover {
+    background-color: $green-normal-active-color;
+    color: #ffffff;
+  }
+}

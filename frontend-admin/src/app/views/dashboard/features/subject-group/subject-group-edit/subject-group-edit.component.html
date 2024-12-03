@@ -1,0 +1,56 @@
+<c-modal-header>
+  <h5 cModalTitle>Subject Group #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+  <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
+    <div class="form-group mb-3">
+      <label cLabel for="title">Title</label>
+      <input
+        cFormControl
+        formControlName="title"
+        id="title"
+        type="text"
+      />
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['title']"
+        [valid]="false"
+      >
+        {{ validationErrors["title"] }}
+      </c-form-feedback>
+    </div>
+    <div class="form-group mb-3">
+      <label cLabel for="title">Subject</label>
+      <app-filterable-multiselect formControlName="subject" [idField]="'id'" [textField]="'title'" 
+        [allowSearchFilter]="true" [allowRemoteDataSearch]="true"
+        [multiple]="false" [filterMethod]="fetchFilterRequest.subjects"></app-filterable-multiselect>
+      <div *ngIf="formControl['subject'].errors">
+        <c-form-feedback class="d-block" *ngIf="formControl['subject'].errors['required'] && formControl['subject'].touched"
+          [valid]="false">
+          Subject is required.
+        </c-form-feedback>
+      </div>
+      <c-form-feedback class="d-block" *ngIf="validationErrors['subject']" [valid]="false">
+        {{ validationErrors['subject'] }}
+      </c-form-feedback>
+    </div>
+    <div class="form-group mb-3">
+      <label cLabel for="title">Teacher</label>
+      <app-filterable-multiselect formControlName="teacher" [idField]="'id'" [textField]="'email'" 
+        [allowSearchFilter]="true" [allowRemoteDataSearch]="true"
+        [multiple]="false" [filterMethod]="fetchFilterRequest.teachers"></app-filterable-multiselect>
+      <div *ngIf="formControl['teacher'].errors">
+        <c-form-feedback class="d-block" *ngIf="formControl['teacher'].errors['required'] && formControl['teacher'].touched"
+          [valid]="false">
+          Teacher is required.
+        </c-form-feedback>
+      </div>
+      <c-form-feedback class="d-block" *ngIf="validationErrors['teacher']" [valid]="false">
+        {{ validationErrors['teacher'] }}
+      </c-form-feedback>
+    </div>
+    <button cButton color="primary" type="submit" [disabled]="loading.post">
+      Save
+    </button>
+  </form>
+</c-modal-body>

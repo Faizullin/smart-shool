@@ -1,0 +1,73 @@
+<c-modal-header>
+  <h5 cModalTitle>Notification #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+  <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
+    <div class="form-group mb-3">
+      <label cLabel for="description">Description</label>
+      <textarea
+        cFormControl
+        formControlName="description"
+        id="description"
+        type="text"
+      ></textarea>
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['description']"
+        [valid]="false"
+      >
+        {{ validationErrors["description"] }}
+      </c-form-feedback>
+    </div>
+    <div class="form-group mb-3">
+      <label cLabel for="verb">Verb</label>
+      <input
+        cFormControl
+        formControlName="verb"
+        id="verb"
+        type="text"
+      />
+      <div *ngIf="formControl['verb'].errors">
+        <c-form-feedback
+          class="d-block"
+          *ngIf="
+            formControl['verb'].errors['required'] &&
+            formControl['verb'].touched
+          "
+          [valid]="false"
+        >
+          Verb is required.
+        </c-form-feedback>
+      </div>
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['verb']"
+        [valid]="false"
+      >
+        {{ validationErrors["verb"] }}
+      </c-form-feedback>
+    </div>
+    <div class="form-group mb-3">
+      <label cLabel for="recipient">Recipient</label>
+      <app-filterable-multiselect
+        formControlName="recipient"
+        id="recipient"
+        [idField]="'id'"
+        [textField]="'username'"
+        [allowRemoteDataSearch]="true"
+        [useInitialLoad]="true"
+        [multiple]="false"
+        [filterMethod]="fetchFilterRequest.users"
+      ></app-filterable-multiselect>
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['recipient_id']"
+        [valid]="false"
+        >{{ validationErrors["recipient_id"] }}</c-form-feedback
+      >
+    </div>
+    <button cButton color="primary" type="submit" [disabled]="loading.post">
+      Save
+    </button>
+  </form>
+</c-modal-body>

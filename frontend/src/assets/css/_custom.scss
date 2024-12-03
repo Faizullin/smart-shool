@@ -1,0 +1,62 @@
+@import "./variables";
+
+$colors: (
+  white-normal: $white-normal-color,
+  green-light: $green-light-color,
+  green-normal: $green-normal-color,
+  green-normal-active: $green-normal-active-color,
+  green-dark: $green-dark-color,
+  black-26: $black-26-color,
+  black-66: $black-66-color,
+  green-darker: $green-darker-color,
+  orange-f2: $orange-f2-color,
+);
+
+.font-weight-medium {
+  font-weight: $font-weight-medium; /* You can adjust the font weight as needed */
+}
+.font-weight-bold {
+  font-weight: $font-weight-bold; /* You can adjust the font weight as needed */
+}
+
+@mixin gen-props($prefix, $property) {
+  @each $color-name, $color in $colors {
+    .#{$prefix}-#{$color-name} {
+      #{$property}: $color !important;
+    }
+  }
+}
+
+@include gen-props("text", "color");
+@include gen-props("bg", "background");
+@include gen-props("border", "border-color");
+@include gen-props("text-color", "color");
+
+// Define font family map
+$fontFamilies: (
+  sans-serif: "Arial" sans-serif,
+  serif: "Times New Roman" serif,
+  monospace: "Courier New" monospace,
+  noto: "Noto Sans",
+  poppins: "Poppins",
+  // Add more font families as needed
+);
+
+// Generate text color utility classes
+// @each $colorName, $colorValue in $colors {
+//   #{$prefix}-#{$color-name}
+//   .text-color-#{$colorName} {
+//     color: $colorValue;
+//   }
+// }
+
+// // Generate font family utility classes
+@each $fontFamilyName, $fontFamilyValue in $fontFamilies {
+  .font-#{$fontFamilyName} {
+    font-family: $fontFamilyValue;
+  }
+}
+
+@function get-max-width-breakpoints($key) {
+  @return map-get($container-max-widths, $key);
+}

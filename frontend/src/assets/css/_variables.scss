@@ -1,0 +1,31 @@
+$white-normal-color: #ffffff;
+$green-normal-color: #00a991;
+$green-light-color: #e6f6f4;
+$green-normal-active-color: #008774;
+$green-dark-color: #007f6d;
+$green-darker-color: #003b33;
+$black-26-color: #262626;
+$black-66-color: #666666;
+$black-2e-color: #2e4049;
+$black-99-color: #999999;
+$orange-f2-color: #f2902f;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+$zindex-dropdown: 1000;
+$zindex-sticky: 1020;
+$zindex-fixed: 1030;
+$zindex-modal-backdrop: 1040;
+$zindex-offcanvas: 1050;
+$zindex-modal: 1060;
+$zindex-popover: 1070;
+$zindex-tooltip: 1080;
+$zindex-nav-sidebar: 1030;
+
+$container-max-widths: (
+  xs: 575.98px,
+  sm: 767.98px,
+  md: 991.98px,
+  lg: 1199.98px,
+);

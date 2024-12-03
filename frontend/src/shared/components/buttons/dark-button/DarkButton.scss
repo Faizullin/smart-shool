@@ -1,0 +1,9 @@
+@import "@/assets/css/_variables";
+@import "../base-button.scss";
+
+.dark-button {
+  @extend .base-button;
+  text-align: center;
+  // padding: 10px 26px;
+  background-color: $black-2e-color;
+}

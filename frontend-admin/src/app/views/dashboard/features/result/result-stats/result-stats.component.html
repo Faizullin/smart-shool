@@ -1,0 +1,18 @@
+<c-modal-header>
+  <h5 cModalTitle>Student #{{ editInstance?.id }} {{ editInstance?.user?.username }}({{ editInstance?.user?.email }})
+  </h5>
+</c-modal-header>
+<c-modal-body>
+  <c-row>
+    <c-col xs="12" lg="8">
+      <c-card class="mb-4">
+        <c-card-header>
+          Results Chart
+        </c-card-header>
+        <c-card-body>
+          <c-chart #lineChart type="line" [data]="chartLineData" [options]="chartLineOptions"></c-chart>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</c-modal-body>

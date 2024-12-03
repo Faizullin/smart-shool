@@ -1,0 +1,15 @@
+.git
+.gitignore
+
+.docker
+
+old_/
+backend-1/
+backend/backend/__pycache__/
+backend/backend/*/__pycache__/
+backend/backend/*/*/__pycache__/
+backend/backend/*/*/*/__pycache__/
+venv
+backend/backend/venv
+frontend/
+frontend/*

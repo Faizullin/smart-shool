@@ -1,0 +1,7 @@
+@import "@/assets/css/_variables";
+@import "../base-button.scss";
+
+.secondary-button {
+  @extend .base-button;
+  background-color: $black-66-color;
+}

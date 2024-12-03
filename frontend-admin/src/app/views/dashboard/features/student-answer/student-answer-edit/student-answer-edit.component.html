@@ -1,0 +1,104 @@
+<c-modal-header>
+  <h5 cModalTitle>Student Answer #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+  <ng-container *ngIf="editInstance && editInstance.question">
+    <c-row>
+      <c-col>
+        <div class="form-group">
+          <label cLabel>Prompt</label>
+          <input
+            cFormControl
+            [readOnly]="true"
+            [defaultValue]="editInstance.question.prompt"
+          />
+        </div>
+      </c-col>
+      <c-col>
+        <div class="d-flex flex-column justify-content-end h-100">
+          <select
+            cSelect
+            [value]="editInstance.question.type"
+            [disabled]="true"
+          >
+            <option value="c">Closed-ended</option>
+            <option value="o">Open-ended</option>
+            <option value="d">Draggable</option>
+          </select>
+        </div>
+      </c-col>
+    </c-row>
+    <form [formGroup]="form" novalidate (submit)="onSave()">
+      <div class="mb-3">
+        <c-card>
+          <c-card-header>
+            <p cCardTitle>User</p>
+          </c-card-header>
+          <c-card-body>
+            <c-input-group class="mb-3">
+              <span cInputGroupText>Username</span>
+              <input
+                aria-label="Username"
+                cFormControl
+                [readOnly]="true"
+                [defaultValue]="editInstance.result.student?.user?.username"
+              />
+              <span cInputGroupText>Email</span>
+              <input
+                aria-label="Email"
+                cFormControl
+                [readOnly]="true"
+                [defaultValue]="editInstance.result.student?.user?.email"
+              />
+            </c-input-group>
+          </c-card-body>
+        </c-card>
+      </div>
+      <div *ngIf="editInstance.question.type === 'o'" class="mt-3">
+        <div class="form-group">
+          <label cLabel>Answer</label>
+          <input cFormControl [defaultValue]="editInstance.answer_text || ''" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label cLabel>Score</label>
+        <input
+          cFormControl
+          type="number"
+          [max]="1"
+          [min]="0"
+          name="score"
+          formControlName="score"
+        />
+        <div *ngIf="formControl['score'].errors">
+          <c-form-feedback
+            class="d-block"
+            *ngIf="
+              formControl['score'].errors['required'] &&
+              formControl['score'].touched
+            "
+            [valid]="false"
+          >
+            Score is required.
+          </c-form-feedback>
+        </div>
+        <c-form-feedback
+          class="d-block"
+          *ngIf="validationErrors['score']"
+          [valid]="false"
+        >
+          {{ validationErrors["score"] }}
+        </c-form-feedback>
+      </div>
+      <button
+        type="submit"
+        cButton
+        color="primary"
+        [disabled]="form.invalid"
+        class="mt-2"
+      >
+        Save
+      </button>
+    </form>
+  </ng-container>
+</c-modal-body>

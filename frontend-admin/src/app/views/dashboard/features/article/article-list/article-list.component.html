@@ -1,0 +1,14 @@
+<dashboard-base-list [title]="table_title" [actions]="actions" [columns]="columns">
+  <ng-template columnDef="featured_image" #headerCellDef let-item>
+    <td>
+      <img class="smart-table__img" [src]="item.featured_image?.url" alt="featured_image" />
+    </td>
+  </ng-template>
+  <ng-template columnDef="tags" #headerCellDef let-item>
+    <td>
+      <div *ngFor="let tag_item of item.tags" class="btn mr-1 mb-1">
+        {{ tag_item.title }}
+      </div>
+    </td>
+  </ng-template>
+</dashboard-base-list>

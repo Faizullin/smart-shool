@@ -1,0 +1,147 @@
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>{{ title }}</c-card-header>
+      <c-card-body>
+        <div class="mb-3">
+          <div class="px-3">
+            <!-- <c-col *ngIf="useSearchFilters" xs="12" md="6">
+                  <label cLabel for="inputEmail-1">Search</label>
+                  <app-debounced-search-input
+                      (textChange)="onFilterChange($event)"></app-debounced-search-input>
+                  <div cFormText>We can search by any field</div>
+              </c-col> -->
+            <div class="row my-2">
+              <div class="col-6 col-sm-4 col-md-2">
+                <ng-container *ngIf="actions?.create && actions?.create?.use">
+                  <button cButton color="primary" (click)="onEdit()">
+                    Create
+                  </button>
+                </ng-container>
+              </div>
+              <div class="col-6 col-sm-4 col-md-2">
+                <ng-content select="[upper_content]"></ng-content>
+              </div>
+            </div>
+            <div class="row my-2">
+              <c-col xs="12" md="6">
+                <div *ngIf="upper_filters.length > 0">
+                  <c-row>
+                    <ng-container *ngFor="let column of upper_filters">
+                      <ng-container *ngIf="column.filter?.type === 'select'">
+                        <c-col class="form-group row pe-3" xs="12" md="6">
+                          <label cLabel>{{ column.header }}</label>
+                          <select cSelect [formControl]="filterControls[column.field]">
+                            <option value="">---</option>
+                            <option *ngFor="let option of column.filter?.fetch?.data"
+                              [value]="getFilterValue(option, column)">
+                              {{ getFilterLabel(option, column) }}
+                            </option>
+                          </select>
+                        </c-col>
+                      </ng-container>
+                    </ng-container>
+                  </c-row>
+                </div>
+              </c-col>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body dataSource-container">
+          <div *ngIf="loading.list" class="dataSource-loading-shade">
+            <c-spinner color="info"></c-spinner>
+          </div>
+          <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
+            <thead>
+              <tr>
+                <!-- Render table headers dynamically -->
+                <ng-container *ngFor="let column of contentColumns">
+                  <th (click)="onSortChanged(column)">{{ column.header }}</th>
+                </ng-container>
+                <ng-container *ngIf="actions.edit || actions.delete">
+                  <th>Actions</th>
+                </ng-container>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Render table rows dynamically -->
+              <tr class="filters-row" *ngIf="filters_count > 0">
+                <td *ngFor="let column of columns">
+                  <c-dropdown *ngIf="column?.filter" [autoClose]="'outside'" direction="dropup-center">
+                    <button cDropdownToggle class="btn" style='background-color:transparent;'
+                      [class.text-white]="filterControls[column.field].value"
+                      [class.bg-primary]="filterControls[column.field].value">
+                      <svg cIcon name="cilFilter"></svg>
+                    </button>
+                    <ul cDropdownMenu class="py-0">
+                      <ng-container *ngIf="column?.filter?.type === 'text'">
+                        <input type="text" class="form-control"
+                          [formControl]="filterControls[column.field]" />
+                      </ng-container>
+                      <ng-container *ngIf="column.filter?.type === 'select'">
+                        <select *ngIf="filterControls[column.field]" class="form-control"
+                          [formControl]="filterControls[column.field]">
+                          <option value="">---</option>
+                          <option *ngFor="let option of column.filter?.fetch?.data"
+                            [value]="getFilterValue(option, column)">
+                            {{ getFilterLabel(option, column) }}
+                          </option>
+                        </select>
+                      </ng-container>
+                      <ng-container *ngIf="column.filter?.type === 'date'">
+                        <input type="text" placeholder="Datepicker" class="form-control" bsDatepicker [bsConfig]="{
+                            isAnimated: true,
+                            dateInputFormat: 'YYYY-MM-DD'
+                          }" (bsValueChange)="
+                            onFilterDateChange($event, column.field)
+                          " />
+                      </ng-container>
+                    </ul>
+                  </c-dropdown>
+                </td>
+                <td *ngIf="actions.edit || actions.delete"></td>
+              </tr>
+              <ng-container *ngIf="!loading.list">
+                <tr *ngFor="let item of data">
+                  <ng-container *ngFor="let column of contentColumns">
+                    <ng-container *ngIf="column.render">
+                      <td [innerHTML]="column.render(item)"></td>
+                    </ng-container>
+                    <ng-container *ngIf="column.template">
+                      <ng-container *ngTemplateOutlet="
+                          column.template;
+                          context: { $implicit: item }
+                        "></ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="!column.template && !column.render">
+                      <td>
+                        {{ getItemColumnValue(item, column.field) }}
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="actions.edit || actions.delete">
+                    <td class="">
+                      <button cButton *ngIf="actions.edit" color="primary" (click)="onEdit(item)"
+                        class="mx-3 mx-3 my-2">
+                        Edit
+                      </button>
+                      <button cButton *ngIf="actions.delete" color="danger" (click)="onDelete(item)">
+                        Delete
+                      </button>
+                    </td>
+                  </ng-container>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <div class="mt-3">
+            <app-smart-pagination [page]="pagination.page" (pageChanged)="onPageChange($event)"
+              [pageSize]="pagination.pageSize" [pageSizeOptions]="pagination.pageSizeOptions"
+              (pageSizeChanged)="onPageSizeChange($event)" [totalPages]="pagination.totalPages"></app-smart-pagination>
+          </div>
+        </div>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

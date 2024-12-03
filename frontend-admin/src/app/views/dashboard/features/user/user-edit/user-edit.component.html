@@ -1,0 +1,57 @@
+<c-modal-header>
+  <h5 cModalTitle>Edit</h5>
+</c-modal-header>
+<c-modal-body>
+  <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
+    <div class="mt-3">
+      <label cLabel for="username">Username</label>
+      <input
+        cFormControl
+        id="username"
+        formControlName="username"
+        type="text"
+      />
+      <div *ngIf="formControl['username'].errors">
+        <c-form-feedback
+          class="d-block"
+          *ngIf="
+            formControl['username'].errors['required'] &&
+            formControl['username'].touched
+          "
+          [valid]="false"
+        >
+          Title is required.
+        </c-form-feedback>
+      </div>
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['username']"
+        [valid]="false"
+      >
+        {{ validationErrors["username"] }}
+      </c-form-feedback>
+    </div>
+    <div class="mt-3 mb-3">
+      <label cLabel for="email">Content</label>
+      <input cFormControl id="email" formControlName="email" type="email" />
+      <c-form-feedback
+        class="d-block"
+        *ngIf="validationErrors['email']"
+        [valid]="false"
+        >{{ validationErrors["email"] }}</c-form-feedback
+      >
+    </div>
+    <c-row>
+      <c-col>
+        <button cButton color="primary" type="submit">Submit</button>
+      </c-col>
+      <c-col>
+        <div>
+          <button cButton color="secondary" (click)="onLoginAs()">
+            Login as
+          </button>
+        </div>
+      </c-col>
+    </c-row>
+  </form>
+</c-modal-body>

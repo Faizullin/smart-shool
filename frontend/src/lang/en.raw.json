@@ -1,0 +1,409 @@
+{
+  "/VnDMl": {
+    "defaultMessage": "Other"
+  },
+  "/tj8WM": {
+    "defaultMessage": "Deep learning"
+  },
+  "1fG/hw": {
+    "defaultMessage": "Welcome to our online school dedicated to IoT, Robotics, and Informatics. We are passionate about fostering innovation and providing quality education in cutting-edge technologies."
+  },
+  "4tL2Jy": {
+    "defaultMessage": "Product Management"
+  },
+  "71DvwL": {
+    "defaultMessage": "Roboto"
+  },
+  "73QGlP": {
+    "defaultMessage": "Confirm new password ?"
+  },
+  "9B6Q74": {
+    "defaultMessage": "Create your Account"
+  },
+  "E5jKnx": {
+    "defaultMessage": "Or login via Face Id"
+  },
+  "EsqiVy": {
+    "defaultMessage": "Our mission is to empower students with the knowledge and skills needed to thrive in the rapidly evolving fields of IoT, Robotics, and Informatics. Whether you're a beginner or an experienced professional, our courses cater to all levels of expertise."
+  },
+  "FvA189": {
+    "defaultMessage": "Web Devlopment"
+  },
+  "Gs62mG": {
+    "defaultMessage": "Start devlopment"
+  },
+  "HHimCO": {
+    "defaultMessage": "Expert Instructors"
+  },
+  "KHMm3V": {
+    "defaultMessage": "Comprehensive Curriculum"
+  },
+  "KNEurE": {
+    "defaultMessage": "Community Support"
+  },
+  "KfGEob": {
+    "defaultMessage": "Explore our state-of-the-art online learning platform that provides a dynamic and interactive learning experience. Join our community of like-minded individuals and stay updated on the latest advancements in technology."
+  },
+  "QusafT": {
+    "defaultMessage": "Not a member yet?"
+  },
+  "Th4u/F": {
+    "defaultMessage": "Conferences"
+  },
+  "Zb4Zyi": {
+    "defaultMessage": "Click to login"
+  },
+  "about_us": {
+  },
+  "actions": {
+  },
+  "activated": {
+    "defaultMessage": "Activated"
+  },
+  "admin": {
+    "defaultMessage": "Admin"
+  },
+  "cYDrCK": {
+    "defaultMessage": "Deep-ai"
+  },
+  "certificates": {
+    "defaultMessage": "Certificates"
+  },
+  "close": {
+  },
+  "conference.alert_session_stpped": {
+  },
+  "conference.alert_user_joined": {
+  },
+  "conference.alert_user_left": {
+  },
+  "conference.prep_title": {
+  },
+  "conference.start_webcam_prview": {
+  },
+  "conference.stop_meeting": {
+  },
+  "conference.stop_webcam_prview": {
+  },
+  "confirm": {
+  },
+  "cyRU1N": {
+    "defaultMessage": "Forgot your password?"
+  },
+  "d02RrA": {
+    "defaultMessage": "Why choose us?"
+  },
+  "dashboard": {
+    "defaultMessage": "Dashboard"
+  },
+  "dashboard.conference_planned_time": {
+    "defaultMessage": "Planned time"
+  },
+  "dashboard.exams.suuubcas": {
+    "defaultMessage": "Submit project for Exam (#{exam_id})"
+  },
+  "dashboard.exams_exam_type": {
+    "defaultMessage": "Exam Type"
+  },
+  "dashboard.exams_start_quiz": {
+    "defaultMessage": "Start quiz"
+  },
+  "dashboard.exams_submit_project": {
+    "defaultMessage": "Submit project"
+  },
+  "dashboard.instructions_body_0": {
+  },
+  "dashboard.instructions_body_1": {
+  },
+  "dashboard.instructions_body_2": {
+  },
+  "dashboard.instructions_body_3": {
+  },
+  "dashboard.instructions_title_0": {
+  },
+  "dashboard.instructions_title_1": {
+  },
+  "dashboard.instructions_title_2": {
+  },
+  "dashboard.instructions_title_3": {
+    "defaultMessage": "C++ Arduino JSON Data"
+  },
+  "dashboard.notifXsc": {
+    "defaultMessage": "Mark as Read"
+  },
+  "dashboard.notifications_add_face_id": {
+    "defaultMessage": "Add face id"
+  },
+  "dashboard.notifications_attempt_exam": {
+    "defaultMessage": "Attempt exam"
+  },
+  "dashboard.projects.files_count_svadv": {
+    "defaultMessage": "{files_count} files"
+  },
+  "dashboard.projects.sadva": {
+    "defaultMessage": "The name of new project"
+  },
+  "dashboard.projects_ad28992": {
+    "defaultMessage": "Add Variable"
+  },
+  "dashboard.projects_createappfile": {
+    "defaultMessage": "Create .cpp file"
+  },
+  "dashboard.projects_cuy223": {
+    "defaultMessage": "Device Form"
+  },
+  "dashboard.projects_dkvlkejb": {
+    "defaultMessage": "Documents (Pdf)"
+  },
+  "dashboard.projects_should_update1": {
+    "defaultMessage": "Should update code?"
+  },
+  "dashboard.projects_ui328992": {
+    "defaultMessage": "Field name"
+  },
+  "dashboard.projects_uudvdsvbb": {
+    "defaultMessage": "Images"
+  },
+  "dashboard.projects_videooiwenv": {
+    "defaultMessage": "Videoes"
+  },
+  "dashboard.projects_waruu2": {
+    "defaultMessage": "To modify labels you should recreate new device"
+  },
+  "dashboard.results_show_feedback": {
+    "defaultMessage": "Show feedback"
+  },
+  "dashboard.results_stats": {
+  },
+  "dashboard.results_table": {
+    "defaultMessage": "Table"
+  },
+  "data": {
+    "defaultMessage": "Data"
+  },
+  "day": {
+    "defaultMessage": "Day"
+  },
+  "delete": {
+    "defaultMessage": "Delete"
+  },
+  "description": {
+    "defaultMessage": "Description"
+  },
+  "detail": {
+    "defaultMessage": "Detail"
+  },
+  "device": {
+    "defaultMessage": "Device"
+  },
+  "ecguCq": {
+    "defaultMessage": "Advanced robotics"
+  },
+  "edit": {
+    "defaultMessage": "Edit"
+  },
+  "email": {
+  },
+  "exam": {
+    "defaultMessage": "Exam"
+  },
+  "exams": {
+    "defaultMessage": "Exams"
+  },
+  "face_id.dvda": {
+    "defaultMessage": "No face id provided?"
+  },
+  "face_id.lets_train": {
+    "defaultMessage": "Let's train"
+  },
+  "face_id.login_with_face_id": {
+    "defaultMessage": "Login with face id"
+  },
+  "face_id.train_with_face_id": {
+    "defaultMessage": "Train face id"
+  },
+  "feedback": {
+    "defaultMessage": "Feedback"
+  },
+  "files": {
+    "defaultMessage": "Files"
+  },
+  "go_to_page": {
+    "defaultMessage": "Go to page"
+  },
+  "hnM9ND": {
+    "defaultMessage": "Robotics integration"
+  },
+  "home": {
+    "defaultMessage": "Home"
+  },
+  "image": {
+    "defaultMessage": "Image"
+  },
+  "join": {
+    "defaultMessage": "Join"
+  },
+  "label": {
+    "defaultMessage": "Label"
+  },
+  "leave": {
+  },
+  "login": {
+    "defaultMessage": "Login"
+  },
+  "logout": {
+    "defaultMessage": "Logout"
+  },
+  "main": {
+    "defaultMessage": "Main"
+  },
+  "month": {
+    "defaultMessage": "Month"
+  },
+  "my_projects": {
+    "defaultMessage": "My projects"
+  },
+  "not_activated": {
+    "defaultMessage": "Not activated"
+  },
+  "notifications": {
+    "defaultMessage": "Notifications"
+  },
+  "oiUZCZ": {
+    "defaultMessage": "Graphic Design"
+  },
+  "ongoing": {
+    "defaultMessage": "Ongoing"
+  },
+  "open": {
+  },
+  "or11Q2": {
+    "defaultMessage": "Hands-on Learning"
+  },
+  "our_services": {
+    "defaultMessage": "Our Services"
+  },
+  "page": {
+    "defaultMessage": "Page"
+  },
+  "passed": {
+    "defaultMessage": "Passed"
+  },
+  "password": {
+  },
+  "practical_score": {
+  },
+  "profile": {
+    "defaultMessage": "Profile"
+  },
+  "projects": {
+    "defaultMessage": "Projects"
+  },
+  "quit": {
+    "defaultMessage": "Quit"
+  },
+  "quiz": {
+    "defaultMessage": "Quiz"
+  },
+  "read": {
+    "defaultMessage": "Read"
+  },
+  "recent": {
+    "defaultMessage": "Recent"
+  },
+  "register.already_registered": {
+    "defaultMessage": "Already registered"
+  },
+  "register.login.not_member": {
+    "defaultMessage": "Not member yet?"
+  },
+  "register.password_confirmation": {
+    "defaultMessage": "Confirma Password"
+  },
+  "register.roles": {
+    "defaultMessage": "Roles"
+  },
+  "register.submit": {
+    "defaultMessage": "Register"
+  },
+  "register.xsc241": {
+    "defaultMessage": "Staff (admin / teacher)"
+  },
+  "reload": {
+    "defaultMessage": "Reload"
+  },
+  "remove": {
+    "defaultMessage": "Remove"
+  },
+  "resources": {
+    "defaultMessage": "Resources"
+  },
+  "results": {
+    "defaultMessage": "Results"
+  },
+  "save": {
+    "defaultMessage": "Save"
+  },
+  "script": {
+    "defaultMessage": "Script"
+  },
+  "send": {
+    "defaultMessage": "Send"
+  },
+  "share": {
+  },
+  "show": {
+  },
+  "student": {
+    "defaultMessage": "Student"
+  },
+  "subject": {
+  },
+  "subject_group": {
+    "defaultMessage": "Subject group"
+  },
+  "submit": {
+  },
+  "tVweXM": {
+    "defaultMessage": "IT start"
+  },
+  "theory_score": {
+  },
+  "title": {
+    "defaultMessage": "Title"
+  },
+  "top-articles": {
+    "defaultMessage": "Top articles"
+  },
+  "total_score": {
+  },
+  "ullM+c": {
+    "defaultMessage": "Unlock exciting career opportunities in the fields of IoT, Robotics, and Informatics. Our programs are designed to prepare you for the challenges of the modern technological landscape."
+  },
+  "unsupported_file_format": {
+    "defaultMessage": "Unsupported file format"
+  },
+  "upload": {
+    "defaultMessage": "upload"
+  },
+  "upload_file": {
+    "defaultMessage": "Upload file"
+  },
+  "useful_links": {
+    "defaultMessage": "Useful Links"
+  },
+  "username": {
+  },
+  "watch": {
+    "defaultMessage": "Watch"
+  },
+  "web_design": {
+    "defaultMessage": "Web Design"
+  },
+  "year": {
+    "defaultMessage": "Year"
+  },
+  "zB5VYc": {
+    "defaultMessage": "Opportunities"
+  }
+}

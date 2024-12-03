@@ -1,0 +1,34 @@
+<dashboard-base-list
+  [title]="table_title"
+  [actions]="actions"
+  [columns]="columns"
+  [upper_filters]="upper_filters"
+>
+  <ng-template
+    columnDef="additional_actions"
+    columnLabel=""
+    sortable="true"
+    #headerCellDef
+    let-item
+  >
+    <td>
+      <button
+        *ngIf="item.status === 'planned' && item.admin.id === user?.id"
+        cButton
+        color="primary"
+        (click)="onJoinClick(item)"
+      >
+        Start now
+      </button>
+      <button
+        *ngIf="item.status === 'ongoing'"
+        cButton
+        color="primary"
+        (click)="onJoinClick(item)"
+      >
+        Join
+      </button>
+      <p *ngIf="item.status === 'completed'">Completed</p>
+    </td>
+  </ng-template>
+</dashboard-base-list>

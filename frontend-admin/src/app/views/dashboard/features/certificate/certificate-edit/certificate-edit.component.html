@@ -1,0 +1,45 @@
+<c-modal-header>
+    <h5 cModalTitle>Certificate #{{ editInstance?.id }}</h5>
+</c-modal-header>
+<c-modal-body>
+    <form [formGroup]="form" novalidate (ngSubmit)="onSave()">
+        <div class="form-group mb-3">
+            <label cLabel for="student">Student</label>
+            <app-filterable-multiselect formControlName="student" id="student" [idField]="'id'" [textFieldDef]="getStudentFilterTextField"
+                [allowRemoteDataSearch]="true" [multiple]="false" [useInitialLoad]="true" 
+                [filterMethod]="fetchFilterRequest.students"></app-filterable-multiselect>
+            <c-form-feedback class="d-block" *ngIf="validationErrors['student']" [valid]="false">{{
+                validationErrors['student']
+                }}</c-form-feedback>
+        </div>
+        <div class="form-group mb-3">
+            <label cLabel for="subject">Subject</label>
+            <app-filterable-multiselect formControlName="subject" id="subject" [idField]="'id'" [textField]="'title'"
+                [allowRemoteDataSearch]="true" [multiple]="false" [useInitialLoad]="true"
+                [filterMethod]="fetchFilterRequest.subjects"></app-filterable-multiselect>
+            <c-form-feedback class="d-block" *ngIf="validationErrors['subject']" [valid]="false">{{
+                validationErrors['subject']
+                }}</c-form-feedback>
+        </div>
+        <div class="form-group mb-3">
+            <c-form-check>
+                <input cFormCheckInput id="generate_file" type="checkbox" formControlName="generate_file" />
+                <label cFormCheckLabel for="generate_file">Generate image file</label>
+            </c-form-check>
+        </div>
+        <button cButton color="primary" type="submit" [disabled]="loading.post">
+            Save
+        </button>
+    </form>
+    <div class="mt-4">
+        <ng-container *ngIf="editInstance">
+            <c-row>
+                <c-col md="6" xl="4">
+                    <a [href]="editInstance.image?.url">
+                        <img [src]="editInstance.image?.url" alt="" class="img-fluid" />
+                    </a>
+                </c-col>
+            </c-row>
+        </ng-container>
+    </div>
+</c-modal-body>

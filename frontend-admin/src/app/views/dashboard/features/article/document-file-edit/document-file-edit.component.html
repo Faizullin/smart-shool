@@ -1,0 +1,78 @@
+<c-row class="mb-3">
+  <div>
+    <div class="content">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="card-box">
+              <div class="row">
+                <div class="w-100">
+                  <h4 class="header-title m-b-30">My Files</h4>
+                  <input
+                    #fileInput
+                    hidden
+                    type="file"
+                    (change)="onFileChange($event)"
+                  />
+                  <div class="d-flex">
+                    <button
+                      cButton
+                      color="primary"
+                      (click)="fileInput.click()"
+                      [disabled]="loading.post"
+                    >
+                      Upload
+                    </button>
+                    <div class="ms-3">
+                      <c-form-feedback
+                        class="d-block"
+                        *ngIf="validationErrors['file']"
+                        [valid]="false"
+                        >{{ validationErrors["file"] }}</c-form-feedback
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="editInstance" class="row">
+                <div
+                  class="col-lg-3 col-xl-2"
+                  *ngFor="let file of editInstance.files"
+                >
+                  <div class="file-man-box">
+                    <a
+                      href="#"
+                      (click)="deleteFile($event, file)"
+                      class="file-close"
+                    >
+                      <svg cIcon name="cilDelete"></svg>
+                    </a>
+                    <div class="file-img-box">
+                      <ng-container *ngIf="fileType(file); else inactive">
+                        <img [src]="file.url"/>
+                      </ng-container>
+                      <ng-template #inactive>
+                        <svg cIcon name="cilFile"></svg>
+                      </ng-template>
+                    </div>
+                    <a [href]="file.url" class="file-download">
+                      <svg cIcon name="cilCloudDownload"></svg>
+                    </a>
+                    <div class="file-man-title">
+                      <h5 class="mb-0 text-overflow">{{ file.name }}</h5>
+                      <p class="mb-0">
+                        <small>{{ file.size }}</small>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <c-col></c-col>
+</c-row>

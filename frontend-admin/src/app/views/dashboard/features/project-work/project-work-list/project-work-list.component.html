@@ -1,0 +1,22 @@
+<dashboard-base-list
+  [title]="table_title"
+  [actions]="actions"
+  [columns]="columns"
+>
+  <ng-template columnDef="submit_exam" #headerCellDef let-item>
+    <td>{{ item.submit_exam?.id }} {{ item.submit_exam?.exam_type }}</td>
+  </ng-template>
+  <ng-template columnDef="result" #headerCellDef let-item>
+    <td>
+      <button
+        *ngIf="item.result"
+        cButton
+        type="button"
+        color="primary"
+        (click)="onResultEditOpen(item.result)"
+      >
+        See Result #{{ item.result.id }}
+      </button>
+    </td>
+  </ng-template>
+</dashboard-base-list>

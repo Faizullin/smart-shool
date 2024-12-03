@@ -1,0 +1,37 @@
+.project-layout {
+  .file-manager {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+
+    h5 {
+      text-transform: uppercase;
+    }
+
+    .file-control {
+      color: inherit;
+      font-size: 11px;
+      margin-right: 10px;
+      &.active {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .file-list {
+    li {
+      border-bottom: 1px solid #e7eaec;
+      display: flex;
+
+      a {
+        color: #666666;
+        display: block;
+        padding: 5px 0;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

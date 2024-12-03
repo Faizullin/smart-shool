@@ -1,0 +1,22 @@
+<c-row>
+    <c-col>
+      <c-pagination aria-label="Page navigation example">
+        <li cPageItem>
+          <a cPageLink [routerLink] (click)="onPageChange(page-1)">Previous</a>
+        </li>
+        <li cPageItem *ngFor="let page_item of getPaginationRange()" (click)="onPageChange(page_item)"
+          [active]="page_item==page">
+          <a cPageLink [routerLink]>{{ page_item }}</a>
+        </li>
+        <li cPageItem (click)="onPageChange(page+1)">
+          <a cPageLink [routerLink]>Next</a>
+        </li>
+      </c-pagination>
+    </c-col>
+    <c-col>
+      <label for="pageSizeSelect">Page Size:</label>
+      <select id="pageSizeSelect" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange(pageSize)">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+      </select>
+    </c-col>
+  </c-row>

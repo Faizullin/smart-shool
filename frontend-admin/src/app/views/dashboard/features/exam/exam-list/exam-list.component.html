@@ -1,0 +1,50 @@
+<dashboard-base-list
+  [title]="table_title"
+  [actions]="actions"
+  [columns]="columns"
+>
+  <ng-template
+    columnDef="quiz"
+    #headerCellDef
+    let-item
+  >
+    <td>
+      <button
+        *ngIf="item.quiz"
+        cButton
+        type="button"
+        color="primary"
+        (click)="onEditQuiz(item)"
+      >
+        Edit Quiz #{{ item.quiz.id }}
+      </button>
+      <button
+        *ngIf="!item.quiz"
+        cButton
+        type="button"
+        color="primary"
+        (click)="onEditQuiz(item)"
+      >
+        Create Quiz
+      </button>
+    </td>
+  </ng-template>
+  <ng-template
+    columnDef="stats"
+    columnLabel="Student Stats."
+    sortable="false"
+    #headerCellDef
+    let-item
+  >
+    <td>
+      <button
+        cButton
+        type="button"
+        color="secondary"
+        (click)="onStatsOpenClick(item.id)"
+      >
+        See exam stats
+      </button>
+    </td>
+  </ng-template>
+</dashboard-base-list>

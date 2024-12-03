@@ -1,0 +1,78 @@
+<c-col xs="6" lg="3">
+  <c-card class="mb-4">
+    <c-card-header> Disk Usage Data in Gb </c-card-header>
+    <c-card-body>
+      <c-chart #diskStatsChart type="pie" [data]="chartDiskData"></c-chart>
+    </c-card-body>
+  </c-card>
+</c-col>
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>Unchecked results</c-card-header>
+      <c-card-body>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          align="middle"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+            <tr>
+              <th>Id</th>
+              <th class="text-center">
+                <svg cIcon name="cilPeople"></svg>
+              </th>
+              <th>Score</th>
+              <th>Activity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let result_item of results_data; index as i">
+              <td class="text-center">
+                <div class="small text-medium-emphasis text-nowrap">
+                  <span>
+                    <a href="#" (click)="onOpenClick($event)">{{
+                      result_item.id
+                    }}</a>
+                  </span>
+                </div>
+              </td>
+              <td class="text-center">
+                <div class="small text-medium-emphasis text-nowrap">
+                  <span>
+                    {{
+                      result_item.student
+                        ? result_item.student.user.username
+                        : ""
+                    }}
+                  </span>
+                </div>
+                <!-- <c-avatar
+                  size="md"
+                  src=""
+                  status=""
+                ></c-avatar> -->
+              </td>
+              <td class="text-center">
+                <div class="small text-medium-emphasis text-nowrap">
+                  <span>
+                    {{ result_item.total_score }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="small text-medium-emphasis">Created At</div>
+                <div class="fw-semibold text-nowrap">
+                  {{ result_item.created_at }}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
