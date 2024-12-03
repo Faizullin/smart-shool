@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
-import { IDevice, IDeviceSensorDataSubmit } from "../models/IDevice";
 import $api from "../http";
+import { IDevice, IDeviceSensorDataSubmit } from "../models/IDevice";
 import { IDataResponse } from "../models/response/IDataResponse";
 
 export default class DeviceService {
@@ -46,5 +46,10 @@ export default class DeviceService {
         page_size: 1,
       },
     });
+  }
+  static async fetchGenerateApiKey(
+    device_id: number,
+  ) {
+    return $api.post<{ key: string; }>(`/projects/device/${device_id}/generate-key/`);
   }
 }

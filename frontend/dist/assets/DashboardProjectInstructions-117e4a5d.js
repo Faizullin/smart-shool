@@ -1,4 +1,25 @@
-export const BotSendCode = `
+import{j as e,ap as t,F as s}from"./index-33e0424c.js";import{P as o,D as n}from"./ProjectLayout-e7fee23d.js";import{d as r}from"./index-9d4c6f9e.js";const a=`import serial.tools.list_ports
+
+def find_arduino_port():
+    # Get a list of all available serial ports
+    ports = list(serial.tools.list_ports.comports())
+
+    if not ports:
+        print("No serial ports found.")
+    else:
+        print("Available serial ports:")
+        for port in ports:
+            print(f"   {port.device}")
+
+            # Check if the device is an Arduino by examining its description or manufacturer
+            if "Arduino" in port.description or "Arduino" in port.manufacturer:
+                print(f"   --> Arduino found on {port.device}")
+                return port.device
+
+    print("No Arduino found.")
+    return None
+
+find_arduino_port()`,i=`
 import asyncio
 import json
 import random
@@ -71,4 +92,4 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 
-`;
+`,p=()=>e.jsx(o,{children:e.jsx("div",{children:e.jsxs(t,{defaultActiveKey:"0",children:[e.jsxs(t.Item,{eventKey:"0",children:[e.jsx(t.Header,{children:e.jsx(s,{id:"dashboard.instructions_title_0"})}),e.jsx(t.Body,{children:e.jsx("p",{children:e.jsx(s,{id:"dashboard.instructions_body_0"})})})]}),e.jsxs(t.Item,{eventKey:"1",children:[e.jsx(t.Header,{children:e.jsx(s,{id:"dashboard.instructions_title_1"})}),e.jsxs(t.Body,{children:[e.jsx("p",{children:e.jsx(s,{id:"dashboard.instructions_body_1"})}),e.jsx(r,{height:"30vh",defaultLanguage:"python",defaultValue:a,options:{readOnly:!0}})]})]}),e.jsxs(t.Item,{eventKey:"2",children:[e.jsx(t.Header,{children:e.jsx(s,{id:"dashboard.instructions_title_2"})}),e.jsxs(t.Body,{children:[e.jsx("p",{children:e.jsx(s,{id:"dashboard.instructions_body_2"})}),e.jsx(r,{height:"60vh",defaultLanguage:"python",defaultValue:i,options:{readOnly:!0}})]})]}),e.jsxs(t.Item,{eventKey:"3",children:[e.jsx(t.Header,{children:e.jsx(s,{id:"dashboard.instructions_title_3",defaultMessage:"C++ Arduino JSON Data"})}),e.jsxs(t.Body,{children:[e.jsx("p",{children:e.jsx(s,{id:"dashboard.instructions_body_3"})}),e.jsx(r,{height:"40vh",defaultLanguage:"cpp",defaultValue:n,options:{readOnly:!0}})]})]})]})})});export{p as default};

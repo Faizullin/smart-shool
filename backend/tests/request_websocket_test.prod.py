@@ -1,4 +1,3 @@
-export const BotSendCode = `
 import asyncio
 import json
 import random
@@ -6,8 +5,8 @@ import random
 import websockets
 
 # Customize
-DEVICE_ID = None
-API_KEY = ''  # Device api key from broadcast page
+DEVICE_ID=3
+API_KEY = 'Q1bdgWZx.DpJI3HcbDcoXqOMZMOildm1Blr4ju3V7'  # Device api key from broadcast page
 URL = f'ws://localhost:8000/ws/projects/broadcast/{DEVICE_ID}/device/?key={API_KEY}'
 
 
@@ -70,5 +69,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-`;

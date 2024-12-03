@@ -20,7 +20,6 @@ export interface IDevice extends TimestampedModel {
   title: string;
   file: IFile;
   script: IFile;
-  password: string;
   connection_status: "connected" | "failed" | "pending" | "not_connected";
   activated: boolean;
   sensor_data_labels?: Array<IDeviceLabel>;

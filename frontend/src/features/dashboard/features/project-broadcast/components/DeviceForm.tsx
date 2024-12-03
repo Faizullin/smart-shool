@@ -5,7 +5,6 @@ import DeviceService from "@/core/services/DeviceService";
 import InputLabel from "@/shared/components/InputLabel";
 import SecondaryButton from "@/shared/components/buttons/secondary-button/SecondaryButton";
 import InputError from "@/shared/components/form/InputError";
-import PasswordInput from "@/shared/components/form/auth/PasswordInput";
 import TextInput from "@/shared/components/form/auth/TextInput";
 import { AxiosError } from "axios";
 import React, { FC, useState } from "react";
@@ -30,12 +29,10 @@ const DeviceForm: FC<IDeviceFormProps> = ({
 }) => {
   const [data, setData] = useState<{
     sensor_data_labels: IJsonDataLabels[];
-    password: string;
     script_id: number;
     title: string;
   }>({
     script_id: 0,
-    password: "",
     title: "",
     sensor_data_labels: [
       {
@@ -88,7 +85,6 @@ const DeviceForm: FC<IDeviceFormProps> = ({
     const submit_data = {
       title: data.title,
       script_id: data.script_id,
-      password: data.password,
       sensor_data_labels: data.sensor_data_labels,
       practical_work_id: projectWork.id,
     };
@@ -136,7 +132,6 @@ const DeviceForm: FC<IDeviceFormProps> = ({
         ...data,
         script_id: device.script.id,
         title: device.title,
-        password: device.password || "",
         sensor_data_labels: device.sensor_data_labels,
       }));
     }
@@ -159,19 +154,6 @@ const DeviceForm: FC<IDeviceFormProps> = ({
           />
           <InputError message={errors.title} className="mt-2" />
         </div>
-        <div className="col-6 form-group mb-2">
-          <InputLabel htmlFor="password" value={"Password"} />
-          <PasswordInput
-            id="password"
-            name="password"
-            value={data.password}
-            onChange={handleInputChange}
-            autoComplete={"off"}
-          />
-          <InputError message={errors.password} className="mt-2"></InputError>
-        </div>
-      </div>
-      <div className="row mb-2">
         <div className="col-6 form-group mb-2">
           <InputLabel
             htmlFor="password"

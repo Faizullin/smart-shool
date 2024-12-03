@@ -16,10 +16,11 @@ import {
 import AuthStorageService from "@/core/services/AuthStorageService";
 import DeviceService from "@/core/services/DeviceService";
 import PrimaryButton from "@/shared/components/buttons/primary-button/PrimaryButton";
+import SecondaryButton from "@/shared/components/buttons/secondary-button/SecondaryButton";
 import { mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
 import { AxiosError } from "axios";
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useCallback, useRef, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +31,7 @@ import DeviceForm from "./components/DeviceForm";
 import SensorDataContainer from "./components/SensorDataContainer";
 import SensorDataStatsContainer from "./components/SensorDataStatsContainer";
 
-interface IDashboardProjectBroadcastProps {}
+interface IDashboardProjectBroadcastProps { }
 
 const DashboardProjectBroadcast: FC<IDashboardProjectBroadcastProps> = () => {
   const intl = useIntl();
@@ -54,6 +55,8 @@ const DashboardProjectBroadcast: FC<IDashboardProjectBroadcastProps> = () => {
   const ws = useRef<WebSocket | null>(null);
   const [usersConnected, setUsersConnected] = useState<IUserConnected[]>([]);
   const [messages, setMessages] = useState<IConferenceChatMessage[]>([]);
+  const [generatedApiKey, setGeneratedApiKey] = useState<string | null>(null)
+  const [showGeneratedApiKey, setShowGeneratedApiKey] = useState<boolean>(false)
 
   const fetchDevice = async (id: number) => {
     setLoading((loading) => ({
@@ -160,6 +163,20 @@ const DashboardProjectBroadcast: FC<IDashboardProjectBroadcastProps> = () => {
   const handleShowForm = () => {
     setShowForm(true);
   };
+  const handleRequestApiKey = useCallback(() => {
+    if (!device) {
+      return;
+    }
+    if (confirm("Generate new api key?")) {
+      DeviceService.fetchGenerateApiKey(device.id).then(response => {
+        if (response.data) {
+          const key = response.data.key;
+          setGeneratedApiKey(key)
+          setShowGeneratedApiKey(true)
+        }
+      })
+    }
+  }, [device])
 
   React.useEffect(() => {
     if (projectData && projectData.device?.id) {
@@ -179,7 +196,7 @@ const DashboardProjectBroadcast: FC<IDashboardProjectBroadcastProps> = () => {
             setLastSensorDataSubmitItem(item);
           }
           setSensorDataSubmitList(data_results.reverse());
-        } catch {}
+        } catch { }
       };
       fetchReadStreamData();
     }
@@ -191,8 +208,7 @@ const DashboardProjectBroadcast: FC<IDashboardProjectBroadcastProps> = () => {
       }
       const token = AuthStorageService.getCurrentAccessToken();
       const newWebsocket = new WebSocket(
-        `${import.meta.env.VITE_APP_WS_BASE_URL}/ws/projects/broadcast/${
-          device.id
+        `${import.meta.env.VITE_APP_WS_BASE_URL}/ws/projects/broadcast/${device.id
         }/user/?token=${token}`
       );
       newWebsocket.onopen = () => {
@@ -242,7 +258,7 @@ const DashboardProjectBroadcast: FC<IDashboardProjectBroadcastProps> = () => {
             break;
         }
       };
-      newWebsocket.onerror = (event) => {console.error(event)};
+      newWebsocket.onerror = (event) => { console.error(event) };
       newWebsocket.onclose = (event) => {
         if (event.code >= 4000) {
           dispatch(
@@ -277,64 +293,72 @@ const DashboardProjectBroadcast: FC<IDashboardProjectBroadcastProps> = () => {
               <FormattedMessage id="device" defaultMessage="Device" />
             </div>
             <div className="card-body">
-              {device === null ? (
-                <PrimaryButton className="p-2" onClick={handleShowForm}>
-                  <Icon path={mdiPlus} color="#ffffff" size={1} />
-                  <FormattedMessage id="device" defaultMessage="Device" />
-                </PrimaryButton>
-              ) : (
-                <div>
-                  <div className="d-flex">
-                    <button
-                      className="btn btn-info me-3 "
-                      onClick={handleEditDevice}
-                    >
-                      <FormattedMessage id="edit" defaultMessage="Edit" />
-                    </button>
-                    <button
-                      className="btn btn-danger me-3"
-                      onClick={handleDeleteDevice}
-                      disabled={loading.post}
-                    >
-                      <FormattedMessage id="delete" defaultMessage="Delete" />
-                    </button>
-                    {isDeviceActivated === true ? (
-                      <button
-                        className="btn btn-success me-3"
-                        onClick={() => handleToggleActivated(false)}
-                        disabled={loading.post}
-                      >
-                        <FormattedMessage
-                          id="activated"
-                          defaultMessage="Activated"
-                        />
-                      </button>
+              {
+                loading.detail ? <div>loading...</div> : (
+                  <>
+
+                    {device === null ? (
+                      <PrimaryButton className="p-2" onClick={handleShowForm}>
+                        <Icon path={mdiPlus} color="#ffffff" size={1} />
+                        <FormattedMessage id="device" defaultMessage="Device" />
+                      </PrimaryButton>
                     ) : (
-                      <button
-                        className="btn btn-warning me-3"
-                        onClick={() => handleToggleActivated(true)}
-                        disabled={loading.post}
-                      >
-                        <FormattedMessage
-                          id="not_activated"
-                          defaultMessage="Not activated"
-                        />
-                      </button>
-                    )}
-                  </div>
-                  <div className="row mt-2 ">
-                    <div className="col-8 col-md-5">
-                      <p>DEVICE_ID = {`${device.id}`}</p>
-                      <p>
+                      <div>
+                        <div className="d-flex">
+                          <button
+                            className="btn btn-info me-3 "
+                            onClick={handleEditDevice}
+                          >
+                            <FormattedMessage id="edit" defaultMessage="Edit" />
+                          </button>
+                          <button
+                            className="btn btn-danger me-3"
+                            onClick={handleDeleteDevice}
+                            disabled={loading.post}
+                          >
+                            <FormattedMessage id="delete" defaultMessage="Delete" />
+                          </button>
+                          {isDeviceActivated === true ? (
+                            <button
+                              className="btn btn-success me-3"
+                              onClick={() => handleToggleActivated(false)}
+                              disabled={loading.post}
+                            >
+                              <FormattedMessage
+                                id="activated"
+                                defaultMessage="Activated"
+                              />
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-warning me-3"
+                              onClick={() => handleToggleActivated(true)}
+                              disabled={loading.post}
+                            >
+                              <FormattedMessage
+                                id="not_activated"
+                                defaultMessage="Not activated"
+                              />
+                            </button>
+                          )}
+                        </div>
+                        <div className="row mt-2 ">
+                          <div className="col-8 col-md-5">
+                            <p>DEVICE_ID = {`${device.id}`}</p>
+                            <SecondaryButton onClick={handleRequestApiKey}>Generate api key</SecondaryButton>
+                            {/* <p>
                         PASSWORD ={" "}
                         <span onClick={handleEditDevice}>
                           {"*".repeat(device.password?.length || 5)}
                         </span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
+                      </p> */}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )
+              }
             </div>
           </div>
           {device && (
@@ -399,6 +423,21 @@ const DashboardProjectBroadcast: FC<IDashboardProjectBroadcastProps> = () => {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseForm}>
+              <FormattedMessage id="close" />
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal show={showGeneratedApiKey} onHide={() => setShowGeneratedApiKey(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Api Key:
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Copy:    {generatedApiKey}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowGeneratedApiKey(false)}>
               <FormattedMessage id="close" />
             </Button>
           </Modal.Footer>
