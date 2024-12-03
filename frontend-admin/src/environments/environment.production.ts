@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseApiUrl: 'https://smedufacelearn.kz',
+  baseApiUrl: 'https://www.smedufacelearn.kz',
 };
