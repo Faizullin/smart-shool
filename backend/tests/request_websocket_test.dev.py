@@ -5,9 +5,10 @@ import random
 import websockets
 
 # Customize
-DEVICE_ID =2 # Device id from broadcast page
-DEVICE_PASSWORD = 'dev.password@1234'  # Device password from broadcast page
-URL = f'wss://security.org.kz/ws/projects/broadcast/{DEVICE_ID}/device/?password={DEVICE_PASSWORD}'
+DEVICE_ID = None
+API_KEY = ''  # Device api key from broadcast page
+URL = f'ws://localhost:8000/ws/projects/broadcast/{DEVICE_ID}/device/?key={API_KEY}'
+
 
 async def websocket_reader(websocket):
     async for input_data in websocket:
@@ -22,6 +23,7 @@ async def websocket_reader(websocket):
             print(f"JSON decode error: {e}")
         except Exception as e:
             print(f"Error processing received data: {e}")
+
 
 async def websocket_sender(websocket):
     while True:
@@ -53,6 +55,7 @@ async def websocket_sender(websocket):
             print(f"Error sending data: {e}")
             break
 
+
 async def main():
     try:
         async with websockets.connect(URL) as websocket:
@@ -62,6 +65,7 @@ async def main():
         print(f"WebSocket connection closed: {err.code} {err.reason}")
     except Exception as e:
         print(f"Error: {e}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

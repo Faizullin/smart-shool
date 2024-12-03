@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 
 from apps.academics.models import get_current_academic_config
 from .filters import ProjectDeviceStreamPagination
+from .models import ProjectDeviceApiKey
 from .permissions import IsDeviceOwner, IsProjectOwner, get_loaded_group_names
 from .serializers import *
 
@@ -22,7 +23,7 @@ class PracticalWorkListMyView(ListCreateAPIView):
     queryset = PracticalWork.objects.all()
     serializer_class = PracticalWorkSerializer
     permission_classes = [
-        permissions.IsAuthenticated,]
+        permissions.IsAuthenticated, ]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, ]
     filterset_fields = ['status']
     ordering_fields = ['id']
@@ -62,7 +63,7 @@ class PracticalWorkListMyView(ListCreateAPIView):
 
 
 class PracticalWorkSubmitView(APIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [permissions.IsAuthenticated, ]
 
     def post(self, request):
         serilizer = PracticalWorkSubmitSerializer(data=request.data)
@@ -247,68 +248,11 @@ class ProjectDeviceStreamView(ListCreateAPIView):
         return device.submits.order_by('-id')
 
 
-# if device.activated:
-#     time_difference = timezone.now() - device.activated_at
-#     if time_difference > timezone.timedelta(minutes=2):
-#         last_submit: ProjectDeviceSensorDataSubmit = device.submits.last()
-#         if last_submit:
-#             time_difference = timezone.now() - last_submit.updated_at
-#             if time_difference > timezone.timedelta(minutes=1):
-#                 device.activated = False
-#                 device.save()
-# class PracticalWorkShareView(APIView):
-#     queryset = PracticalWork.objects.all()
-#     serializer_class = ProjectWorkShareSerializer
-#
-#     permission_classes = [
-#         permissions.IsAuthenticated, IsStudentOrTeacherOrAdmin,]
-
-
-#     def perform_update(self, serializer):
-#         prev_instance: PracticalWork = self.get_object()
-#         instance: PracticalWork = super().perform_update(serializer)
-#         # if prev_instance.shared_students.values_list('id',flat=True) == instance.shared_students:
-#         #     recipients = instance.shared_students.exclude(student__in = prev_instance.shared_students)
-#         #     notify.send(self.request.user, recipient=recipients,
-#         #                 description='Project shared', target=instance, verb='project_share')
-
-#     def get_queryset(self):
-#         queryset = PracticalWork.objects.all()
-#         group_names = get_loaded_group_names(self.request.user)
-#         if 'admin' in group_names or 'teacher' in group_names:
-#             pass
-#         else:
-#             student = self.request.user.student
-#             queryset = queryset.filter(student=student)
-#         return queryset.select_related('student', 'device', 'conference').prefetch_related('files')
-
-
-# class PracticalWorkDocFileCheckView(APIView):
-#
-#     permission_classes = [permissions.IsAuthenticated,
-#                           IsStudentOrTeacherOrAdmin, IsProjectOwner]
-
-#     def post(self, request, pk, file_pk):
-#         practical_work = get_object_or_404(PracticalWork, pk=pk)
-#         practical_work_file = get_object_or_404(FileModel, pk=file_pk)
-#         self.check_object_permissions(request, practical_work)
-#         if practical_work_file.extension != '.docx':
-#             return Response({'detail': 'File is not acceptable.'}, status=status.HTTP_400_BAD_REQUEST)
-#         checker = FileChecker()
-#         is_success_open, errors = checker.read_dox_file(
-#             practical_work_file.file.path)
-#         if not is_success_open:
-#             return Response({'detail': str(errors)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-#         checker.validate_docx_file()
-#         return Response(checker.get_errors(), status=status.HTTP_200_OK)
-
-
 class ProjectDeviceView(viewsets.ModelViewSet):
     queryset = ProjectDevice.objects.all()
     serializer_class = ProjectDeviceSerializer
 
-    permission_classes = [
-        permissions.IsAuthenticated, IsDeviceOwner, ]
+    permission_classes = [permissions.IsAuthenticated, IsDeviceOwner, ]
 
     def get_queryset(self):
         queryset = ProjectDevice.objects.all()
@@ -316,3 +260,13 @@ class ProjectDeviceView(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
+
+
+class ProjectDeviceGenerateApiKeyView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsDeviceOwner, ]
+
+    def post(self, request, device_id: int):
+        device_obj = get_object_or_404(ProjectDevice, pk=device_id)
+        ProjectDeviceApiKey.objects.filter(device=device_obj).delete()
+        obj, key = ProjectDeviceApiKey.objects.create_key(device=device_obj, name="device_api_key")
+        return Response({'key': key}, status=status.HTTP_201_CREATED)

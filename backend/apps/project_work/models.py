@@ -1,11 +1,10 @@
 from django.db import models
+from rest_framework_api_key.models import AbstractAPIKey
 
 from apps.exams.models import Exam
 from apps.file_system.models import File as FileModel
 from apps.students.models import Student
 from utils.models import AbstractTimestampedModel
-
-# Create your models here.
 
 
 class PracticalWork(AbstractTimestampedModel):
@@ -33,7 +32,14 @@ class ProjectDevice(AbstractTimestampedModel):
         PracticalWork, null=False, blank=False, on_delete=models.CASCADE, related_name='device')
     activated = models.BooleanField(default=False)
     activated_at = models.DateTimeField(null=True)
-    password = models.CharField(max_length=128)
+
+
+class ProjectDeviceApiKey(AbstractTimestampedModel, AbstractAPIKey):
+    device = models.OneToOneField(
+        ProjectDevice,
+        on_delete=models.CASCADE,
+        related_name="api_key"
+    )
 
 
 class ProjectDeviceLabel(AbstractTimestampedModel):
@@ -50,7 +56,8 @@ class ProjectDeviceSensorDataSubmit(AbstractTimestampedModel):
 
 class ProjectDeviceSensorData(AbstractTimestampedModel):
     submit = models.ForeignKey(
-        ProjectDeviceSensorDataSubmit, null=False, blank=False, on_delete=models.CASCADE, related_name='sensor_data_list')
+        ProjectDeviceSensorDataSubmit, null=False, blank=False, on_delete=models.CASCADE,
+        related_name='sensor_data_list')
     label = models.ForeignKey(
         ProjectDeviceLabel, null=False, blank=False, on_delete=models.CASCADE)
     value = models.FloatField(null=False)

@@ -1,6 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.password_validation import validate_password
 from django.utils import timezone
 from rest_framework import serializers
 
@@ -9,7 +7,6 @@ from apps.exams.models import Exam
 from apps.file_system.models import File as FileModel
 from apps.students.models import Student
 from utils.serializers import TimestampedSerializer
-
 from .models import (PracticalWork, ProjectDevice, ProjectDeviceLabel,
                      ProjectDeviceSensorData, ProjectDeviceSensorDataSubmit)
 
@@ -47,23 +44,20 @@ class ProjectDeviceSerializer(TimestampedSerializer):
         queryset=PracticalWork.objects.all(), write_only=True, required=True
     )
     script = FileSerializer(read_only=True)
-    password = serializers.CharField(write_only=True)
     activated = serializers.BooleanField(required=False)
     sensor_data_labels = ProjectDeviceLabelSerializer(many=True)
 
     class Meta:
         model = ProjectDevice
-        fields = ('id', 'title', 'script', 'script_id', 'practical_work_id', 'sensor_data_labels', 'password',
+        fields = ('id', 'title', 'script', 'script_id', 'practical_work_id', 'sensor_data_labels',
                   'created_at', 'updated_at', 'activated')
 
     def create(self, validated_data):
         script = validated_data.pop('script_id')
-        password = validated_data.pop('password')
         practical_work = validated_data.pop('practical_work_id')
         sensor_data_labels = validated_data.pop('sensor_data_labels', [])
-        hashed_password = make_password(password)
         instance: ProjectDevice = ProjectDevice.objects.create(
-            **validated_data, script=script, password=hashed_password, practical_work=practical_work)
+            **validated_data, script=script, practical_work=practical_work)
         for item in sensor_data_labels:
             ProjectDeviceLabel.objects.create(**item, device=instance)
         return instance
@@ -71,13 +65,9 @@ class ProjectDeviceSerializer(TimestampedSerializer):
     def update(self, instance: ProjectDevice, validated_data, ):
         title = validated_data.pop('title', None)
         script = validated_data.pop('script_id', None)
-        password = validated_data.pop('password', None)
         activated = validated_data.pop('activated', None)
-        hashed_password = make_password(password)
         if title is not None:
             instance.title = title
-        if password is not None:
-            instance.password = hashed_password
         if script is not None:
             instance.script = script
         if activated is not None:
@@ -91,7 +81,7 @@ class ProjectDeviceSerializer(TimestampedSerializer):
 class ConferenceSerializer(TimestampedSerializer):
     class Meta:
         model = VideoConference
-        fields = ['id', 'status',]
+        fields = ['id', 'status', ]
 
 
 class PracticalWorkSerializer(TimestampedSerializer):
@@ -146,17 +136,16 @@ class ProjectDeviceSensorDataSerializer(TimestampedSerializer):
 
     class Meta:
         model = ProjectDeviceSensorData
-        fields = ['id', 'value', 'field', 'label_id',]
+        fields = ['id', 'value', 'field', 'label_id', ]
 
 
 class ProjectDeviceSensorDataSubmitSerializer(TimestampedSerializer):
-    password = serializers.CharField(required=True, write_only=True)
-    sensor_data_list = ProjectDeviceSensorDataSerializer(many=True,)
+    sensor_data_list = ProjectDeviceSensorDataSerializer(many=True, )
     activated = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = ProjectDeviceSensorDataSubmit
-        fields = ['id',  'password', 'sensor_data_list',
+        fields = ['id', 'sensor_data_list',
                   'created_at', 'updated_at', 'activated']
 
     def get_activated(self, obj):
@@ -165,11 +154,11 @@ class ProjectDeviceSensorDataSubmitSerializer(TimestampedSerializer):
 
 class PracticalWorkFileCodeSerializer(TimestampedSerializer):
     code = serializers.CharField(
-        required=False, allow_blank=True,)
+        required=False, allow_blank=True, )
 
     class Meta:
         model = FileModel
-        fields = ['id', 'code',  'created_at', 'updated_at']
+        fields = ['id', 'code', 'created_at', 'updated_at']
 
 
 class PracticalWorkSubmitSerializer(serializers.Serializer):
@@ -212,22 +201,17 @@ class ProjectWorkShareSerializer(serializers.ModelSerializer):
         return instance
 
 
-class ProjectDeviceConsumerConnectSerializer(serializers.Serializer):
-    password = serializers.CharField(
-        write_only=True, validators=[validate_password])
-
-
 class ProjectDeviceConsumerSensorDataSerializer(TimestampedSerializer):
     field = serializers.CharField(write_only=True)
 
     class Meta:
         model = ProjectDeviceSensorData
-        fields = ['id', 'value', 'field', 'label_id',]
+        fields = ['id', 'value', 'field', 'label_id', ]
 
 
 class ProjectDeviceSensorDataConsumerSubmitSerializer(TimestampedSerializer):
-    sensor_data_list = ProjectDeviceConsumerSensorDataSerializer(many=True,)
+    sensor_data_list = ProjectDeviceConsumerSensorDataSerializer(many=True, )
 
     class Meta:
         model = ProjectDeviceSensorDataSubmit
-        fields = ['id',  'sensor_data_list', 'created_at', 'updated_at',]
+        fields = ['id', 'sensor_data_list', 'created_at', 'updated_at', ]

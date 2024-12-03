@@ -1,13 +1,12 @@
 from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import check_password
 
 from utils.consumers import (AsyncBaseDataConsumer, AsyncBaseDataUserConsumer,
                              ErrorCode, ErrorMessage, UserChatInterface)
-from .models import (ProjectDevice, ProjectDeviceSensorData, ProjectDeviceSensorDataSubmit)
-from .serializers import (ProjectDeviceConsumerConnectSerializer,
-                          ProjectDeviceSensorDataConsumerSubmitSerializer,
-                          serializers)
+from .models import (ProjectDevice, ProjectDeviceSensorData, ProjectDeviceSensorDataSubmit, ProjectDeviceApiKey)
+from .serializers import (
+    ProjectDeviceSensorDataConsumerSubmitSerializer,
+    serializers)
 from ..accounts.groups import StudentGroup, AdminGroup, TeacherGroup
 
 UserModel = get_user_model()
@@ -110,36 +109,34 @@ class ProjectWorkDeviceDataConsumer(AsyncBaseDataConsumer):
         )
 
     @database_sync_to_async
-    def check_device_permission(self, device_id, args, use_password_check=True):
-        password = args.get('password', None)
-        if not password:
+    def check_device_permission(self, device_id, args):
+        key = args.get('key', None)
+        if not key:
             return False, {
                 "code": ErrorCode.INVALID_ARGUMENT,
                 "reason": "Password required"
             }
+        key = key[0]
         try:
-            device = ProjectDevice.objects.get(id=device_id)
+            key_obj: ProjectDeviceApiKey = ProjectDeviceApiKey.objects.get_from_key(key)
+            print(key_obj)
+            device = ProjectDevice.objects.get(id=key_obj.device_id)
+            print(device)
             if not device.activated:
                 return False, {
                     "code": ErrorCode.PERMISSION_DENIED,
                     "reason": "Device is not activated. Activate it."
                 }
-            if use_password_check:
-                serializer = ProjectDeviceConsumerConnectSerializer(data={
-                    'password': password[0],
-                })
-                serializer.is_valid(raise_exception=True)
-                password = serializer.validated_data.pop('password')
-                if not check_password(password, device.password):
-                    return False, {
-                        "code": ErrorCode.PERMISSION_DENIED,
-                        "reason": "Password does not match.",
-                    }
             return True, None
         except serializers.ValidationError as err:
             return False, {
                 "code": ErrorCode.INVALID_ARGUMENT,
                 "reason": err.detail,
+            }
+        except ProjectDeviceApiKey.DoesNotExist:
+            return False, {
+                "code": ErrorCode.AUTHENTICATION_ERROR,
+                "reason": "incorrect api key",
             }
         except ProjectDevice.DoesNotExist:
             return False, {

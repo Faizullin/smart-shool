@@ -26,5 +26,6 @@ urlpatterns = [
          ProjectDeviceStreamView.as_view(), name='sensor-data-stream'),
 #     path('api/projects/<int:pk>/files/<int:file_pk>/check/',
 #          PracticalWorkDocFileCheckView.as_view()),
+    path("api/v1/projects/device/<int:device_id>/generate-key/", ProjectDeviceGenerateApiKeyView.as_view(), name="device-generate-key"),
     path('api/v1/projects/device/', include(device_router.urls)),
 ]

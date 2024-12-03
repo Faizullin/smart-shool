@@ -1,70 +1,74 @@
 import asyncio
 import json
-import random
 
+import serial
 import websockets
 
 # Customize
-DEVICE_ID=3
-API_KEY = 'Q1bdgWZx.DpJI3HcbDcoXqOMZMOildm1Blr4ju3V7'  # Device api key from broadcast page
-URL = f'ws://localhost:8000/ws/projects/broadcast/{DEVICE_ID}/device/?key={API_KEY}'
+DEVICE_ID = None
+API_KEY = ''  # Device api key from broadcast page
+URL = f'wss://smedufacelearn.kz/ws/projects/broadcast/{DEVICE_ID}/device/?key={API_KEY}'
+DELAY_INTERVAL = 10
+SERIAL_BAUDRATE = 9600
+SERIAL_PORT = None  # Serial port for Arduino
 
 
-async def websocket_reader(websocket):
+async def websocket_reader(websocket, serial_port):
     async for input_data in websocket:
         try:
             if type(input_data) is not str:
                 print("Error: message type is not string")
-                continue
             received_data = json.loads(input_data)
-            if received_data.get('type') == "send_command":
-                print(f"Received command: {received_data['data']['command']}")
-        except json.JSONDecodeError as e:
-            print(f"JSON decode error: {e}")
-        except Exception as e:
-            print(f"Error processing received data: {e}")
+            if received_data['type'] == "send_command":
+                print(
+                    f"Received message: {received_data['data']['command']}")
+        except serial.SerialException as e:
+            print(f"Serial port error: {e}")
 
 
-async def websocket_sender(websocket):
+async def websocket_sender(websocket, serial_port):
     while True:
         try:
-            # Simulate sensor data
-            simulated_data = {
-                "temp": round(random.uniform(20.0, 30.0), 2),
-                "hum": round(random.uniform(40.0, 60.0), 2)
-            }
-            sensor_data_list = [
-                {'field': key, 'value': value} for key, value in simulated_data.items()
-            ]
-            submit_data = {
-                "type": "new_submit",
-                "data": {'sensor_data_list': sensor_data_list}
-            }
-            await websocket.send(json.dumps(submit_data))
-            print(f"Data sent to WebSocket: {submit_data}")
+            input_data = serial_port.readline().decode("utf-8").strip()
+            if input_data:
+                print(f"Serial: received data: {input_data}")
+                input_data = json.loads(input_data)
+                sensor_data_list = []
+                for key in input_data.keys():
+                    sensor_data_list.append({
+                        'field': key,
+                        'value': input_data[key]
+                    })
+                if sensor_data_list:
+                    submit_data = {
+                        "type": "new_submit",
+                        "data": {
+                            'sensor_data_list': sensor_data_list
+                        }
+                    }
+                    await websocket.send(json.dumps(submit_data))
+                    print(f"Websocket.send: Data submitted: {submit_data}")
 
-            # Wait for a random interval between 1 and 20 seconds
-            delay = random.randint(1, 20)
-            print(f"Next send in {delay} seconds...")
-            await asyncio.sleep(delay)
+                    await asyncio.sleep(DELAY_INTERVAL)
 
-        except websockets.ConnectionClosed as err:
-            print(f"WebSocket connection closed: {err.code} {err.reason}")
+        except serial.SerialException as e:
+            print(f"Serial port error: {e}")
             break
-        except Exception as e:
-            print(f"Error sending data: {e}")
-            break
+        await asyncio.sleep(DELAY_INTERVAL)
 
 
 async def main():
+    serial_port = serial.Serial(SERIAL_PORT, baudrate=SERIAL_BAUDRATE)
+    print(
+        f"Serial port {serial_port}({SERIAL_PORT},{SERIAL_BAUDRATE}) opened successfully.")
     try:
         async with websockets.connect(URL) as websocket:
-            tasks = [websocket_reader(websocket), websocket_sender(websocket)]
+            tasks = [websocket_reader(websocket, serial_port),
+                     websocket_sender(websocket, serial_port)]
             await asyncio.gather(*tasks)
+
     except websockets.ConnectionClosed as err:
-        print(f"WebSocket connection closed: {err.code} {err.reason}")
-    except Exception as e:
-        print(f"Error: {e}")
+        print(f"Websocket connection closed: {err}")
 
 
 if __name__ == "__main__":
