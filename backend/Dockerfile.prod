@@ -16,13 +16,9 @@ RUN mkdir $HOME/logs/celery
 
 # install system dependencies
 RUN apt-get update && \
-    apt install -y git \
-                gcc netcat \
-                ffmpeg libsm6 libxext6 \
-                poppler-utils \
+    apt install -y gcc netcat \
                 python3-pip \
-                python3-opencv \
-                tesseract-ocr
+                python3-opencv
 
 RUN pip install --trusted-host pypi.python.org --upgrade pip
 
