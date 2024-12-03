@@ -5,9 +5,12 @@ import random
 import websockets
 
 # Customize
-DEVICE_ID = None
+# DEVICE_ID = None
+# API_KEY = ''  # Device api key from broadcast page
+# URL = f'ws://localhost:8000/ws/projects/broadcast/{DEVICE_ID}/device/?key={API_KEY}'
+DEVICE_ID = 4
 API_KEY = ''  # Device api key from broadcast page
-URL = f'ws://localhost:8000/ws/projects/broadcast/{DEVICE_ID}/device/?key={API_KEY}'
+URL = f'wss://smedufacelearn.kz/ws/projects/broadcast/{DEVICE_ID}/device/?key={API_KEY}'
 
 
 async def websocket_reader(websocket):
