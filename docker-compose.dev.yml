@@ -31,8 +31,8 @@ services:
             - /etc/letsencrypt:/etc/letsencrypt
             - ./frontend/dist:/app/frontend/dist
             - ./frontend-admin/dist:/app/frontend-admin/dist
-            - static_data:/app/public/static
-            - media_data:/app/public/media
+            # - static_data:/app/public/static
+            # - media_data:/app/public/media
     redis:
         container_name: smart-shool-redis-1
         restart: unless-stopped
