@@ -18,8 +18,8 @@ venv/
 local_settings.py
 
 
-media/
-static/
+public/media/
+public/static/
 staticfiles/
 model_data/
 
