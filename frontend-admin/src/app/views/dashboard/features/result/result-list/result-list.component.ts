@@ -127,14 +127,14 @@ export class ResultListComponent {
         return (item.student as any)?.current_group?.title || '';
       },
     },
-    {
-      header: 'Updated At',
-      field: 'updated_at',
-      sortable: true,
-      filter: {
-        type: 'date',
-      },
-    },
+    // {
+    //   header: 'Updated At',
+    //   field: 'updated_at',
+    //   sortable: true,
+    //   filter: {
+    //     type: 'date',
+    //   },
+    // },
     {
       header: 'Feedback Actions',
       field: 'feedback_actions',

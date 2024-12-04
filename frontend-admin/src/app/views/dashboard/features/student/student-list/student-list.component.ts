@@ -83,14 +83,14 @@ export class StudentListComponent implements OnInit {
         type: 'date',
       },
     },
-    {
-      header: 'Updated At',
-      field: 'updated_at',
-      sortable: true,
-      filter: {
-        type: 'date',
-      },
-    },
+    // {
+    //   header: 'Updated At',
+    //   field: 'updated_at',
+    //   sortable: true,
+    //   filter: {
+    //     type: 'date',
+    //   },
+    // },
   ];
   ngOnInit(): void {
     const user = this.authStorageService.getUser();

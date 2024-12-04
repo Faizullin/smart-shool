@@ -110,11 +110,11 @@ export class QuizEditComponent extends BaseEditComponent {
       field: 'created_at',
       cellTemplate: (data: Question) => `${data.created_at}`,
     },
-    {
-      header: 'Updated At',
-      field: 'updated_at',
-      cellTemplate: (data: Question) => `${data.updated_at}`,
-    },
+    // {
+    //   header: 'Updated At',
+    //   field: 'updated_at',
+    //   cellTemplate: (data: Question) => `${data.updated_at}`,
+    // },
   ];
   public filterParams: FilterParams = {
     page: 1,

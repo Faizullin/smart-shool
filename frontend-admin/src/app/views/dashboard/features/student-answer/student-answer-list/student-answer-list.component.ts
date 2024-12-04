@@ -59,13 +59,13 @@ export class StudentAnswerListComponent {
         type: 'text',
       },
     },
-    {
-      header: 'Updated At',
-      field: 'updated_at',
-      sortable: true,
-      filter: {
-        type: 'text',
-      },
-    },
+    // {
+    //   header: 'Updated At',
+    //   field: 'updated_at',
+    //   sortable: true,
+    //   filter: {
+    //     type: 'text',
+    //   },
+    // },
   ];
 }

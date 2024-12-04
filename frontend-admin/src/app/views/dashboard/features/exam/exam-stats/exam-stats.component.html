@@ -36,10 +36,6 @@
                         <ng-template columnDef="student" columnLabel="Student." sortable="true" #headerCellDef let-item>
                             <td>{{ item.student ? item.student.user.email : '' }}</td>
                         </ng-template>
-                        <ng-template columnDef="updated_at" columnLabel="Updated At." sortable="true" #headerCellDef
-                            let-item>
-                            <td>{{ item.updated_at }}</td>
-                        </ng-template>
                     </app-smart-table1>
                 </c-card-body>
             </c-card>

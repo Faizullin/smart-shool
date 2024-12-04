@@ -102,14 +102,14 @@ export class ConfereceListComponent implements OnInit {
         type: 'date',
       },
     },
-    {
-      header: 'Updated At',
-      field: 'updated_at',
-      sortable: true,
-      filter: {
-        type: 'date',
-      },
-    },
+    // {
+    //   header: 'Updated At',
+    //   field: 'updated_at',
+    //   sortable: true,
+    //   filter: {
+    //     type: 'date',
+    //   },
+    // },
   ];
   public upper_filters: ITableColumn<Conference>[] = [
     {
