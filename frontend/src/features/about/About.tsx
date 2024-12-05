@@ -8,11 +8,14 @@ import { FormattedMessage } from "react-intl";
 import { useLocation, useNavigate } from "react-router-dom";
 import 'swiper/css';
 import 'swiper/css/effect-cards';
-import { EffectCards } from 'swiper/modules';
+import { Autoplay, EffectCards } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import "./About.scss";
 
-import Img1 from "@/assets/img/landing-home-image.jpg";
+import Img1 from "@/assets/img/landing-home-image-1.jpg";
+import Img2 from "@/assets/img/landing-home-image-2.jpg";
+import Img3 from "@/assets/img/landing-home-image-3.jpg";
+import Img4 from "@/assets/img/landing-home-image-4.jpg";
 
 const PopularArticleItem = ({
   article_item,
@@ -52,8 +55,9 @@ export default function About() {
   >([]);
   const landingSliderImages = [
     Img1,
-    Img1,
-    Img1,
+    Img2,
+    Img3,
+    Img4,
   ]
   React.useEffect(() => {
     if (currentLocation.hash) {
@@ -140,9 +144,9 @@ export default function About() {
                         <Swiper
                           effect={'cards'}
                           grabCursor={true}
-                          modules={[EffectCards]}
+                          modules={[EffectCards, Autoplay]}
                           className="mySwiper"
-                          autoplay={true}
+                          autoplay={{ delay: 3500 }}
                         >
                           {
                             landingSliderImages.map((item, index) => (

@@ -1,4 +1,4 @@
-import{j as e,ap as t,F as s}from"./index-936a227f.js";import{P as i,D as a}from"./ProjectLayout-634b062f.js";import{d as r}from"./index-b07e2b2d.js";const o=`import serial.tools.list_ports
+import{j as e,ap as t,F as s}from"./index-e2e70fbc.js";import{P as i,D as a}from"./ProjectLayout-038f2558.js";import{d as r}from"./index-0c17e776.js";const o=`import serial.tools.list_ports
 
 def find_arduino_port():
     # Get a list of all available serial ports
