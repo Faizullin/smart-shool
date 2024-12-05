@@ -95,29 +95,7 @@ const QuestionItem: React.FC<Props> = ({
             cols={40}
           ></textarea>
         )}
-        {question.question_type === "d" && (
-          <div>
-            {question.choices.map((subquestion_item) => (
-              <div key={subquestion_item.id} className="ans ml-2 mb-1">
-                <div className="mb-1">{subquestion_item.prompt}</div>
-                <Form.Select
-                  defaultValue={getDefaultValueFromDraggable(subquestion_item)}
-                  onChange={handleDraggableChange}
-                >
-                  <option value={`${subquestion_item.id}-0`}>-----</option>
-                  {question.choices?.map((answer_item) => (
-                    <option
-                      key={`${subquestion_item.id}-${answer_item.id}`}
-                      value={`${subquestion_item.id}-${answer_item.id}`}
-                    >
-                      {answer_item.content}
-                    </option>
-                  ))}
-                </Form.Select>
-              </div>
-            ))}
-          </div>
-        )}
+       
       </div>
     </>
   );

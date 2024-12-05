@@ -5,12 +5,12 @@ import serial
 import websockets
 
 # Customize
-DEVICE_ID = None
-API_KEY = ''  # Device api key from broadcast page
+DEVICE_ID = 2
+API_KEY = 'Dm4kVxrG.xUb0SjP1V9Hz0jknlG0XBGusnGdjYMRG'  # Device api key from broadcast page
 URL = f'wss://smedufacelearn.kz/ws/projects/broadcast/{DEVICE_ID}/device/?key={API_KEY}'
 DELAY_INTERVAL = 10
 SERIAL_BAUDRATE = 9600
-SERIAL_PORT = None  # Serial port for Arduino
+SERIAL_PORT = "COM5"  # Serial port for Arduino
 
 
 async def websocket_reader(websocket, serial_port):
@@ -73,3 +73,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+

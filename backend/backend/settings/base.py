@@ -18,7 +18,7 @@ USE_DEBUG_TOOLS = env.bool('USE_DEBUG_TOOLS', False)
 ALLOWED_HOSTS = ["*"]  # env.list('ALLOWED_HOSTS', default=[])
 FRONTEND_APP_BASE_URL = env.str(
     'FRONTEND_APP_BASE_URL', 'http://localhost:5173')
-SITE_COMMAND = env.str('SITE_COMMAND', None)
+SITE_COMMAND = env.str('SITE_COMMAND')
 EMAIL_SERVICE_NAME = env.str("EMAIL_SERVICE_NAME", None)
 INSTALLED_APPS = [
     'apps.admin_dashboard',
@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     # 'django_celery_results',
     # 'django_celery_beat',
     # 'parler',
-    # 'gmailapi_backend',
+    'gmailapi_backend',
     # 'django_grapesjs',
     "log_viewer",
     'apps.accounts',

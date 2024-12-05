@@ -1,14 +1,14 @@
-from rest_framework import viewsets, filters, permissions, status
-from rest_framework.response import Response
-
-from django_filters.rest_framework import DjangoFilterBackend
 from apps.accounts.permissions import IsTeacherOrAdmin, get_loaded_group_names
-from utils.stats_views import AbstractStatsSerializer, AbstractStatsView
-from apps.dashboard.serializers import StudentSerializer
-from .serializers import ResultSerializer, ResultStatsSerializer
-from .filters import ResultPagination, ORDERING_FIELDS, ResultFilter
 from apps.dashboard.models import get_teacher_students_results_queryset
+from apps.dashboard.serializers import StudentSerializer
 from apps.results.models import Result
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, permissions, status, viewsets
+from rest_framework.response import Response
+from utils.stats_views import AbstractStatsSerializer, AbstractStatsView
+
+from .filters import ORDERING_FIELDS, ResultFilter, ResultPagination
+from .serializers import ResultSerializer, ResultStatsSerializer
 
 
 class ResultViewSet(viewsets.ModelViewSet):
@@ -19,7 +19,7 @@ class ResultViewSet(viewsets.ModelViewSet):
     filterset_class = ResultFilter
     ordering_fields = ORDERING_FIELDS
     pagination_class = ResultPagination
-    
+
     permission_classes = [permissions.IsAuthenticated, IsTeacherOrAdmin]
 
     def get_queryset(self):
@@ -30,8 +30,8 @@ class ResultViewSet(viewsets.ModelViewSet):
 
 
 class ResultStats(AbstractStatsView):
-    
-    permission_classes = [permissions.IsAuthenticated, IsTeacherOrAdmin]
+
+    # permission_classes = [permissions.IsAuthenticated, IsTeacherOrAdmin]
     serializer_class = ResultStatsSerializer
     to_show_avg = {
         'total_score': 'total_score', 'practical_score': 'practical_score', 'theory_score': 'theory_score'
@@ -48,6 +48,8 @@ class ResultStats(AbstractStatsView):
         group_by, format_string = self.get_date_data(
             validated_data=validated_data)
         formatted_data = []
+        if student:
+            queryset = queryset.filter(student_id=student.id)
         for item in queryset:
             value = {
                 'date': self.get_date_str(item[group_by], format_string)

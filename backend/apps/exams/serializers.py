@@ -1,8 +1,10 @@
+from apps.accounts.groups import StudentGroup
+from apps.project_work.models import PracticalWork
+from apps.results.models import Result
 from rest_framework import serializers
 from rest_framework.fields import empty
-from apps.results.models import Result
-from .models import Exam, Quiz, Question, Choice
-from apps.project_work.models import PracticalWork
+
+from .models import Choice, Exam, Question, Quiz
 
 
 class ExamSerializer(serializers.ModelSerializer):
@@ -23,7 +25,9 @@ class ExamSerializer(serializers.ModelSerializer):
                   'theory_passed', 'subject', 'quiz_id']
 
     def get_submitted_project_work(self, obj: Exam):
-        if 'student' in self.context.get('loaded_group_names', []):
+        user_group_ids = self.context.get(
+            'request').user.groups.values_list("id", flat=True)
+        if StudentGroup.id in user_group_ids:
             student = self.context['request'].user.student
             try:
                 project_work = PracticalWork.objects.get(
@@ -40,7 +44,9 @@ class ExamSerializer(serializers.ModelSerializer):
         return str(obj.subject)
 
     def get_theory_passed(self, obj):
-        if 'student' in self.context.get('loaded_group_names', []):
+        user_group_ids = self.context.get(
+            'request').user.groups.values_list("id", flat=True)
+        if StudentGroup.id in user_group_ids:
             student = self.context['request'].user.student
             result_queryset = Result.objects.filter(
                 exam=obj, student=student, attendance=True)

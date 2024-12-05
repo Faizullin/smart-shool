@@ -64,7 +64,7 @@ const router = createBrowserRouter(
                     <Route path="register" element={<Register/>}/>
                     <Route path="forgot_password" element={<ForgotPassword/>}/>
                     <Route
-                        path="password_reset/confirm"
+                        path="password-reset/confirm"
                         element={<ForgotPasswordConfirm/>}
                     />
                 </Route>

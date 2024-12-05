@@ -1,16 +1,16 @@
+from apps.accounts.permissions import IsStudent, get_loaded_group_names
+from apps.certificates.operations import generate_cert
+from apps.dashboard.models import get_teacher_exams_queryset
+from apps.results.models import Student, StudentAnswer
 from django.db import transaction
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from rest_framework import status, permissions
+from rest_framework import permissions, status
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts.permissions import IsStudent, get_loaded_group_names
-from apps.certificates.operations import generate_cert
-from apps.dashboard.models import get_teacher_exams_queryset
-from apps.results.models import StudentAnswer, Student
 from .operations import re_calculate_result
 from .serializers import *
 
@@ -20,6 +20,11 @@ class ExamListView(ListAPIView):
     serializer_class = ExamSerializer
     permission_classes = [
         permissions.IsAuthenticated, ]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({"request": self.request})
+        return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -188,7 +193,8 @@ class QuizQuestionListView(ListAPIView):
                 'success': False,
                 'detail': "You already passed a quiz"
             }, status=status.HTTP_403_FORBIDDEN)
-        queryset = self.filter_queryset(Question.objects.prefetch_related('choices').filter(quiz=quiz))
+        queryset = self.filter_queryset(
+            Question.objects.prefetch_related('choices').filter(quiz=quiz))
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)

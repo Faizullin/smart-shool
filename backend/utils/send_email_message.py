@@ -53,11 +53,13 @@
 
 # from celery import shared_task
 # from celery.utils.log import get_task_logger
+import logging
+
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
-# logger = get_task_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class SiteUrls:

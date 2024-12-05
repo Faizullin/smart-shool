@@ -119,9 +119,7 @@ class ProjectWorkDeviceDataConsumer(AsyncBaseDataConsumer):
         key = key[0]
         try:
             key_obj: ProjectDeviceApiKey = ProjectDeviceApiKey.objects.get_from_key(key)
-            print(key_obj)
             device = ProjectDevice.objects.get(id=key_obj.device_id)
-            print(device)
             if not device.activated:
                 return False, {
                     "code": ErrorCode.PERMISSION_DENIED,
