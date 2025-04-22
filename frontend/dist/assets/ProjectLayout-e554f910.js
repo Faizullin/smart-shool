@@ -1,4 +1,4 @@
-import{j as e,a as k,b as f,d as w,h as F,K as P,F as r,as as S,at as $,ak as j,al as m,au as v,av as D,e as A,aw as _,R as N,o as M,I as C,ax as R,ay as z,az as y,aj as I}from"./index-e2e70fbc.js";function W(s){return e.jsx("button",{type:s.type?s.type:"button",className:`secondary-button text-color-white-normal font-noto font-weight-medium ${s.processing&&"opacity-25"} `+s.className,disabled:s.processing,onClick:s.onClick,children:s.children})}const B=`const int analogPin = A0; // Analog pin where your sensor is connected
+import{j as e,a as k,b as f,d as w,h as F,K as P,F as r,as as S,at as $,ak as j,al as m,au as v,av as D,e as A,aw as _,R as N,o as M,I as C,ax as R,ay as z,az as y,aj as I}from"./index-9c02b3eb.js";function W(s){return e.jsx("button",{type:s.type?s.type:"button",className:`secondary-button text-color-white-normal font-noto font-weight-medium ${s.processing&&"opacity-25"} `+s.className,disabled:s.processing,onClick:s.onClick,children:s.children})}const B=`const int analogPin = A0; // Analog pin where your sensor is connected
 
 void setup() {
   Serial.begin(9600); // Initialize serial communication

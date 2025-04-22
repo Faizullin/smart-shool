@@ -51,9 +51,6 @@ const ArticleItem = ({
         <div className="h-100 d-flex flex-column justify-content-between">
           <div className="content-2">
             <div className="title">
-              {/* <p className="created_at text-uppercase font-noto">
-                {article_item.created_at}&nbsp;&nbsp; |&nbsp;&nbsp;
-              </p> */}
               <p className="we-ve-reached font-noto">{article_item.title}</p>
             </div>
             <div className="subject">
