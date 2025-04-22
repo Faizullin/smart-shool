@@ -94,14 +94,14 @@ export class ConfereceListComponent implements OnInit {
       header: '',
       field: 'additional_actions',
     },
-    {
-      header: 'Created At',
-      field: 'created_at',
-      sortable: true,
-      filter: {
-        type: 'date',
-      },
-    },
+    // {
+    //   header: 'Created At',
+    //   field: 'created_at',
+    //   sortable: true,
+    //   filter: {
+    //     type: 'date',
+    //   },
+    // },
     // {
     //   header: 'Updated At',
     //   field: 'updated_at',

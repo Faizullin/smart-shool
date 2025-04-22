@@ -51,14 +51,14 @@ export class StudentAnswerListComponent {
       header: 'Score',
       field: 'score',
     },
-    {
-      header: 'Created At',
-      field: 'created_at',
-      sortable: true,
-      filter: {
-        type: 'text',
-      },
-    },
+    // {
+    //   header: 'Created At',
+    //   field: 'created_at',
+    //   sortable: true,
+    //   filter: {
+    //     type: 'text',
+    //   },
+    // },
     // {
     //   header: 'Updated At',
     //   field: 'updated_at',

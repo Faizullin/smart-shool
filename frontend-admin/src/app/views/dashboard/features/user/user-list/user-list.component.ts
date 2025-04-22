@@ -50,14 +50,14 @@ export class UserListComponent {
         type: 'text',
       },
     },
-    {
-      header: 'Created At',
-      field: 'created_at',
-      sortable: true,
-      filter: {
-        type: 'date',
-      },
-    },
+    // {
+    //   header: 'Created At',
+    //   field: 'created_at',
+    //   sortable: true,
+    //   filter: {
+    //     type: 'date',
+    //   },
+    // },
     // {
     //   header: 'Updated At',
     //   field: 'updated_at',

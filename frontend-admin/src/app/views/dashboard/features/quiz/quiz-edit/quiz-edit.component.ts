@@ -105,11 +105,11 @@ export class QuizEditComponent extends BaseEditComponent {
       field: 'type',
       cellTemplate: (data: Question) => `${QuestionTypeLabels[data.type]}`,
     },
-    {
-      header: 'Created At',
-      field: 'created_at',
-      cellTemplate: (data: Question) => `${data.created_at}`,
-    },
+    // {
+    //   header: 'Created At',
+    //   field: 'created_at',
+    //   cellTemplate: (data: Question) => `${data.created_at}`,
+    // },
     // {
     //   header: 'Updated At',
     //   field: 'updated_at',

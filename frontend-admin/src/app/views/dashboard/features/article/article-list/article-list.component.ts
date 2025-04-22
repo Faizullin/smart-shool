@@ -82,14 +82,14 @@ export class ArticleListComponent {
       header: 'Featured Image',
       field: 'featured_image',
     },
-    {
-      header: 'Created At',
-      field: 'created_at',
-      sortable: true,
-      filter: {
-        type: 'date',
-      },
-    },
+    // {
+    //   header: 'Created At',
+    //   field: 'created_at',
+    //   sortable: true,
+    //   filter: {
+    //     type: 'date',
+    //   },
+    // },
     // {
     //   header: 'Updated At',
     //   field: 'updated_at',
